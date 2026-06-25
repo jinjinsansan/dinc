@@ -1,0 +1,16 @@
+# dependencies / build
+node_modules/
+.next/
+out/
+build/
+.vercel/
+
+# env
+.env*.local
+
+# OS / editor
+.DS_Store
+Thumbs.db
+
+# 配布用 zip（展開済みのため除外）
+dinc.zip

@@ -1,0 +1,472 @@
+<!DOCTYPE html>
+<html>
+<head>
+<meta charset="utf-8">
+<meta name="viewport" content="width=device-width, initial-scale=1">
+<script src="./support.js"></script>
+</head>
+<body>
+<x-dc>
+<helmet>
+<link rel="preconnect" href="https://fonts.googleapis.com">
+<link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+<link href="https://fonts.googleapis.com/css2?family=Noto+Serif+JP:wght@400;500;600;700&family=Noto+Sans+JP:wght@400;500;700&family=JetBrains+Mono:wght@400;500;700&display=swap" rel="stylesheet">
+<style>
+:root{
+  --bg:#0a0a0f; --bg-deep:#06060a; --surface:#12121e; --surface2:#181828;
+  --gold:#c9a84c; --gold-light:#e8c96a; --gold-dim:#8a7434;
+  --text:#f0f0f0; --muted:#8888aa; --dim:#555571;
+  --border:#2a2a3e; --hair:#1c1c2c;
+  --serif:'Noto Serif JP',serif; --sans:'Noto Sans JP',sans-serif; --mono:'JetBrains Mono',ui-monospace,monospace;
+}
+*{box-sizing:border-box}
+html{-webkit-font-smoothing:antialiased;text-rendering:optimizeLegibility;scroll-behavior:smooth}
+body{margin:0;padding:0;background:var(--bg);color:var(--text);font-family:var(--sans);font-feature-settings:"palt";line-height:1.7}
+::-webkit-scrollbar{width:9px;height:9px}
+::-webkit-scrollbar-track{background:var(--bg-deep)}
+::-webkit-scrollbar-thumb{background:var(--border)}
+::-webkit-scrollbar-thumb:hover{background:var(--gold-dim)}
+details summary::-webkit-details-marker{display:none}
+@keyframes dlFloat{0%,100%{transform:translateY(0)}50%{transform:translateY(-14px)}}
+@keyframes dlIn{from{opacity:0;transform:translateY(14px)}to{opacity:1;transform:none}}
+@keyframes dlToast{from{opacity:0;transform:translate(-50%,10px)}to{opacity:1;transform:translate(-50%,0)}}
+@keyframes dlTwinkle{0%,100%{opacity:.25}50%{opacity:.9}}
+</style>
+</helmet>
+
+<div style="background:var(--bg);color:var(--text);min-height:100vh;overflow-x:hidden">
+
+  <!-- ════════ HEADER ════════ -->
+  <header style="position:sticky;top:0;z-index:100;background:{{ headerBg }};backdrop-filter:{{ headerBlur }};border-bottom:1px solid {{ headerBorder }};transition:all .3s ease">
+    <div style="max-width:1440px;margin:0 auto;padding:16px 40px;display:flex;align-items:center;justify-content:space-between;gap:24px">
+      <a href="#top" style="display:flex;align-items:center;gap:13px;text-decoration:none;flex-shrink:0">
+        <svg width="34" height="34" viewBox="0 0 40 40" style="display:block">
+          <defs><linearGradient id="dlabLogo" x1="0" y1="0" x2="40" y2="40" gradientUnits="userSpaceOnUse"><stop stop-color="#e8c96a"></stop><stop offset="1" stop-color="#c9a84c"></stop></linearGradient></defs>
+          <rect x="1" y="1" width="38" height="38" rx="11" fill="#0b1f3a"></rect>
+          <rect x="1" y="1" width="38" height="38" rx="11" fill="none" stroke="#26324a" stroke-width="1"></rect>
+          <path d="M11 13h6c4 0 7 2.8 7 7s-3 7-7 7h-6z" fill="none" stroke="url(#dlabLogo)" stroke-width="2.6" stroke-linejoin="round"></path>
+          <path d="M25 20l6-5m-6 5l6 5" fill="none" stroke="url(#dlabLogo)" stroke-width="2.6" stroke-linecap="round" stroke-linejoin="round"></path>
+        </svg>
+        <div style="display:flex;align-items:baseline;gap:11px">
+          <span style="font-family:var(--serif);font-size:22px;font-weight:700;letter-spacing:.02em;color:var(--text)">D-<span style="color:var(--gold)">lab</span></span>
+          <span style="font-family:var(--mono);font-size:10px;letter-spacing:.12em;color:var(--dim)">EST. 2026</span>
+        </div>
+      </a>
+      <nav style="display:flex;gap:32px;align-items:center">
+        <sc-for list="{{ navLinks }}" as="n" hint-placeholder-count="4">
+          <a href="{{ n.href }}" style="font-family:var(--mono);font-size:12px;letter-spacing:.12em;color:var(--muted);text-transform:uppercase;text-decoration:none" style-hover="color:var(--gold)">{{ n.label }}</a>
+        </sc-for>
+        <a href="#" onClick="{{ login }}" style="font-family:var(--mono);font-size:12px;letter-spacing:.12em;color:var(--muted);text-transform:uppercase;text-decoration:none">Log In</a>
+        <button onClick="{{ apply }}" style="display:inline-flex;align-items:center;gap:9px;padding:12px 22px;font-family:var(--sans);font-weight:700;font-size:12px;letter-spacing:.05em;border:none;background:var(--gold);color:var(--bg-deep);cursor:pointer">{{ applyLabel }} <span style="font-size:13px">→</span></button>
+      </nav>
+    </div>
+  </header>
+
+  <!-- ════════ HERO ════════ -->
+  <section id="top" style="position:relative;min-height:96vh;overflow:hidden;border-bottom:1px solid var(--hair)">
+    <!-- particles -->
+    <sc-for list="{{ particles }}" as="p" hint-placeholder-count="0">
+      <div style="position:absolute;left:{{ p.x }};top:{{ p.y }};width:{{ p.s }};height:{{ p.s }};background:var(--gold);border-radius:50%;opacity:.4;animation:dlTwinkle {{ p.dur }} ease-in-out {{ p.delay }} infinite,dlFloat {{ p.fdur }} ease-in-out infinite;pointer-events:none"></div>
+    </sc-for>
+    <!-- radial glow -->
+    <div style="position:absolute;top:38%;left:50%;transform:translate(-50%,-50%);width:920px;height:920px;max-width:120vw;background:radial-gradient(circle,rgba(201,168,76,.13) 0%,transparent 60%);pointer-events:none"></div>
+
+    <!-- meta strip -->
+    <div style="position:absolute;top:30px;left:0;right:0;display:flex;justify-content:space-between;padding:0 44px;font-family:var(--mono);font-size:11px;color:var(--dim);letter-spacing:.18em;text-transform:uppercase;z-index:2;flex-wrap:wrap;gap:8px">
+      <span>VOL. 01 / FIRST COHORT</span>
+      <span>TOKYO — REMOTE</span>
+      <span>2026 SPRING INTAKE</span>
+    </div>
+
+    <!-- vertical accent -->
+    <div style="position:absolute;top:120px;left:44px;writing-mode:vertical-rl;font-family:var(--serif);font-size:13px;color:var(--dim);letter-spacing:.4em;z-index:2">作 れ る 側 の 人 間 に な る</div>
+
+    <div style="position:relative;z-index:2;max-width:1280px;margin:0 auto;padding:140px 120px 130px">
+      <div style="font-family:var(--mono);font-size:11px;letter-spacing:.18em;text-transform:uppercase;color:var(--gold);margin-bottom:44px">— A NEW SCHOOL FOR THE POST-CODE ERA</div>
+
+      <h1 style="font-family:var(--serif);font-size:clamp(52px,8vw,120px);line-height:1.05;font-weight:700;letter-spacing:-.02em;margin:0">
+        <span style="color:var(--dim);display:block;font-size:.4em;letter-spacing:.1em;margin-bottom:22px;font-weight:400">10年前には、不可能だった。</span>
+        <span>今日から、</span><br>
+        <span style="color:var(--gold);font-style:italic">あなたにも、</span><br>
+        <span>できる。</span>
+      </h1>
+
+      <div style="display:grid;grid-template-columns:1fr 1.2fr;gap:72px;margin-top:56px;align-items:end">
+        <div>
+          <div style="font-family:var(--mono);font-size:11px;color:var(--dim);letter-spacing:.2em;margin-bottom:16px">— NOTE FROM THE FOUNDER</div>
+          <p style="font-family:var(--serif);font-size:18px;line-height:1.9;color:var(--text);font-style:italic;margin:0">ノーコードで本格<span style="color:var(--gold)">競馬予想AI</span>を作った私が、その全てを8週間で教えます。題材は競馬AI。身につくのは、<span style="border-bottom:1px solid var(--gold)">何でも作れる力</span>。</p>
+        </div>
+        <div style="display:flex;flex-direction:column;gap:14px;align-items:flex-start">
+          <button onClick="{{ watch }}" style="display:inline-flex;align-items:center;gap:11px;padding:18px 28px;font-family:var(--sans);font-weight:700;font-size:14px;letter-spacing:.05em;border:none;background:var(--gold);color:var(--bg-deep);cursor:pointer">無料ローンチ動画を見る <span style="font-size:15px">→</span></button>
+          <a href="#pricing" style="display:inline-flex;align-items:center;gap:11px;padding:18px 28px;font-family:var(--sans);font-weight:700;font-size:14px;letter-spacing:.05em;border:1px solid var(--border);color:var(--text);text-decoration:none" style-hover="border-color:var(--gold);color:var(--gold)">料金プランを見る</a>
+          <div style="font-family:var(--mono);font-size:11px;color:var(--dim);margin-top:10px;display:flex;align-items:center;gap:8px">
+            <span style="width:6px;height:6px;background:var(--gold);border-radius:50%;box-shadow:0 0 8px var(--gold);display:inline-block"></span>
+            1期生 残り {{ seatsLeft }} / {{ maxSlots }} 名
+          </div>
+        </div>
+      </div>
+    </div>
+
+    <!-- bottom stat strip -->
+    <div style="position:absolute;bottom:0;left:0;right:0;border-top:1px solid var(--hair);padding:30px 44px;display:grid;grid-template-columns:repeat(4,1fr);background:rgba(6,6,10,.5);backdrop-filter:blur(8px);z-index:2">
+      <sc-for list="{{ heroStats }}" as="s" hint-placeholder-count="4">
+        <div style="border-left:{{ s.bl }};padding-left:{{ s.pl }}">
+          <div style="font-family:var(--serif);font-size:46px;font-weight:700;color:var(--gold);line-height:1;font-feature-settings:'tnum'">{{ s.n }}</div>
+          <div style="font-family:var(--mono);font-size:10px;color:var(--dim);letter-spacing:.18em;text-transform:uppercase;margin-top:12px">{{ s.en }}</div>
+          <div style="font-size:11px;color:var(--muted);margin-top:4px">{{ s.jp }}</div>
+        </div>
+      </sc-for>
+    </div>
+  </section>
+
+  <!-- ════════ 01 ERA CHANGE ════════ -->
+  <section id="about" style="padding:130px 48px;border-bottom:1px solid var(--hair)">
+    <div style="max-width:1280px;margin:0 auto">
+      <div style="margin-bottom:72px">
+        <div style="display:flex;align-items:baseline;gap:24px;margin-bottom:28px">
+          <span style="font-family:var(--serif);font-size:14px;color:var(--gold);font-feature-settings:'tnum'">№ 01</span>
+          <span style="font-family:var(--mono);font-size:11px;letter-spacing:.18em;text-transform:uppercase;color:var(--gold)">THE TURNING POINT</span>
+          <div style="flex:1;height:1px;background:var(--hair)"></div>
+        </div>
+        <h2 style="font-family:var(--serif);font-size:clamp(34px,5vw,60px);line-height:1.1;font-weight:700;letter-spacing:-.01em;max-width:900px;margin:0">個人開発の常識は、<br><span style="color:var(--gold);font-style:italic">静かに、しかし完全に</span>、置き換わった。</h2>
+      </div>
+
+      <div style="display:grid;grid-template-columns:1fr 1px 1fr;align-items:stretch">
+        <div style="padding-right:60px">
+          <div style="font-family:var(--mono);font-size:11px;color:var(--dim);letter-spacing:.2em;margin-bottom:24px">— BEFORE / 2015</div>
+          <h3 style="font-family:var(--serif);font-size:32px;line-height:1.3;font-weight:400;color:var(--dim);margin:0 0 30px">アイデアがあっても、<br>作れる人にしか作れなかった。</h3>
+          <div style="display:flex;flex-direction:column;gap:15px">
+            <sc-for list="{{ beforeList }}" as="b" hint-placeholder-count="4">
+              <div style="display:flex;gap:16px;font-size:15px;color:var(--muted)"><span style="font-family:var(--mono);color:var(--dim)">{{ b.n }}</span><span>{{ b.t }}</span></div>
+            </sc-for>
+          </div>
+        </div>
+        <div style="width:1px;background:var(--hair)"></div>
+        <div style="padding-left:60px">
+          <div style="font-family:var(--mono);font-size:11px;color:var(--gold);letter-spacing:.2em;margin-bottom:24px">— NOW / 2026</div>
+          <h3 style="font-family:var(--serif);font-size:32px;line-height:1.3;font-weight:700;color:var(--text);margin:0 0 30px">アイデアがあれば、<br><span style="color:var(--gold)">誰でも作れる。</span></h3>
+          <div style="display:flex;flex-direction:column;gap:15px">
+            <sc-for list="{{ nowList }}" as="b" hint-placeholder-count="4">
+              <div style="display:flex;gap:16px;font-size:15px;color:var(--text)"><span style="font-family:var(--mono);color:var(--gold)">{{ b.n }}</span><span>{{ b.t }}</span></div>
+            </sc-for>
+          </div>
+        </div>
+      </div>
+
+      <div style="margin-top:100px;padding:60px 0;border-top:1px solid var(--hair);border-bottom:1px solid var(--hair);text-align:center">
+        <span style="font-family:var(--serif);font-size:clamp(26px,3.5vw,46px);line-height:1.4;font-style:italic;color:var(--text)">「気づいた人から、<span style="color:var(--gold)">圧倒的な差</span>がつき始めている。」</span>
+      </div>
+    </div>
+  </section>
+
+  <!-- ════════ 02 ACHIEVEMENT ════════ -->
+  <section style="padding:130px 48px;background:var(--bg-deep);border-bottom:1px solid var(--hair)">
+    <div style="max-width:1280px;margin:0 auto">
+      <div style="margin-bottom:64px">
+        <div style="display:flex;align-items:baseline;gap:24px;margin-bottom:28px">
+          <span style="font-family:var(--serif);font-size:14px;color:var(--gold)">№ 02</span>
+          <span style="font-family:var(--mono);font-size:11px;letter-spacing:.18em;text-transform:uppercase;color:var(--gold)">EVIDENCE / WHAT I BUILT</span>
+          <div style="flex:1;height:1px;background:var(--hair)"></div>
+        </div>
+        <h2 style="font-family:var(--serif);font-size:clamp(34px,5vw,60px);line-height:1.1;font-weight:700;margin:0">講師がノーコードで<br>作ったもの。</h2>
+        <p style="font-size:16px;line-height:1.9;color:var(--muted);margin-top:28px;max-width:640px">全てClaude Codeだけで開発。代表作は本格競馬予想AI。</p>
+      </div>
+
+      <!-- featured -->
+      <div style="border:1px solid var(--border);background:linear-gradient(135deg,rgba(201,168,76,.06),transparent 60%);padding:56px;margin-bottom:44px;display:grid;grid-template-columns:1fr 1.4fr;gap:56px;align-items:center">
+        <div>
+          <div style="font-family:var(--mono);font-size:11px;color:var(--gold);letter-spacing:.2em;margin-bottom:16px">FEATURED — FLAGSHIP WORK</div>
+          <h3 style="font-family:var(--serif);font-size:52px;font-weight:700;line-height:1.1;margin:0 0 22px;letter-spacing:-.01em">本格<br><span style="color:var(--gold)">競馬予想AI</span></h3>
+          <p style="font-size:15px;color:var(--muted);line-height:1.9;margin:0 0 30px">JRA全レースを対象とした予測エンジン。回収率・信頼度スコアの自動算出から有料会員管理まで、全機能をClaude Codeでゼロから構築。リリースから運用継続中。</p>
+          <div style="display:grid;grid-template-columns:repeat(3,1fr)">
+            <sc-for list="{{ flagStats }}" as="f" hint-placeholder-count="3">
+              <div style="border-left:{{ f.bl }};padding-left:{{ f.pl }}">
+                <div style="font-family:var(--serif);font-size:23px;color:var(--gold);font-weight:700">{{ f.v }}</div>
+                <div style="font-family:var(--mono);font-size:10px;color:var(--dim);letter-spacing:.15em;margin-top:4px">{{ f.l }}</div>
+              </div>
+            </sc-for>
+          </div>
+        </div>
+        <div style="aspect-ratio:4/3;border:1px solid var(--border);background:linear-gradient(135deg,#12121e,#1a1a2e);position:relative;overflow:hidden">
+          <div style="position:absolute;inset:0;padding:30px;display:flex;flex-direction:column;justify-content:space-between">
+            <div style="font-family:var(--mono);font-size:10px;color:var(--dim);letter-spacing:.2em">[ FLAGSHIP / 競馬予想AI ]</div>
+            <svg viewBox="0 0 400 180" style="width:100%;height:auto">
+              <defs><linearGradient id="dlChart" x1="0" y1="0" x2="0" y2="1"><stop offset="0" stop-color="#c9a84c" stop-opacity=".4"></stop><stop offset="1" stop-color="#c9a84c" stop-opacity="0"></stop></linearGradient></defs>
+              <path d="M0,140 L40,120 L80,130 L120,90 L160,100 L200,60 L240,75 L280,40 L320,55 L360,20 L400,30 L400,180 L0,180 Z" fill="url(#dlChart)"></path>
+              <path d="M0,140 L40,120 L80,130 L120,90 L160,100 L200,60 L240,75 L280,40 L320,55 L360,20 L400,30" stroke="#c9a84c" stroke-width="1.5" fill="none"></path>
+              <circle cx="40" cy="120" r="3" fill="#e8c96a"></circle><circle cx="120" cy="90" r="3" fill="#e8c96a"></circle><circle cx="200" cy="60" r="3" fill="#e8c96a"></circle><circle cx="280" cy="40" r="3" fill="#e8c96a"></circle><circle cx="360" cy="20" r="3" fill="#e8c96a"></circle>
+            </svg>
+            <div style="display:flex;justify-content:space-between;font-family:var(--mono);font-size:10px;color:var(--dim);letter-spacing:.1em"><span>JRA / WIN5</span><span>RECOVERY 124%</span><span>LIVE</span></div>
+          </div>
+        </div>
+      </div>
+
+      <div style="font-family:var(--mono);font-size:11px;color:var(--dim);letter-spacing:.2em;margin-bottom:22px">OTHER WORKS / 06</div>
+      <div style="display:grid;grid-template-columns:repeat(3,1fr);gap:1px;background:var(--hair)">
+        <sc-for list="{{ otherWorks }}" as="o" hint-placeholder-count="6">
+          <div style="background:var(--bg-deep);padding:30px" style-hover="background:var(--surface)">
+            <div style="display:flex;justify-content:space-between;margin-bottom:22px">
+              <span style="font-family:var(--mono);font-size:10px;color:var(--gold);letter-spacing:.2em">{{ o.tag }}</span>
+              <span style="font-family:var(--serif);font-size:12px;color:var(--dim)">{{ o.no }}</span>
+            </div>
+            <h4 style="font-family:var(--serif);font-size:22px;font-weight:700;margin:0 0 8px">{{ o.title }}</h4>
+            <p style="font-size:13px;color:var(--muted);margin:0">{{ o.desc }}</p>
+          </div>
+        </sc-for>
+      </div>
+    </div>
+  </section>
+
+  <!-- ════════ 03 ABOUT ════════ -->
+  <section style="padding:130px 48px;border-bottom:1px solid var(--hair)">
+    <div style="max-width:1280px;margin:0 auto">
+      <div style="margin-bottom:72px">
+        <div style="display:flex;align-items:baseline;gap:24px;margin-bottom:28px">
+          <span style="font-family:var(--serif);font-size:14px;color:var(--gold)">№ 03</span>
+          <span style="font-family:var(--mono);font-size:11px;letter-spacing:.18em;text-transform:uppercase;color:var(--gold)">THE LAB / WHAT WE ARE</span>
+          <div style="flex:1;height:1px;background:var(--hair)"></div>
+        </div>
+        <h2 style="font-family:var(--serif);font-size:clamp(34px,5vw,60px);line-height:1.1;font-weight:700;margin:0">D-labは、<br><span style="color:var(--gold);font-style:italic">作れる人間</span>を増やす場所。</h2>
+        <p style="font-size:16px;line-height:1.9;color:var(--muted);margin-top:28px;max-width:640px">ただ学ぶだけの場所ではない。仲間と作り、依頼し合い、稼ぐコミュニティ。3つの柱で、あなたの「作れる力」を育てる。</p>
+      </div>
+      <div style="display:grid;grid-template-columns:repeat(3,1fr);gap:1px;background:var(--hair);border:1px solid var(--hair)">
+        <sc-for list="{{ pillars }}" as="p" hint-placeholder-count="3">
+          <div style="background:var(--bg);padding:52px;min-height:340px">
+            <div style="font-family:var(--mono);font-size:11px;color:var(--dim);letter-spacing:.2em;margin-bottom:30px">{{ p.n }}</div>
+            <div style="display:flex;align-items:baseline;gap:16px;margin-bottom:22px">
+              <h3 style="font-family:var(--serif);font-size:74px;font-weight:700;color:var(--gold);line-height:1;letter-spacing:-.02em;margin:0">{{ p.jp }}</h3>
+              <span style="font-family:var(--mono);font-size:14px;color:var(--dim);letter-spacing:.15em;text-transform:uppercase">{{ p.en }}</span>
+            </div>
+            <p style="font-size:15px;color:var(--muted);line-height:1.9;margin:0">{{ p.body }}</p>
+          </div>
+        </sc-for>
+      </div>
+    </div>
+  </section>
+
+  <!-- ════════ 04 CURRICULUM ════════ -->
+  <section id="curriculum" style="padding:130px 48px;background:var(--bg-deep);border-bottom:1px solid var(--hair)">
+    <div style="max-width:1280px;margin:0 auto">
+      <div style="margin-bottom:64px">
+        <div style="display:flex;align-items:baseline;gap:24px;margin-bottom:28px">
+          <span style="font-family:var(--serif);font-size:14px;color:var(--gold)">№ 04</span>
+          <span style="font-family:var(--mono);font-size:11px;letter-spacing:.18em;text-transform:uppercase;color:var(--gold)">CURRICULUM / 8 WEEKS</span>
+          <div style="flex:1;height:1px;background:var(--hair)"></div>
+        </div>
+        <h2 style="font-family:var(--serif);font-size:clamp(34px,5vw,60px);line-height:1.1;font-weight:700;margin:0">8週間で、<br>あなたは<span style="color:var(--gold);font-style:italic">変わる。</span></h2>
+        <p style="font-size:16px;line-height:1.9;color:var(--muted);margin-top:28px;max-width:640px">毎週、新しいプロダクトを完成させる。手は動かす。コードは書かない。</p>
+      </div>
+      <div style="border-top:1px solid var(--hair)">
+        <sc-for list="{{ weeks }}" as="w" hint-placeholder-count="8">
+          <details style="border-bottom:1px solid var(--hair)">
+            <summary style="display:grid;grid-template-columns:110px 1fr auto;align-items:center;gap:28px;padding:28px 0;cursor:pointer;list-style:none">
+              <div style="font-family:var(--serif);font-size:52px;font-weight:700;color:var(--gold);line-height:1;font-feature-settings:'tnum'">{{ w.w }}</div>
+              <h3 style="font-family:var(--serif);font-size:26px;font-weight:400;line-height:1.3;margin:0">{{ w.t }}</h3>
+              <span style="font-family:var(--mono);font-size:11px;color:var(--dim);letter-spacing:.2em">+ READ</span>
+            </summary>
+            <div style="padding:0 0 36px 138px;max-width:800px">
+              <p style="font-size:16px;color:var(--muted);line-height:1.9;margin:0">{{ w.d }}</p>
+            </div>
+          </details>
+        </sc-for>
+      </div>
+    </div>
+  </section>
+
+  <!-- ════════ 05 PRICING ════════ -->
+  <section id="pricing" style="padding:130px 48px;border-bottom:1px solid var(--hair)">
+    <div style="max-width:1280px;margin:0 auto">
+      <div style="margin-bottom:72px">
+        <div style="display:flex;align-items:baseline;gap:24px;margin-bottom:28px">
+          <span style="font-family:var(--serif);font-size:14px;color:var(--gold)">№ 05</span>
+          <span style="font-family:var(--mono);font-size:11px;letter-spacing:.18em;text-transform:uppercase;color:var(--gold)">ENROLMENT / 3 PLANS</span>
+          <div style="flex:1;height:1px;background:var(--hair)"></div>
+        </div>
+        <h2 style="font-family:var(--serif);font-size:clamp(34px,5vw,60px);line-height:1.1;font-weight:700;margin:0">あなたのペースで、<br><span style="color:var(--gold);font-style:italic">選べる。</span></h2>
+        <p style="font-size:16px;line-height:1.9;color:var(--muted);margin-top:28px;max-width:640px">{{ pricingIntro }}</p>
+      </div>
+      <div style="display:grid;grid-template-columns:repeat(3,1fr);gap:1px;background:var(--hair);border:1px solid var(--hair)">
+        <sc-for list="{{ plans }}" as="p" hint-placeholder-count="3">
+          <div style="background:{{ p.cardBg }};padding:46px;position:relative;display:flex;flex-direction:column">
+            <div style="position:absolute;top:0;left:0;right:0;height:2px;background:{{ p.topBar }}"></div>
+            <div style="display:flex;justify-content:space-between;align-items:baseline;margin-bottom:24px">
+              <span style="font-family:var(--mono);font-size:10px;color:{{ p.tagColor }};letter-spacing:.2em">{{ p.tag }}</span>
+              <span style="font-family:var(--mono);font-size:10px;color:var(--dim);letter-spacing:.15em">{{ p.idx }} / 03</span>
+            </div>
+            <h3 style="font-family:var(--serif);font-size:27px;font-weight:700;margin:0 0 8px">{{ p.name }}</h3>
+            <p style="font-size:13px;color:var(--muted);margin:0 0 30px;line-height:1.7">{{ p.body }}</p>
+            <div style="margin-bottom:30px;display:flex;align-items:baseline;gap:8px">
+              <span style="font-family:var(--serif);font-size:14px;color:var(--muted)">¥</span>
+              <span style="font-family:var(--serif);font-size:54px;font-weight:700;color:{{ p.priceColor }};line-height:1;letter-spacing:-.02em;font-feature-settings:'tnum'">{{ p.price }}</span>
+              <span style="font-family:var(--mono);font-size:11px;color:var(--dim);letter-spacing:.15em;margin-left:8px">{{ p.sub }}</span>
+            </div>
+            <div style="display:flex;flex-direction:column;gap:12px;margin-bottom:38px;flex:1">
+              <sc-for list="{{ p.features }}" as="f" hint-placeholder-count="4">
+                <div style="display:flex;gap:12px;font-size:14px;color:var(--muted);align-items:flex-start"><span style="color:var(--gold);font-family:var(--mono);font-size:11px;margin-top:4px">—</span><span>{{ f }}</span></div>
+              </sc-for>
+            </div>
+            <button onClick="{{ p.apply }}" style="width:100%;display:inline-flex;align-items:center;justify-content:center;gap:10px;padding:17px;font-family:var(--sans);font-weight:700;font-size:14px;letter-spacing:.05em;cursor:pointer;border:{{ p.btnBorder }};background:{{ p.btnBg }};color:{{ p.btnColor }}">{{ p.cta }} <span style="font-size:15px">→</span></button>
+          </div>
+        </sc-for>
+      </div>
+    </div>
+  </section>
+
+  <!-- ════════ 06 FAQ ════════ -->
+  <section id="faq" style="padding:130px 48px;border-bottom:1px solid var(--hair)">
+    <div style="max-width:1280px;margin:0 auto">
+      <div style="margin-bottom:64px">
+        <div style="display:flex;align-items:baseline;gap:24px;margin-bottom:28px">
+          <span style="font-family:var(--serif);font-size:14px;color:var(--gold)">№ 06</span>
+          <span style="font-family:var(--mono);font-size:11px;letter-spacing:.18em;text-transform:uppercase;color:var(--gold)">QUESTIONS</span>
+          <div style="flex:1;height:1px;background:var(--hair)"></div>
+        </div>
+        <h2 style="font-family:var(--serif);font-size:clamp(34px,5vw,60px);line-height:1.1;font-weight:700;margin:0">気になることに、<br><span style="color:var(--gold);font-style:italic">ひとつずつ。</span></h2>
+      </div>
+      <div style="border-top:1px solid var(--hair)">
+        <sc-for list="{{ faqs }}" as="q" hint-placeholder-count="5">
+          <details style="border-bottom:1px solid var(--hair)">
+            <summary style="display:grid;grid-template-columns:60px 1fr auto;gap:24px;align-items:center;padding:26px 0;cursor:pointer;list-style:none">
+              <span style="font-family:var(--mono);font-size:12px;color:var(--dim);letter-spacing:.15em">{{ q.no }}</span>
+              <h3 style="font-family:var(--serif);font-size:20px;font-weight:400;margin:0">{{ q.q }}</h3>
+              <span style="font-family:var(--mono);font-size:15px;color:var(--gold)">+</span>
+            </summary>
+            <div style="padding:0 0 30px 84px;max-width:800px"><p style="font-size:15px;color:var(--muted);line-height:1.9;margin:0">{{ q.a }}</p></div>
+          </details>
+        </sc-for>
+      </div>
+    </div>
+  </section>
+
+  <!-- ════════ CTA ════════ -->
+  <section style="padding:140px 48px;position:relative;overflow:hidden;border-bottom:1px solid var(--hair)">
+    <div style="position:absolute;top:50%;left:50%;transform:translate(-50%,-50%);width:800px;height:800px;max-width:120vw;background:radial-gradient(circle,rgba(201,168,76,.11) 0%,transparent 60%);pointer-events:none"></div>
+    <div style="max-width:900px;margin:0 auto;text-align:center;position:relative">
+      <div style="font-family:var(--mono);font-size:11px;letter-spacing:.18em;text-transform:uppercase;color:var(--gold);margin-bottom:32px">— LAST CALL / COHORT 01</div>
+      <h2 style="font-family:var(--serif);font-size:clamp(46px,7vw,92px);line-height:1.05;font-weight:700;letter-spacing:-.02em;margin:0 0 38px">さあ、<br><span style="color:var(--gold);font-style:italic">作れる側の人間</span>に<br>なろう。</h2>
+      <p style="font-size:16px;color:var(--muted);line-height:1.9;margin:0 auto 52px;max-width:540px">{{ ctaSub }}</p>
+      <div style="display:flex;gap:16px;justify-content:center;flex-wrap:wrap">
+        <button onClick="{{ apply }}" style="display:inline-flex;align-items:center;gap:11px;padding:21px 40px;font-family:var(--sans);font-weight:700;font-size:15px;letter-spacing:.05em;border:none;background:var(--gold);color:var(--bg-deep);cursor:pointer">{{ ctaApplyLabel }} <span style="font-size:16px">→</span></button>
+        <button onClick="{{ watch }}" style="display:inline-flex;align-items:center;gap:11px;padding:21px 40px;font-family:var(--sans);font-weight:700;font-size:15px;letter-spacing:.05em;border:1px solid var(--border);background:none;color:var(--text);cursor:pointer" style-hover="border-color:var(--gold);color:var(--gold)">無料動画を見る</button>
+      </div>
+    </div>
+  </section>
+
+  <!-- ════════ FOOTER ════════ -->
+  <footer style="padding:80px 48px 46px;background:var(--bg-deep)">
+    <div style="max-width:1280px;margin:0 auto">
+      <div style="display:grid;grid-template-columns:2fr 1fr 1fr 1fr;gap:56px;margin-bottom:60px">
+        <div>
+          <div style="display:flex;align-items:center;gap:12px;margin-bottom:16px">
+            <svg width="28" height="28" viewBox="0 0 40 40"><rect x="1" y="1" width="38" height="38" rx="11" fill="#0b1f3a"></rect><path d="M11 13h6c4 0 7 2.8 7 7s-3 7-7 7h-6z" fill="none" stroke="url(#dlabLogo)" stroke-width="2.6" stroke-linejoin="round"></path><path d="M25 20l6-5m-6 5l6 5" fill="none" stroke="url(#dlabLogo)" stroke-width="2.6" stroke-linecap="round" stroke-linejoin="round"></path></svg>
+            <span style="font-family:var(--serif);font-size:22px;font-weight:700">D-<span style="color:var(--gold)">lab</span></span>
+          </div>
+          <p style="font-size:13px;color:var(--muted);line-height:1.8;max-width:320px;margin:0">ノーコードで本格AIプロダクトを作る、個人開発者養成コミュニティ。ノーコードで本格競馬予想AIを作った実績者が教える。</p>
+        </div>
+        <sc-for list="{{ footerCols }}" as="c" hint-placeholder-count="3">
+          <div>
+            <div style="font-family:var(--mono);font-size:11px;color:var(--dim);letter-spacing:.2em;margin-bottom:16px">{{ c.title }}</div>
+            <div style="display:flex;flex-direction:column;gap:10px">
+              <sc-for list="{{ c.links }}" as="l" hint-placeholder-count="3">
+                <a href="#" onClick="{{ l.go }}" style="font-size:13px;color:var(--muted);text-decoration:none" style-hover="color:var(--gold)">{{ l.label }}</a>
+              </sc-for>
+            </div>
+          </div>
+        </sc-for>
+      </div>
+      <div style="border-top:1px solid var(--hair);padding-top:30px;display:flex;justify-content:space-between;flex-wrap:wrap;gap:8px;font-family:var(--mono);font-size:11px;color:var(--dim)">
+        <span>© 2026 D-LAB / ACADEMY · D-market・D-swipe・Dlogic ファミリー</span>
+        <span>DESIGNED IN TOKYO</span>
+      </div>
+    </div>
+  </footer>
+
+  <!-- toast -->
+  <sc-if value="{{ toast }}" hint-placeholder-val="">
+    <div style="position:fixed;left:50%;bottom:32px;transform:translateX(-50%);z-index:200;background:var(--gold);color:var(--bg-deep);padding:13px 26px;font-family:var(--sans);font-size:14px;font-weight:700;letter-spacing:.03em;box-shadow:0 14px 40px rgba(0,0,0,.5);animation:dlToast .25s ease">{{ toast }}</div>
+  </sc-if>
+</div>
+</x-dc>
+<script type="text/x-dc" data-dc-script data-props="{&quot;$preview&quot;:{&quot;width&quot;:1280,&quot;height&quot;:900},&quot;enrollmentOpen&quot;:{&quot;editor&quot;:&quot;boolean&quot;,&quot;default&quot;:false,&quot;tsType&quot;:&quot;boolean&quot;},&quot;remainingSlots&quot;:{&quot;editor&quot;:&quot;int&quot;,&quot;default&quot;:10,&quot;min&quot;:0,&quot;max&quot;:20,&quot;tsType&quot;:&quot;number&quot;},&quot;maxSlots&quot;:{&quot;editor&quot;:&quot;int&quot;,&quot;default&quot;:20,&quot;min&quot;:1,&quot;max&quot;:100,&quot;tsType&quot;:&quot;number&quot;}}">
+class Component extends DCLogic {
+  constructor(props){
+    super(props);
+    this.state = { scrolled:false, toast:null };
+  }
+  componentDidMount(){
+    this._onScroll = ()=>{ const s = window.scrollY>20; if(s!==this.state.scrolled) this.setState({scrolled:s}); };
+    window.addEventListener('scroll', this._onScroll, {passive:true});
+  }
+  componentWillUnmount(){ window.removeEventListener('scroll', this._onScroll); }
+  flash(msg){ this.setState({toast:msg}); clearTimeout(this._t); this._t=setTimeout(()=>this.setState({toast:null}),2600); }
+
+  renderVals(){
+    const open = this.props.enrollmentOpen ?? false;
+    const seats = this.props.remainingSlots ?? 10;
+    const maxSlots = this.props.maxSlots ?? 20;
+    const applyLabel = open ? 'APPLY' : 'COMING SOON';
+    const flash = (m)=>this.flash(m);
+    const apply = ()=> open ? this.flash('申込フォームへ / Apply') : this.flash('準備中です。事前登録を受付中 / Coming soon');
+    const watch = ()=> this.flash('無料ローンチ動画へ / Launch video');
+    const login = (e)=>{ if(e&&e.preventDefault)e.preventDefault(); this.flash('ログインへ / Log in'); };
+
+    return {
+      headerBg: this.state.scrolled ? 'rgba(10,10,15,.85)' : 'transparent',
+      headerBlur: this.state.scrolled ? 'blur(12px)' : 'none',
+      headerBorder: this.state.scrolled ? 'var(--hair)' : 'transparent',
+      navLinks:[['About','#about'],['Curriculum','#curriculum'],['Plans','#pricing'],['FAQ','#faq']].map(([label,href])=>({label,href})),
+      apply, watch, login, flash,
+      applyLabel, ctaApplyLabel: open?'申し込む':'事前登録する',
+      seatsLeft:seats, maxSlots,
+
+      particles: Array.from({length:22}).map((_,i)=>{ const r=(n)=>{const x=Math.sin(i*97.13+n)*1e4; return x-Math.floor(x);};
+        return { x:(r(1)*100).toFixed(1)+'%', y:(r(2)*88).toFixed(1)+'%', s:(1+r(3)*2.4).toFixed(1)+'px',
+          dur:(2.5+r(4)*3).toFixed(2)+'s', delay:(r(5)*4).toFixed(2)+'s', fdur:(6+r(6)*8).toFixed(2)+'s' }; }),
+
+      heroStats:[['10+','Products Released','個人開発したプロダクト'],['0','Lines of Code Written','書いたコードの行数'],['8','Weeks to Build','あなたが作れるまで'],['¥0','Engineer Salary','エンジニアの雇用費']].map(([n,en,jp],i)=>({n,en,jp,bl:i?'1px solid var(--hair)':'none',pl:i?'32px':'0'})),
+
+      beforeList:['プログラミング言語の習得に1〜2年','エンジニアを雇うと月100万円〜','デザイナー、インフラ、別途必要','完成まで半年〜1年が当たり前'].map((t,i)=>({t,n:'0'+(i+1)})),
+      nowList:['日本語でAIに話しかけるだけ','初期費用 月¥3,000のAIサブスクのみ','デザインも実装もAIが代行','最短で1日、長くて2週間で完成'].map((t,i)=>({t,n:'0'+(i+1)})),
+
+      flagStats:[['全機能','ノーコード'],['100%','Claude Code'],['運用中','継続課金']].map(([v,l],i)=>({v,l,bl:i?'1px solid var(--hair)':'none',pl:i?'16px':'0'})),
+      otherWorks:[['AI / GAME','ガチャ型RPG','9日間で完成・運用中'],['AI / SAAS','AIカウンセラー','月額制Webアプリ'],['DATA','データ分析ツール','株・為替の自動分析'],['CONTENT','コンテンツ自動生成','YouTube台本AI'],['LP / SAAS','スワイプ型LP生成','ノーコードLP制作SaaS'],['COMMERCE','EC買取査定システム','リアル店舗連動']].map(([tag,title,desc],i)=>({tag,title,desc,no:'№ 0'+(i+1)})),
+
+      pillars:[['03 / 01','学ぶ','Learn','8週間のカリキュラムで、AI個人開発の全てを体系的に学ぶ。コードは書かない。日本語で話しかけるだけ。'],['03 / 02','作る','Build','受講中に最低3つのプロダクトを作る。LP、Webアプリ、SaaS。仲間とレビューし合い、磨き上げる。'],['03 / 03','稼ぐ','Earn','受発注ボードで仲間と仕事を回し合う。卒業後はClaude Code開発者として独立する道も。']].map(([n,jp,en,body])=>({n,jp,en,body})),
+
+      weeks:[['01','はじめてのClaude Code','入れて、話しかけて、感動する。AIへの正しい指示の出し方を体に染み込ませる。'],['02','日本語だけでWebページを作る','コードを一切書かず、最初のWebサイトを公開する。'],['03','デザインをAIに注文する','プロの見た目に仕上げるための語彙とプロンプト。'],['04','機能を言葉で追加する','ログイン、データ保存、フォーム。Supabase連携を日本語で。'],['05','AIの力をアプリに入れる','チャット、要約、分析。ClaudeをAPIから呼び出す。'],['06','完成させて世界に公開する','デプロイ。URLが生まれる瞬間、あなたは「作った人」になる。'],['07','お金を受け取れるようにする','Stripe決済の導入。サブスク・買い切り両方の実装。'],['08','お客さんを集めて稼ぐ','SNS告知、SEO、最初の売上を立てる戦術一式。']].map(([w,t,d])=>({w,t,d})),
+
+      pricingIntro: open ? '全プラン一括払い、追加料金なし。Stripeでの安全な決済。' : '現在お申し込みは準備中です。公開通知をご希望の方はメールアドレスをご登録ください。',
+      plans:[
+        {id:'video',name:'動画のみ',tag:'ARCHIVE',price:'49,800',sub:'ICHIKATSU',body:'全講義動画アーカイブ閲覧。自分のペースで学ぶ。',features:['全8週分の講義動画','無期限視聴','資料ダウンロード'],featured:false},
+        {id:'mail',name:'動画 + メール',tag:'RECOMMENDED',price:'98,000',sub:'ICHIKATSU',body:'動画 + 個別メール相談。質問は無制限。',features:['全8週分の講義動画','無期限視聴','資料ダウンロード','個別メール相談（無制限）','質問への優先回答'],featured:true},
+        {id:'zoom',name:'Zoom型（1期生）',tag:'COHORT 01',price:'150,000',sub:'ICHIKATSU',body:'8週間×週1回2時間のライブZoom講座（録画あり）。',features:['全8週分の講義動画','週1回のライブZoom講座','資料ダウンロード','個別メール相談（無制限）','Zoomでの直接質問','卒業後6ヶ月コミュニティ無料'],featured:false}
+      ].map((p,i)=>({
+        name:p.name, tag:p.tag, price:p.price, sub:p.sub, body:p.body, features:p.features, idx:'0'+(i+1),
+        cardBg: p.featured ? 'linear-gradient(180deg,rgba(201,168,76,.08),var(--bg))' : 'var(--bg)',
+        topBar: p.featured ? 'var(--gold)' : 'transparent',
+        tagColor: p.featured ? 'var(--gold)' : 'var(--dim)',
+        priceColor: p.featured ? 'var(--gold)' : 'var(--text)',
+        cta: open ? '申し込む' : '近日公開・事前登録',
+        btnBg: p.featured ? 'var(--gold)' : 'transparent',
+        btnColor: p.featured ? 'var(--bg-deep)' : 'var(--text)',
+        btnBorder: p.featured ? 'none' : '1px solid var(--border)',
+        apply
+      })),
+
+      faqs:[['プログラミング経験がなくても大丈夫ですか？','大丈夫です。本講座はプログラミング未経験者を前提に設計されています。コードを書く時間より、AIに正しく指示を出す練習に重点を置きます。'],['競馬の知識がなくても受講できますか？','問題ありません。題材として競馬AIに触れますが、本質は「何でも作れる力」の習得です。8週間で作るプロダクトはあなた自身のアイデアで構いません。'],['動画はいつまで視聴できますか？','無期限です。一度購入すれば、講座終了後もずっと視聴できます。'],['Zoom型は録画を後から見られますか？','はい。全Zoomセッションは録画され、24時間以内にアーカイブとしてアップされます。当日参加できなくても問題ありません。'],['返金保証はありますか？','受講開始から14日以内、第1週の動画視聴前であれば全額返金いたします。']].map(([q,a],i)=>({q,a,no:'Q.0'+(i+1)})),
+
+      ctaSub: open ? ('1期生 残り '+seats+'名。締切：2026年5月31日。') : '1期生の募集はまもなく開始します。公開通知をご希望の方はメールアドレスをご登録ください。',
+
+      footerCols:[
+        {title:'LEARN',links:[['カリキュラム'],['ローンチ動画'],['料金']]},
+        {title:'MEMBERS',links:[['ダッシュボード'],['ログイン'],['会員登録']]},
+        {title:'LEGAL',links:[['特定商取引法'],['プライバシー']]}
+      ].map(c=>({title:c.title, links:c.links.map(([label])=>({label, go:(e)=>{ if(e&&e.preventDefault)e.preventDefault(); flash(label+' / 準備中'); }}))})),
+
+      toast: this.state.toast
+    };
+  }
+}
+</script>
+</body>
+</html>

@@ -1,0 +1,366 @@
+<!DOCTYPE html>
+<html>
+<head>
+<meta charset="utf-8">
+<meta name="viewport" content="width=device-width, initial-scale=1">
+<script src="./support.js"></script>
+</head>
+<body>
+<x-dc>
+<helmet>
+<link rel="preconnect" href="https://fonts.googleapis.com">
+<link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+<link href="https://fonts.googleapis.com/css2?family=Noto+Sans+JP:wght@400;500;700;900&family=Roboto+Mono:wght@500;700&display=swap" rel="stylesheet">
+<style>
+:root{
+  --bg:#050608; --bg2:#0B0E11; --surface:#181A20; --surface2:#1E2127; --surface3:#252830;
+  --gold:#F0B90B; --gold2:#FCD535; --gold-soft:rgba(240,185,11,.14);
+  --text:#EAECEF; --sub:#B7BDC6; --dim:#848E9C; --faint:#5E6673;
+  --up:#0ECB81; --down:#F6465D; --line:#2B3139;
+  --sans:'Noto Sans JP',system-ui,sans-serif; --mono:'Roboto Mono',ui-monospace,monospace;
+}
+*{box-sizing:border-box}
+html,body{margin:0;padding:0}
+body{background:var(--bg);font-family:var(--sans);-webkit-font-smoothing:antialiased;color:var(--text)}
+.mono{font-family:var(--mono);font-variant-numeric:tabular-nums}
+.scrollx::-webkit-scrollbar{height:0;display:none}.scrollx{scrollbar-width:none}
+@keyframes dgIn{from{opacity:0;transform:translateY(6px)}to{opacity:1;transform:none}}
+@keyframes dgToast{from{opacity:0;transform:translate(-50%,8px)}to{opacity:1;transform:translate(-50%,0)}}
+@keyframes dgBar{from{width:0}}
+</style>
+</helmet>
+
+<div style="min-height:100vh;background:radial-gradient(120% 60% at 50% 0%,#0d1014,var(--bg) 70%);display:flex;justify-content:center">
+  <div style="width:100%;max-width:620px;min-height:100vh;background:var(--bg);position:relative">
+
+    <!-- ░░ HEADER ░░ -->
+    <header style="position:sticky;top:0;z-index:40;background:rgba(5,6,8,.88);backdrop-filter:blur(12px);border-bottom:1px solid var(--line)">
+      <div style="display:flex;align-items:center;justify-content:space-between;padding:12px 16px">
+        <div style="display:flex;align-items:center;gap:10px">
+          <svg width="30" height="30" viewBox="0 0 40 40" style="display:block">
+            <defs><linearGradient id="dgLogo" x1="0" y1="0" x2="40" y2="40" gradientUnits="userSpaceOnUse"><stop stop-color="#FCD535"></stop><stop offset="1" stop-color="#F0B90B"></stop></linearGradient></defs>
+            <rect x="1" y="1" width="38" height="38" rx="11" fill="#0b1f3a"></rect>
+            <path d="M11 13h6c4 0 7 2.8 7 7s-3 7-7 7h-6z" fill="none" stroke="url(#dgLogo)" stroke-width="2.7" stroke-linejoin="round"></path>
+            <path d="M25 20l6-5m-6 5l6 5" fill="none" stroke="url(#dgLogo)" stroke-width="2.7" stroke-linecap="round" stroke-linejoin="round"></path>
+          </svg>
+          <div style="line-height:1.1">
+            <div style="font-weight:900;font-size:16px;letter-spacing:-.01em">D<span style="color:var(--gold)">logic</span></div>
+            <div style="font-size:9px;color:var(--dim);letter-spacing:.18em">REFERENCE WIN-RATE</div>
+          </div>
+        </div>
+        <div style="display:flex;align-items:center;gap:7px">
+          <span style="font-size:10px;font-weight:700;color:var(--dim);border:1px solid var(--line);border-radius:6px;padding:4px 8px">LLM不使用</span>
+          <span style="font-size:10px;font-weight:700;color:var(--gold);background:var(--gold-soft);border:1px solid rgba(240,185,11,.3);border-radius:6px;padding:4px 8px">会員</span>
+        </div>
+      </div>
+    </header>
+
+    <main style="padding:18px 16px 60px">
+      <!-- title -->
+      <div style="margin-bottom:14px">
+        <h1 style="margin:0;font-size:24px;font-weight:900;letter-spacing:-.01em">参考勝率</h1>
+        <p style="margin:6px 0 0;font-size:13px;color:var(--sub);line-height:1.6">市場(オッズ)と<span style="color:var(--text);font-weight:700">同等精度</span>でAIが独立推定した勝率。<br>当てるためではなく、<span style="color:var(--gold);font-weight:700">読みやすいセカンドオピニオン</span>として。</p>
+      </div>
+
+      <!-- date tabs -->
+      <div class="scrollx" style="display:flex;gap:8px;overflow-x:auto;margin-bottom:14px">
+        <sc-for list="{{ dateTabs }}" as="d" hint-placeholder-count="2">
+          <button onClick="{{ d.pick }}" style="white-space:nowrap;cursor:pointer;font-family:inherit;font-size:13px;font-weight:700;padding:8px 16px;border-radius:999px;border:1px solid {{ d.border }};background:{{ d.bg }};color:{{ d.color }}">{{ d.label }}</button>
+        </sc-for>
+      </div>
+
+      <!-- summary + toggle -->
+      <div style="display:flex;flex-wrap:wrap;align-items:center;justify-content:space-between;gap:8px;background:var(--surface);border:1px solid var(--line);border-radius:12px;padding:12px 14px;margin-bottom:14px">
+        <div style="font-size:13px;color:var(--sub)">全{{ raceCount }}R ・ <span style="color:var(--up);font-weight:700">オッズ確定 {{ confirmedCount }}</span> / <span style="color:var(--gold);font-weight:700">オッズ待ち {{ pendingCount }}</span></div>
+        <button onClick="{{ toggleConfirmed }}" style="cursor:pointer;font-family:inherit;font-size:12px;font-weight:700;padding:7px 13px;border-radius:8px;border:1px solid {{ confBorder }};background:{{ confBg }};color:{{ confColor }}">{{ confLabel }}</button>
+      </div>
+
+      <!-- legend -->
+      <div style="display:flex;flex-wrap:wrap;gap:14px;background:var(--bg2);border:1px solid var(--line);border-radius:12px;padding:11px 14px;margin-bottom:18px;font-size:11px;color:var(--dim)">
+        <div style="display:flex;align-items:center;gap:6px"><span style="width:22px;height:7px;border-radius:3px;background:linear-gradient(90deg,var(--gold),var(--gold2))"></span>AI参考勝率</div>
+        <div style="display:flex;align-items:center;gap:6px"><span style="width:22px;height:7px;border-radius:3px;background:#3a4250"></span>市場の評価</div>
+        <div style="display:flex;align-items:center;gap:6px"><span style="font-weight:700;color:var(--gold)">妙味候補</span>= AI＞市場(人気薄)</div>
+      </div>
+
+      <!-- sections -->
+      <div style="display:flex;flex-direction:column;gap:26px">
+        <sc-for list="{{ sections }}" as="s" hint-placeholder-count="2">
+          <div>
+            <div style="display:flex;align-items:baseline;gap:10px;border-bottom:1px solid var(--line);padding-bottom:7px;margin-bottom:14px">
+              <h2 style="margin:0;font-size:16px;font-weight:900">{{ s.label }}</h2>
+              <span style="font-size:11px;color:var(--dim)">{{ s.note }}</span>
+            </div>
+            <sc-for list="{{ s.venues }}" as="v" hint-placeholder-count="2">
+              <section style="margin-bottom:16px">
+                <h3 style="margin:0 0 8px;font-size:13px;font-weight:700;color:var(--gold);display:flex;align-items:center;gap:7px"><span style="width:5px;height:5px;border-radius:50%;background:var(--gold)"></span>{{ v.name }} <span style="color:var(--dim);font-weight:500;font-size:11px">{{ v.count }}R</span></h3>
+                <div style="display:flex;flex-direction:column;gap:8px">
+                  <sc-for list="{{ v.races }}" as="r" hint-placeholder-count="3">
+                    <div style="overflow:hidden;border-radius:12px;border:1px solid {{ r.cardBorder }};background:var(--surface)">
+                      <div onClick="{{ r.toggle }}" style="display:flex;align-items:center;justify-content:space-between;padding:13px 14px;cursor:pointer">
+                        <div style="display:flex;align-items:center;gap:10px;min-width:0">
+                          <span style="display:inline-flex;align-items:center;justify-content:center;min-width:38px;height:30px;padding:0 7px;border-radius:8px;background:var(--surface3);font-weight:900;font-size:13px;color:var(--text)">{{ r.rLabel }}</span>
+                          <div style="min-width:0">
+                            <div style="font-weight:700;font-size:14px;white-space:nowrap;overflow:hidden;text-overflow:ellipsis">{{ r.venue }} <span style="color:var(--dim);font-weight:500;font-size:12px">{{ r.fieldSize }}頭</span></div>
+                            <div style="font-size:11px;color:var(--dim);margin-top:1px">本命 <span class="mono" style="color:var(--sub);font-weight:700">{{ r.topUmaban }}</span> {{ r.topBamei }}</div>
+                          </div>
+                        </div>
+                        <div style="display:flex;align-items:center;gap:9px;flex-shrink:0">
+                          <sc-if value="{{ r.pending }}" hint-placeholder-val="">
+                            <span style="font-size:10px;font-weight:700;color:var(--gold);background:var(--gold-soft);border:1px solid rgba(240,185,11,.3);border-radius:6px;padding:3px 7px">オッズ待ち</span>
+                          </sc-if>
+                          <sc-if value="{{ r.hasValue }}" hint-placeholder-val="">
+                            <span style="font-size:10px;font-weight:700;color:var(--gold);background:var(--gold-soft);border:1px solid rgba(240,185,11,.4);border-radius:6px;padding:3px 7px">妙味{{ r.valueCount }}</span>
+                          </sc-if>
+                          <div style="text-align:right"><div class="mono" style="font-weight:900;font-size:16px;color:var(--gold2)">{{ r.topPct }}</div><div style="font-size:9px;color:var(--dim)">本命勝率</div></div>
+                          <span style="color:var(--faint);font-size:12px">{{ r.caret }}</span>
+                        </div>
+                      </div>
+
+                      <sc-if value="{{ r.open }}" hint-placeholder-val="">
+                        <div style="border-top:1px solid var(--line);padding:12px 14px;background:var(--bg2)">
+                          <sc-if value="{{ r.pending }}" hint-placeholder-val="">
+                            <p style="margin:0 0 12px;font-size:11px;color:var(--dim);line-height:1.7;background:var(--surface);border:1px dashed var(--line);border-radius:8px;padding:9px 11px">⏳ オッズ未形成のため<b style="color:var(--sub)">絶対勝率は非表示</b>。下記は過去走ベースの<b style="color:var(--sub)">暫定ランキング</b>です。発走が近づくほど精度が上がります。</p>
+                          </sc-if>
+                          <div style="display:grid;grid-template-columns:1.6fr 1fr 1fr 1fr;gap:6px;font-size:10px;color:var(--faint);padding:0 2px 8px;font-weight:700">
+                            <span>馬 (順位)</span><span style="text-align:right">参考勝率</span><span style="text-align:right">市場人気</span><span style="text-align:right">オッズ</span>
+                          </div>
+                          <div style="display:flex;flex-direction:column;gap:9px">
+                            <sc-for list="{{ r.horses }}" as="h" hint-placeholder-count="6">
+                              <div style="background:{{ h.rowBg }};border:1px solid {{ h.rowBorder }};border-radius:10px;padding:9px 10px">
+                                <div style="display:grid;grid-template-columns:1.6fr 1fr 1fr 1fr;gap:6px;align-items:center">
+                                  <div style="display:flex;align-items:center;gap:8px;min-width:0">
+                                    <span class="mono" style="color:var(--faint);font-size:11px;width:14px;text-align:center">{{ h.rank }}</span>
+                                    <span class="mono" style="display:inline-flex;align-items:center;justify-content:center;width:24px;height:24px;flex-shrink:0;border-radius:6px;background:{{ h.umaBg }};color:{{ h.umaColor }};font-weight:700;font-size:12px">{{ h.umaban }}</span>
+                                    <span style="font-weight:700;font-size:13px;white-space:nowrap;overflow:hidden;text-overflow:ellipsis;color:{{ h.nameColor }}">{{ h.bamei }}</span>
+                                  </div>
+                                  <span class="mono" style="text-align:right;font-weight:900;font-size:14px;color:var(--gold2)">{{ h.pct }}</span>
+                                  <span class="mono" style="text-align:right;font-size:12px;color:var(--sub)">{{ h.ninki }}</span>
+                                  <span class="mono" style="text-align:right;font-size:12px;color:var(--sub)">{{ h.odds }}</span>
+                                </div>
+                                <!-- divergence bars -->
+                                <sc-if value="{{ h.showBars }}" hint-placeholder-val="{{ true }}">
+                                  <div style="margin-top:8px;display:flex;flex-direction:column;gap:4px">
+                                    <div style="display:flex;align-items:center;gap:7px">
+                                      <span style="width:26px;font-size:9px;color:var(--gold);font-weight:700">AI</span>
+                                      <div style="flex:1;height:7px;border-radius:4px;background:var(--surface3);overflow:hidden"><div style="height:100%;width:{{ h.aiW }};background:linear-gradient(90deg,var(--gold),var(--gold2));border-radius:4px"></div></div>
+                                    </div>
+                                    <div style="display:flex;align-items:center;gap:7px">
+                                      <span style="width:26px;font-size:9px;color:var(--dim);font-weight:700">市場</span>
+                                      <div style="flex:1;height:7px;border-radius:4px;background:var(--surface3);overflow:hidden"><div style="height:100%;width:{{ h.mktW }};background:#3a4250;border-radius:4px"></div></div>
+                                    </div>
+                                  </div>
+                                </sc-if>
+                                <sc-if value="{{ h.tag }}" hint-placeholder-val="">
+                                  <div style="margin-top:8px;display:flex;align-items:center;gap:6px">
+                                    <span style="font-size:10px;font-weight:700;border-radius:6px;padding:3px 8px;border:1px solid {{ h.tagBorder }};background:{{ h.tagBg }};color:{{ h.tagColor }}">{{ h.tag }}</span>
+                                    <span style="font-size:10px;color:var(--dim)">{{ h.tagNote }}</span>
+                                  </div>
+                                </sc-if>
+                              </div>
+                            </sc-for>
+                          </div>
+                        </div>
+                      </sc-if>
+                    </div>
+                  </sc-for>
+                </div>
+              </section>
+            </sc-for>
+          </div>
+        </sc-for>
+      </div>
+
+      <!-- disclaimer -->
+      <div style="margin-top:24px;border:1px solid var(--line);background:var(--surface);border-radius:12px;padding:14px;font-size:11.5px;line-height:1.8;color:var(--dim)">
+        参考勝率は、過去走・騎手・条件などから算出した<span style="color:var(--sub)">市場(オッズ)と同等精度の独立推定</span>です。地方(NAR)では市場より高く評価した馬に<span style="color:var(--gold)">「妙味候補」</span>を表示します。中央(JRA)は市場のエコーになりやすいため<span style="color:var(--sub)">妙味判定は出さず「市場の整理」</span>として表示します。<br><span style="color:var(--sub)">回収率・的中を保証するものではありません。最終判断はご自身で。</span>
+      </div>
+      <p style="margin:14px 0 0;text-align:center;font-size:10px;color:var(--faint)">model: market_nar_v1 ・ generated: {{ generatedAt }}</p>
+    </main>
+  </div>
+
+  <sc-if value="{{ toast }}" hint-placeholder-val="">
+    <div style="position:fixed;left:50%;bottom:26px;transform:translateX(-50%);z-index:90;background:var(--surface3);border:1px solid var(--line);color:var(--text);padding:11px 22px;border-radius:999px;font-size:13px;font-weight:700;box-shadow:0 14px 36px rgba(0,0,0,.5);animation:dgToast .25s ease">{{ toast }}</div>
+  </sc-if>
+</div>
+</x-dc>
+<script type="text/x-dc" data-dc-script data-props="{&quot;$preview&quot;:{&quot;width&quot;:620,&quot;height&quot;:900}}">
+class Component extends DCLogic {
+  constructor(props){
+    super(props);
+    this.state = { date:'20260624', confirmedOnly:false, open:{'20260624#0':true}, toast:null };
+  }
+  flash(m){ this.setState({toast:m}); clearTimeout(this._t); this._t=setTimeout(()=>this.setState({toast:null}),2000); }
+
+  // ── sample data matching MarketPreds structure ──
+  DATA={
+    '20260624':{ generated:'2026-06-24 10:42', races:[
+      // NAR 大井 (show_value true)
+      {key:'oi1',venue:'大井',kai:'nar',rn:1,field:12,pending:false,horses:[
+        {rank:1,umaban:11,bamei:'ヒカリノキセキ',p_race:.24,ninki:1,odds:3.4},
+        {rank:2,umaban:3,bamei:'サクラランナー',p_race:.19,ninki:4,odds:7.8},
+        {rank:3,umaban:7,bamei:'テンカイドウ',p_race:.16,ninki:7,odds:14.2},
+        {rank:4,umaban:5,bamei:'ミナミノホシ',p_race:.12,ninki:2,odds:4.1},
+        {rank:5,umaban:9,bamei:'カゼノオト',p_race:.10,ninki:3,odds:5.6},
+        {rank:6,umaban:1,bamei:'リュウセイガー',p_race:.07,ninki:6,odds:11.0}
+      ]},
+      {key:'oi2',venue:'大井',kai:'nar',rn:2,field:14,pending:false,horses:[
+        {rank:1,umaban:8,bamei:'ゴールドフェイス',p_race:.22,ninki:2,odds:4.5},
+        {rank:2,umaban:2,bamei:'シルバームーン',p_race:.18,ninki:1,odds:3.2},
+        {rank:3,umaban:12,bamei:'アオイソラ',p_race:.15,ninki:8,odds:18.0},
+        {rank:4,umaban:6,bamei:'ハヤテマル',p_race:.12,ninki:3,odds:6.0},
+        {rank:5,umaban:4,bamei:'ユメミルコロ',p_race:.09,ninki:5,odds:9.4}
+      ]},
+      // NAR 川崎
+      {key:'kw1',venue:'川崎',kai:'nar',rn:5,field:11,pending:false,horses:[
+        {rank:1,umaban:4,bamei:'クロガネオー',p_race:.27,ninki:1,odds:2.9},
+        {rank:2,umaban:10,bamei:'ナミダボシ',p_race:.17,ninki:6,odds:12.5},
+        {rank:3,umaban:1,bamei:'フウジンライ',p_race:.14,ninki:2,odds:4.8},
+        {rank:4,umaban:7,bamei:'スズカゼ',p_race:.11,ninki:4,odds:7.2}
+      ]},
+      // NAR 門別 pending
+      {key:'mb1',venue:'門別',kai:'nar',rn:3,field:10,pending:true,horses:[
+        {rank:1,umaban:6,bamei:'ホクトノツルギ',p_race:.21,ninki:null,odds:null},
+        {rank:2,umaban:2,bamei:'エゾノカガヤキ',p_race:.18,ninki:null,odds:null},
+        {rank:3,umaban:9,bamei:'シレトコブルー',p_race:.15,ninki:null,odds:null},
+        {rank:4,umaban:4,bamei:'マツカゼゴウ',p_race:.12,ninki:null,odds:null}
+      ]},
+      // JRA 東京 (show_value false)
+      {key:'tk11',venue:'東京',kai:'jra',rn:11,field:16,pending:false,horses:[
+        {rank:1,umaban:7,bamei:'レガートヴェント',p_race:.20,ninki:1,odds:3.6},
+        {rank:2,umaban:14,bamei:'グランエクリプス',p_race:.17,ninki:2,odds:4.2},
+        {rank:3,umaban:3,bamei:'サンライズノヴァ',p_race:.13,ninki:3,odds:5.9},
+        {rank:4,umaban:9,bamei:'メイショウカイザー',p_race:.11,ninki:5,odds:9.0},
+        {rank:5,umaban:1,bamei:'トウカイブライト',p_race:.09,ninki:4,odds:7.1}
+      ]},
+      {key:'tk12',venue:'東京',kai:'jra',rn:12,field:14,pending:false,horses:[
+        {rank:1,umaban:5,bamei:'ヴィクトワール',p_race:.23,ninki:1,odds:3.0},
+        {rank:2,umaban:11,bamei:'ノーザンライト',p_race:.16,ninki:3,odds:6.4},
+        {rank:3,umaban:8,bamei:'キタサンブルーム',p_race:.13,ninki:2,odds:4.6}
+      ]}
+    ]},
+    '20260625':{ generated:'2026-06-25 06:10', races:[
+      {key:'oi1b',venue:'大井',kai:'nar',rn:1,field:13,pending:true,horses:[
+        {rank:1,umaban:3,bamei:'アサヒノボル',p_race:.23,ninki:null,odds:null},
+        {rank:2,umaban:9,bamei:'ツキノヒカリ',p_race:.18,ninki:null,odds:null},
+        {rank:3,umaban:5,bamei:'カガリビ',p_race:.15,ninki:null,odds:null},
+        {rank:4,umaban:11,bamei:'ソラノキワミ',p_race:.12,ninki:null,odds:null}
+      ]},
+      {key:'kw1b',venue:'川崎',kai:'nar',rn:4,field:12,pending:true,horses:[
+        {rank:1,umaban:7,bamei:'ダイヤモンドアイ',p_race:.25,ninki:null,odds:null},
+        {rank:2,umaban:2,bamei:'ハナミズキ',p_race:.17,ninki:null,odds:null},
+        {rank:3,umaban:10,bamei:'ヤマトダマシイ',p_race:.14,ninki:null,odds:null}
+      ]},
+      {key:'hs11b',venue:'阪神',kai:'jra',rn:11,field:18,pending:true,horses:[
+        {rank:1,umaban:12,bamei:'セイウンスカイ',p_race:.19,ninki:null,odds:null},
+        {rank:2,umaban:4,bamei:'ロードカナロア',p_race:.16,ninki:null,odds:null},
+        {rank:3,umaban:16,bamei:'ダノンザキッド',p_race:.13,ninki:null,odds:null}
+      ]}
+    ]}
+  };
+
+  pct(x){ return x==null?'—':Math.round(x*100)+'%'; }
+  impliedMarket(horses){ // normalize 1/odds across horses with odds
+    const inv=horses.map(h=> h.odds&&h.odds>0 ? 1/h.odds : 0);
+    const sum=inv.reduce((a,b)=>a+b,0)||1;
+    return horses.map((h,i)=> h.odds? inv[i]/sum : null);
+  }
+  valueTag(h,pending,showValue){
+    if(!showValue||pending||h.ninki==null) return null;
+    const gap=h.ninki-h.rank;
+    if(h.rank<=3&&gap>=3) return 'value';
+    if(gap<=-3) return 'down';
+    return null;
+  }
+
+  renderVals(){
+    const st=this.state, ds=this.DATA[st.date]||{races:[],generated:''};
+    let races=ds.races;
+    const confirmedCount=races.filter(r=>!r.pending).length;
+    const pendingCount=races.length-confirmedCount;
+    if(st.confirmedOnly) races=races.filter(r=>!r.pending);
+
+    const base={
+      toast:st.toast,
+      generatedAt:ds.generated,
+      raceCount:(this.DATA[st.date]?.races.length)||0,
+      confirmedCount, pendingCount,
+      toggleConfirmed:()=>this.setState({confirmedOnly:!st.confirmedOnly}),
+      confLabel:st.confirmedOnly?'すべて表示':'オッズ確定のみ',
+      confBg:st.confirmedOnly?'var(--gold-soft)':'transparent',
+      confColor:st.confirmedOnly?'var(--gold)':'var(--sub)',
+      confBorder:st.confirmedOnly?'rgba(240,185,11,.4)':'var(--line)'
+    };
+
+    // date tabs
+    const today='20260624';
+    base.dateTabs=Object.keys(this.DATA).sort().map(d=>{ const on=st.date===d; const label=d===today?'今日 '+this.dl(d):(d>today?'明日 '+this.dl(d):this.dl(d)); return {
+      label, bg:on?'var(--gold-soft)':'transparent', color:on?'var(--gold)':'var(--sub)', border:on?'var(--gold)':'var(--line)',
+      pick:()=>this.setState({date:d}) }; });
+
+    // group jra -> nar
+    const order=[{kai:'jra',label:'中央競馬',note:'市場の整理（妙味判定なし）'},{kai:'nar',label:'地方競馬',note:'妙味候補あり'}];
+    base.sections=order.map(o=>{
+      const rs=races.filter(r=>(r.kai||'nar')===o.kai);
+      if(rs.length===0) return null;
+      const vmap=new Map();
+      rs.forEach(r=>{ const a=vmap.get(r.venue)||[]; a.push(r); vmap.set(r.venue,a); });
+      const venues=Array.from(vmap.entries()).map(([name,vr])=>{
+        vr.sort((a,b)=>(a.pending!==b.pending)?(a.pending?1:-1):a.rn-b.rn);
+        return { name, count:vr.length, races:vr.map(r=>this.buildRace(r,o.kai)) };
+      });
+      return { label:o.label, note:o.note, venues };
+    }).filter(Boolean);
+
+    return base;
+  }
+
+  dl(d){ const y=+d.slice(0,4),m=+d.slice(4,6),da=+d.slice(6,8); const wd=['日','月','火','水','木','金','土'][new Date(y,m-1,da).getDay()]; return m+'/'+da+'('+wd+')'; }
+
+  buildRace(r,kai){
+    const showValue = kai!=='jra';
+    const pending=r.pending;
+    const key=this.state.date+'#'+r.key;
+    const open=!!this.state.open[r.key+'::'+this.state.date] || !!this.state.open[this.state.date+'#'+(r.key==='oi1'?0:'x')];
+    const isOpen = this.state.open[r.key]===true;
+    const top=r.horses[0];
+    const implied=this.impliedMarket(r.horses);
+    const maxP=Math.max(...r.horses.map(h=>h.p_race),0.01);
+    let valueCount=0;
+    const horses=r.horses.map((h,i)=>{
+      const tag=this.valueTag(h,pending,showValue);
+      if(tag==='value') valueCount++;
+      const mkt=implied[i];
+      const aiW=Math.round(h.p_race/maxP*100)+'%';
+      const mktW=mkt==null?'0%':Math.round(mkt/maxP*100)+'%';
+      return {
+        rank:h.rank, umaban:h.umaban==null?'-':h.umaban, bamei:h.bamei,
+        pct:pending?this.pct(h.p_race):this.pct(h.p_race),
+        ninki:h.ninki==null?'—':h.ninki+'番',
+        odds:h.odds==null?'—':h.odds.toFixed(1),
+        showBars:!pending, aiW, mktW,
+        umaBg: tag==='value'?'var(--gold)':'var(--surface3)',
+        umaColor: tag==='value'?'#0b0e11':'var(--text)',
+        nameColor: tag==='value'?'var(--gold2)':'var(--text)',
+        rowBg: tag==='value'?'rgba(240,185,11,.06)':'var(--surface)',
+        rowBorder: tag==='value'?'rgba(240,185,11,.35)':'var(--line)',
+        tag: tag==='value'?'妙味候補':(tag==='down'?'評価減':null),
+        tagColor: tag==='value'?'var(--gold)':'var(--down)',
+        tagBg: tag==='value'?'var(--gold-soft)':'rgba(246,70,93,.1)',
+        tagBorder: tag==='value'?'rgba(240,185,11,.4)':'rgba(246,70,93,.3)',
+        tagNote: tag==='value'?('AI '+h.rank+'位 ・ 市場 '+h.ninki+'番人気'):(tag==='down'?'市場より低評価':'')
+      };
+    });
+    return {
+      rLabel:r.rn+'R', venue:r.venue, fieldSize:r.field,
+      topUmaban:top.umaban==null?'-':top.umaban, topBamei:top.bamei, topPct:this.pct(top.p_race),
+      pending, hasValue:valueCount>0, valueCount,
+      cardBorder: valueCount>0?'rgba(240,185,11,.3)':'var(--line)',
+      open:isOpen, caret:isOpen?'▲':'▼',
+      toggle:()=>this.setState(s=>({open:{...s.open,[r.key]:!s.open[r.key]}})),
+      horses
+    };
+  }
+}
+</script>
+</body>
+</html>

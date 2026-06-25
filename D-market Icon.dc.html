@@ -1,0 +1,172 @@
+<!DOCTYPE html>
+<html>
+<head>
+<meta charset="utf-8">
+<meta name="viewport" content="width=device-width, initial-scale=1">
+<script src="./support.js"></script>
+</head>
+<body>
+<x-dc>
+<helmet>
+<link rel="preconnect" href="https://fonts.googleapis.com">
+<link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+<link href="https://fonts.googleapis.com/css2?family=Roboto:wght@500;700;800&family=Noto+Sans+JP:wght@500;700&display=swap" rel="stylesheet">
+<style>
+*{box-sizing:border-box}
+html,body{margin:0;padding:0}
+body{background:#e7ebf2;font-family:'Roboto','Noto Sans JP',system-ui,sans-serif}
+</style>
+</helmet>
+
+<div style="min-width:100%;min-height:100vh;background:#e7ebf2;padding:48px;box-sizing:border-box">
+  <div style="max-width:1080px;margin:0 auto">
+    <div style="margin-bottom:6px;font-size:13px;font-weight:700;letter-spacing:.12em;color:#5a6e88;text-transform:uppercase">D-market · LINE Icon</div>
+    <h1 style="margin:0 0 32px;font-size:26px;font-weight:800;color:#0b1f3a;letter-spacing:-.01em">アプリ／プロフィールアイコン</h1>
+
+    <!-- main row: app icon + line circle preview -->
+    <div style="display:flex;flex-wrap:wrap;gap:40px;align-items:flex-start;margin-bottom:44px">
+
+      <!-- App icon (rounded square) -->
+      <div style="display:flex;flex-direction:column;align-items:center;gap:14px">
+        <svg width="240" height="240" viewBox="0 0 240 240" style="display:block;border-radius:54px;box-shadow:0 24px 60px -22px rgba(11,31,58,.55)">
+          <defs>
+            <linearGradient id="icBg" x1="0" y1="0" x2="240" y2="240" gradientUnits="userSpaceOnUse"><stop stop-color="#102a4c"></stop><stop offset="1" stop-color="#0a1a30"></stop></linearGradient>
+            <linearGradient id="icMark" x1="64" y1="58" x2="184" y2="182" gradientUnits="userSpaceOnUse"><stop stop-color="#38bdf8"></stop><stop offset="1" stop-color="#06b6d4"></stop></linearGradient>
+            <radialGradient id="icGlow" cx="0.7" cy="0.25" r="0.9"><stop stop-color="rgba(56,189,248,.22)"></stop><stop offset="1" stop-color="rgba(56,189,248,0)"></stop></radialGradient>
+          </defs>
+          <rect width="240" height="240" rx="54" fill="url(#icBg)"></rect>
+          <rect width="240" height="240" rx="54" fill="url(#icGlow)"></rect>
+          <path d="M70 62h28c30 0 52 25 52 58s-22 58-52 58H70z" fill="none" stroke="url(#icMark)" stroke-width="16" stroke-linejoin="round"></path>
+          <path d="M150 120l30-26m-30 26l30 26" fill="none" stroke="url(#icMark)" stroke-width="16" stroke-linecap="round" stroke-linejoin="round"></path>
+        </svg>
+        <div style="font-size:12.5px;font-weight:700;color:#5a6e88">アプリアイコン (角丸)</div>
+      </div>
+
+      <!-- LINE circle preview -->
+      <div style="display:flex;flex-direction:column;align-items:center;gap:14px">
+        <svg width="240" height="240" viewBox="0 0 240 240" style="display:block;border-radius:50%;box-shadow:0 24px 60px -22px rgba(11,31,58,.55)">
+          <defs>
+            <clipPath id="cir"><circle cx="120" cy="120" r="120"></circle></clipPath>
+          </defs>
+          <g clip-path="url(#cir)">
+            <rect width="240" height="240" fill="url(#icBg)"></rect>
+            <rect width="240" height="240" fill="url(#icGlow)"></rect>
+            <path d="M70 62h28c30 0 52 25 52 58s-22 58-52 58H70z" fill="none" stroke="url(#icMark)" stroke-width="16" stroke-linejoin="round"></path>
+            <path d="M150 120l30-26m-30 26l30 26" fill="none" stroke="url(#icMark)" stroke-width="16" stroke-linecap="round" stroke-linejoin="round"></path>
+          </g>
+        </svg>
+        <div style="font-size:12.5px;font-weight:700;color:#5a6e88">LINE表示 (円形クロップ)</div>
+      </div>
+
+      <!-- LINE-style mock -->
+      <div style="display:flex;flex-direction:column;gap:10px;background:#fff;border-radius:20px;padding:18px 20px;box-shadow:0 10px 30px -16px rgba(11,31,58,.4);min-width:280px">
+        <div style="font-size:11px;font-weight:700;color:#9fb4d0;letter-spacing:.08em">トーク一覧での見え方</div>
+        <div style="display:flex;align-items:center;gap:12px;padding:8px 0">
+          <svg width="54" height="54" viewBox="0 0 240 240" style="border-radius:50%;flex-shrink:0">
+            <g clip-path="url(#cir)"><rect width="240" height="240" fill="url(#icBg)"></rect><path d="M70 62h28c30 0 52 25 52 58s-22 58-52 58H70z" fill="none" stroke="url(#icMark)" stroke-width="16" stroke-linejoin="round"></path><path d="M150 120l30-26m-30 26l30 26" fill="none" stroke="url(#icMark)" stroke-width="16" stroke-linecap="round" stroke-linejoin="round"></path></g>
+          </svg>
+          <div style="flex:1">
+            <div style="font-size:15px;font-weight:700;color:#0b1f3a">D-market 公式</div>
+            <div style="font-size:13px;color:#5a6e88">新しい市場が公開されました 📈</div>
+          </div>
+          <div style="font-size:11px;color:#9fb4d0">9:41</div>
+        </div>
+        <div style="display:flex;align-items:center;gap:12px;padding:8px 0;border-top:1px solid #eef3fb">
+          <svg width="40" height="40" viewBox="0 0 240 240" style="border-radius:50%;flex-shrink:0">
+            <g clip-path="url(#cir)"><rect width="240" height="240" fill="url(#icBg)"></rect><path d="M70 62h28c30 0 52 25 52 58s-22 58-52 58H70z" fill="none" stroke="url(#icMark)" stroke-width="16" stroke-linejoin="round"></path><path d="M150 120l30-26m-30 26l30 26" fill="none" stroke="url(#icMark)" stroke-width="16" stroke-linecap="round" stroke-linejoin="round"></path></g>
+          </svg>
+          <div style="flex:1"><div style="font-size:14px;font-weight:700;color:#0b1f3a">D-market</div></div>
+        </div>
+      </div>
+    </div>
+
+    <!-- size ladder -->
+    <div style="background:#fff;border-radius:20px;padding:24px 28px;box-shadow:0 10px 30px -18px rgba(11,31,58,.35);margin-bottom:32px">
+      <div style="font-size:13px;font-weight:700;color:#0b1f3a;margin-bottom:18px">サイズ別の視認性 (円形)</div>
+      <div style="display:flex;align-items:flex-end;gap:28px;flex-wrap:wrap">
+        <sc-for list="{{ sizes }}" as="s" hint-placeholder-count="5">
+          <div style="display:flex;flex-direction:column;align-items:center;gap:8px">
+            <svg width="{{ s.px }}" height="{{ s.px }}" viewBox="0 0 240 240" style="border-radius:50%">
+              <g clip-path="url(#cir)"><rect width="240" height="240" fill="url(#icBg)"></rect><path d="M70 62h28c30 0 52 25 52 58s-22 58-52 58H70z" fill="none" stroke="url(#icMark)" stroke-width="16" stroke-linejoin="round"></path><path d="M150 120l30-26m-30 26l30 26" fill="none" stroke="url(#icMark)" stroke-width="16" stroke-linecap="round" stroke-linejoin="round"></path></g>
+            </svg>
+            <div style="font-size:11px;font-weight:600;color:#9fb4d0">{{ s.label }}</div>
+          </div>
+        </sc-for>
+      </div>
+    </div>
+
+    <!-- variants -->
+    <div style="font-size:13px;font-weight:700;color:#0b1f3a;margin-bottom:16px">バリエーション</div>
+    <div style="display:flex;flex-wrap:wrap;gap:24px">
+      <!-- navy square -->
+      <div style="display:flex;flex-direction:column;align-items:center;gap:10px">
+        <svg width="132" height="132" viewBox="0 0 240 240" style="border-radius:30px;box-shadow:0 12px 30px -16px rgba(11,31,58,.5)">
+          <rect width="240" height="240" rx="54" fill="url(#icBg)"></rect>
+          <path d="M70 62h28c30 0 52 25 52 58s-22 58-52 58H70z" fill="none" stroke="url(#icMark)" stroke-width="16" stroke-linejoin="round"></path>
+          <path d="M150 120l30-26m-30 26l30 26" fill="none" stroke="url(#icMark)" stroke-width="16" stroke-linecap="round" stroke-linejoin="round"></path>
+        </svg>
+        <div style="font-size:11.5px;font-weight:600;color:#5a6e88">ネイビー (標準)</div>
+      </div>
+      <!-- solid cyan fill -->
+      <div style="display:flex;flex-direction:column;align-items:center;gap:10px">
+        <svg width="132" height="132" viewBox="0 0 240 240" style="border-radius:30px;box-shadow:0 12px 30px -16px rgba(6,182,212,.5)">
+          <defs><linearGradient id="icCyan" x1="0" y1="0" x2="240" y2="240" gradientUnits="userSpaceOnUse"><stop stop-color="#0ea5e9"></stop><stop offset="1" stop-color="#06b6d4"></stop></linearGradient></defs>
+          <rect width="240" height="240" rx="54" fill="url(#icCyan)"></rect>
+          <path d="M70 62h28c30 0 52 25 52 58s-22 58-52 58H70z" fill="none" stroke="#fff" stroke-width="16" stroke-linejoin="round"></path>
+          <path d="M150 120l30-26m-30 26l30 26" fill="none" stroke="#fff" stroke-width="16" stroke-linecap="round" stroke-linejoin="round"></path>
+        </svg>
+        <div style="font-size:11.5px;font-weight:600;color:#5a6e88">シアン (白抜き)</div>
+      </div>
+      <!-- white bg -->
+      <div style="display:flex;flex-direction:column;align-items:center;gap:10px">
+        <svg width="132" height="132" viewBox="0 0 240 240" style="border-radius:30px;box-shadow:0 12px 30px -16px rgba(11,31,58,.3)">
+          <rect width="240" height="240" rx="54" fill="#fff" stroke="#e2ebf6" stroke-width="2"></rect>
+          <path d="M70 62h28c30 0 52 25 52 58s-22 58-52 58H70z" fill="none" stroke="url(#icMark)" stroke-width="16" stroke-linejoin="round"></path>
+          <path d="M150 120l30-26m-30 26l30 26" fill="none" stroke="url(#icMark)" stroke-width="16" stroke-linecap="round" stroke-linejoin="round"></path>
+        </svg>
+        <div style="font-size:11.5px;font-weight:600;color:#5a6e88">白地</div>
+      </div>
+      <!-- monochrome -->
+      <div style="display:flex;flex-direction:column;align-items:center;gap:10px">
+        <svg width="132" height="132" viewBox="0 0 240 240" style="border-radius:30px;box-shadow:0 12px 30px -16px rgba(11,31,58,.4)">
+          <rect width="240" height="240" rx="54" fill="#0b1f3a"></rect>
+          <path d="M70 62h28c30 0 52 25 52 58s-22 58-52 58H70z" fill="none" stroke="#fff" stroke-width="16" stroke-linejoin="round"></path>
+          <path d="M150 120l30-26m-30 26l30 26" fill="none" stroke="#fff" stroke-width="16" stroke-linecap="round" stroke-linejoin="round"></path>
+        </svg>
+        <div style="font-size:11.5px;font-weight:600;color:#5a6e88">モノクロ</div>
+      </div>
+      <!-- wordmark lockup -->
+      <div style="display:flex;flex-direction:column;align-items:center;gap:10px">
+        <div style="width:200px;height:132px;border-radius:20px;background:#fff;border:1px solid #e2ebf6;display:flex;flex-direction:column;align-items:center;justify-content:center;gap:12px;box-shadow:0 12px 30px -18px rgba(11,31,58,.3)">
+          <svg width="60" height="60" viewBox="0 0 240 240" style="border-radius:15px">
+            <rect width="240" height="240" rx="54" fill="url(#icBg)"></rect>
+            <path d="M70 62h28c30 0 52 25 52 58s-22 58-52 58H70z" fill="none" stroke="url(#icMark)" stroke-width="16" stroke-linejoin="round"></path>
+            <path d="M150 120l30-26m-30 26l30 26" fill="none" stroke="url(#icMark)" stroke-width="16" stroke-linecap="round" stroke-linejoin="round"></path>
+          </svg>
+          <div style="font-weight:700;font-size:19px;letter-spacing:-.01em;color:#0b1f3a">D-<span style="color:#5a6e88;font-weight:500">market</span></div>
+        </div>
+        <div style="font-size:11.5px;font-weight:600;color:#5a6e88">ロックアップ</div>
+      </div>
+    </div>
+
+    <p style="margin:32px 0 0;font-size:12.5px;color:#5a6e88;line-height:1.7;max-width:680px">D-swipeと共通のネイビータイル＋シアングラデの輪郭D＋スワイプシェブロン。LINEの円形クロップでも切れないよう中央寄せ・余白確保。書き出し用のPNG (1024px) はチャットのダウンロードカードから取得できます。</p>
+  </div>
+</div>
+</x-dc>
+<script type="text/x-dc" data-dc-script data-props="{&quot;$preview&quot;:{&quot;width&quot;:1080,&quot;height&quot;:900}}">
+class Component extends DCLogic {
+  renderVals(){
+    return {
+      sizes:[
+        {px:96,label:'96px'},
+        {px:72,label:'72px'},
+        {px:54,label:'54px (一覧)'},
+        {px:40,label:'40px'},
+        {px:28,label:'28px (最小)'}
+      ]
+    };
+  }
+}
+</script>
+</body>
+</html>

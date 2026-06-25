@@ -1,0 +1,400 @@
+<!DOCTYPE html>
+<html>
+<head>
+<meta charset="utf-8">
+<meta name="viewport" content="width=device-width, initial-scale=1">
+<script src="./support.js"></script>
+</head>
+<body>
+<x-dc>
+<helmet>
+<link rel="preconnect" href="https://fonts.googleapis.com">
+<link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+<link href="https://fonts.googleapis.com/css2?family=Noto+Serif+JP:wght@400;500;600;700&family=Noto+Sans+JP:wght@400;500;700&family=Inter:wght@400;500;600;700;800;900&display=swap" rel="stylesheet">
+<style>
+:root{
+  --navy:#0b1f3a; --navy2:#0e2747; --navy-deep:#081627; --ink:#101826;
+  --paper:#f6f8fb; --paper2:#eef2f7; --surface:#ffffff; --line:#e3e9f1; --hair:#eef2f7;
+  --text:#15212f; --sub:#5a6b80; --dim:#8a99ac; --faint:#aeb9c7;
+  --cyan:#22b8e6; --gold:#c9a84c; --pink:#e0518a; --green:#1f9d6b; --violet:#7c6bd6;
+  --sans:'Noto Sans JP',system-ui,sans-serif; --serif:'Noto Serif JP',serif; --inter:'Inter',sans-serif;
+}
+*{box-sizing:border-box}
+html{scroll-behavior:smooth;-webkit-font-smoothing:antialiased;text-rendering:optimizeLegibility}
+body{margin:0;padding:0;background:var(--paper);color:var(--text);font-family:var(--sans);line-height:1.75;font-feature-settings:"palt"}
+::-webkit-scrollbar{width:10px}::-webkit-scrollbar-track{background:var(--paper2)}::-webkit-scrollbar-thumb{background:#c9d4e1;border-radius:6px}
+.scrollx::-webkit-scrollbar{height:0;display:none}.scrollx{scrollbar-width:none}
+details summary::-webkit-details-marker{display:none}
+@keyframes dcFloat{0%,100%{transform:translateY(0)}50%{transform:translateY(-10px)}}
+@keyframes dcToast{from{opacity:0;transform:translate(-50%,8px)}to{opacity:1;transform:translate(-50%,0)}}
+@keyframes dcMarquee{from{transform:translateX(0)}to{transform:translateX(-50%)}}
+</style>
+</helmet>
+
+<div style="background:var(--paper);color:var(--text);overflow-x:hidden">
+
+  <!-- ░░ NAV ░░ -->
+  <header style="position:fixed;top:0;left:0;right:0;z-index:60;background:{{ navBg }};backdrop-filter:blur(14px);border-bottom:1px solid {{ navBorder }};transition:all .3s ease">
+    <div style="max-width:1280px;margin:0 auto;padding:15px 30px;display:flex;align-items:center;justify-content:space-between;gap:20px">
+      <a href="#top" style="display:flex;align-items:center;gap:12px;text-decoration:none;flex-shrink:0">
+        <svg width="34" height="34" viewBox="0 0 40 40" style="display:block">
+          <defs><linearGradient id="dcMaster" x1="0" y1="0" x2="40" y2="40" gradientUnits="userSpaceOnUse"><stop stop-color="#7fe3ff"></stop><stop offset=".5" stop-color="#22b8e6"></stop><stop offset="1" stop-color="#1f8fd0"></stop></linearGradient></defs>
+          <rect x="1" y="1" width="38" height="38" rx="11" fill="#0b1f3a"></rect>
+          <path d="M11 13h6c4 0 7 2.8 7 7s-3 7-7 7h-6z" fill="none" stroke="url(#dcMaster)" stroke-width="2.7" stroke-linejoin="round"></path>
+          <path d="M25 20l6-5m-6 5l6 5" fill="none" stroke="url(#dcMaster)" stroke-width="2.7" stroke-linecap="round" stroke-linejoin="round"></path>
+        </svg>
+        <div style="display:flex;align-items:baseline;gap:9px">
+          <span style="font-family:var(--inter);font-weight:800;font-size:19px;letter-spacing:-.02em;color:{{ navInk }}">D<span style="color:{{ navSub }};font-weight:600"> Inc.</span></span>
+          <span style="font-size:12px;font-weight:700;color:{{ navSub }}">株式会社D</span>
+        </div>
+      </a>
+      <nav style="display:flex;align-items:center;gap:4px">
+        <sc-for list="{{ navLinks }}" as="n" hint-placeholder-count="5">
+          <a href="{{ n.href }}" style="font-size:13px;font-weight:700;letter-spacing:.02em;color:{{ navLinkColor }};text-decoration:none;padding:9px 13px;border-radius:8px">{{ n.label }}<span style="font-family:var(--inter);font-size:9px;color:{{ navFaint }};margin-left:5px;letter-spacing:.1em">{{ n.en }}</span></a>
+        </sc-for>
+        <a href="#contact" style="margin-left:8px;display:inline-flex;align-items:center;gap:7px;font-size:13px;font-weight:700;padding:10px 20px;border-radius:999px;background:{{ navCtaBg }};color:{{ navCtaColor }};text-decoration:none;border:1px solid {{ navCtaBorder }}">お問い合わせ <span style="font-size:14px">→</span></a>
+      </nav>
+    </div>
+  </header>
+
+  <!-- ░░ HERO ░░ -->
+  <section id="top" style="position:relative;background:linear-gradient(180deg,var(--navy),var(--navy-deep));color:#eaf2fb;overflow:hidden">
+    <!-- product-accent orbits -->
+    <div style="position:absolute;top:14%;right:8%;width:11px;height:11px;border-radius:50%;background:var(--cyan);box-shadow:0 0 26px var(--cyan);animation:dcFloat 7s ease-in-out infinite;opacity:.8"></div>
+    <div style="position:absolute;top:62%;right:20%;width:9px;height:9px;border-radius:50%;background:var(--gold);box-shadow:0 0 22px var(--gold);animation:dcFloat 9s ease-in-out infinite 1s;opacity:.7"></div>
+    <div style="position:absolute;top:34%;left:11%;width:8px;height:8px;border-radius:50%;background:var(--pink);box-shadow:0 0 20px var(--pink);animation:dcFloat 8s ease-in-out infinite .6s;opacity:.7"></div>
+    <div style="position:absolute;top:-18%;left:50%;transform:translateX(-50%);width:900px;height:900px;max-width:130vw;background:radial-gradient(circle,rgba(34,184,230,.14),transparent 62%);pointer-events:none"></div>
+
+    <div style="position:relative;z-index:2;max-width:1280px;margin:0 auto;padding:120px 30px 130px">
+      <div style="font-family:var(--inter);font-size:12px;font-weight:700;letter-spacing:.32em;color:var(--cyan);margin-bottom:34px">D INC. — AI PRODUCT STUDIO</div>
+      <h1 style="font-family:var(--serif);font-size:clamp(40px,6.6vw,92px);line-height:1.12;font-weight:700;letter-spacing:-.01em;margin:0;max-width:18em">
+        AIで、個人の<br><span style="color:var(--cyan)">「できる」</span>を増やす。
+      </h1>
+      <p style="margin:38px 0 0;font-size:clamp(15px,1.8vw,19px);line-height:2;color:rgba(234,242,251,.82);max-width:40em;font-weight:400">予測市場から競馬AI、性格診断、ノーコード開発教育まで。<br>私たちは、テクノロジーで一人ひとりの意思決定と創造を後押しする<br>プロダクト群「<span style="color:#fff;font-weight:700">Dファミリー</span>」を運営しています。</p>
+      <div style="display:flex;flex-wrap:wrap;gap:14px;margin-top:46px">
+        <a href="#products" style="display:inline-flex;align-items:center;gap:10px;font-size:15px;font-weight:700;padding:16px 30px;border-radius:999px;background:var(--cyan);color:var(--navy-deep);text-decoration:none">プロダクトを見る <span>→</span></a>
+        <a href="#about" style="display:inline-flex;align-items:center;gap:10px;font-size:15px;font-weight:700;padding:16px 30px;border-radius:999px;background:rgba(255,255,255,.06);border:1px solid rgba(255,255,255,.2);color:#eaf2fb;text-decoration:none">私たちについて</a>
+      </div>
+    </div>
+
+    <!-- stat strip -->
+    <div style="position:relative;z-index:2;border-top:1px solid rgba(255,255,255,.1);background:rgba(8,22,39,.5);backdrop-filter:blur(8px)">
+      <div style="max-width:1280px;margin:0 auto;padding:26px 30px;display:grid;grid-template-columns:repeat(4,1fr);gap:20px">
+        <sc-for list="{{ heroStats }}" as="s" hint-placeholder-count="4">
+          <div style="border-left:{{ s.bl }};padding-left:{{ s.pl }}">
+            <div style="font-family:var(--inter);font-size:34px;font-weight:800;letter-spacing:-.02em;color:#fff;line-height:1">{{ s.n }}</div>
+            <div style="font-size:12px;color:rgba(234,242,251,.6);margin-top:6px">{{ s.l }}</div>
+          </div>
+        </sc-for>
+      </div>
+    </div>
+
+    <!-- family marquee -->
+    <div style="position:relative;z-index:2;border-top:1px solid rgba(255,255,255,.1);overflow:hidden;padding:16px 0">
+      <div style="display:flex;gap:48px;width:max-content;animation:dcMarquee 24s linear infinite;white-space:nowrap">
+        <sc-for list="{{ marquee }}" as="m" hint-placeholder-count="10">
+          <span style="font-family:var(--inter);font-size:15px;font-weight:700;letter-spacing:.04em;color:rgba(234,242,251,.4)">{{ m.label }}<span style="color:{{ m.dot }}"> ●</span></span>
+        </sc-for>
+      </div>
+    </div>
+  </section>
+
+  <!-- ░░ MISSION ░░ -->
+  <section id="about" style="padding:130px 30px;border-bottom:1px solid var(--line)">
+    <div style="max-width:1100px;margin:0 auto">
+      <div style="display:flex;align-items:baseline;gap:20px;margin-bottom:54px">
+        <span style="font-family:var(--inter);font-size:13px;font-weight:700;color:var(--cyan)">01</span>
+        <span style="font-family:var(--inter);font-size:12px;letter-spacing:.22em;font-weight:700;color:var(--dim)">MISSION</span>
+        <div style="flex:1;height:1px;background:var(--line)"></div>
+      </div>
+      <h2 style="font-family:var(--serif);font-size:clamp(30px,4.6vw,56px);line-height:1.35;font-weight:700;letter-spacing:-.01em;margin:0;max-width:20em">テクノロジーを、<br>誰もが使える<span style="color:var(--cyan)">「力」</span>に。</h2>
+      <p style="margin:38px 0 0;font-size:17px;line-height:2.1;color:var(--sub);max-width:42em">専門知識や資本がなくても、AIがあれば誰もが「作れる側・選べる側」に立てる時代になりました。株式会社Dは、その変化を一人ひとりの手元に届けるために、難しい技術を<b style="color:var(--text);font-weight:700">親しみやすいプロダクト</b>へと翻訳し続けます。予測する、創る、出会う、学ぶ——日常のあらゆる意思決定を、テクノロジーで少しだけ賢く、ずっと楽しく。</p>
+
+      <div style="display:grid;grid-template-columns:repeat(3,1fr);gap:1px;background:var(--line);border:1px solid var(--line);border-radius:18px;overflow:hidden;margin-top:64px">
+        <sc-for list="{{ values }}" as="v" hint-placeholder-count="3">
+          <div style="background:var(--surface);padding:38px 30px">
+            <div style="font-family:var(--inter);font-size:12px;font-weight:700;letter-spacing:.14em;color:{{ v.color }};margin-bottom:18px">{{ v.no }}</div>
+            <h3 style="font-family:var(--serif);font-size:23px;font-weight:700;margin:0 0 14px;line-height:1.4">{{ v.title }}</h3>
+            <p style="font-size:14px;line-height:1.9;color:var(--sub);margin:0">{{ v.body }}</p>
+          </div>
+        </sc-for>
+      </div>
+    </div>
+  </section>
+
+  <!-- ░░ PRODUCTS ░░ -->
+  <section id="products" style="padding:130px 30px;background:var(--surface);border-bottom:1px solid var(--line)">
+    <div style="max-width:1180px;margin:0 auto">
+      <div style="display:flex;align-items:baseline;gap:20px;margin-bottom:24px">
+        <span style="font-family:var(--inter);font-size:13px;font-weight:700;color:var(--cyan)">02</span>
+        <span style="font-family:var(--inter);font-size:12px;letter-spacing:.22em;font-weight:700;color:var(--dim)">PRODUCTS — Dファミリー</span>
+        <div style="flex:1;height:1px;background:var(--line)"></div>
+      </div>
+      <h2 style="font-family:var(--serif);font-size:clamp(28px,4.4vw,50px);line-height:1.2;font-weight:700;margin:0 0 16px">ひとつのDから、<br>5つのプロダクトへ。</h2>
+      <p style="font-size:16px;color:var(--sub);margin:0 0 54px;max-width:40em">共通するのは「AIで個人をエンパワーする」という思想と、ネイビータイルのDロゴ。世界観はそれぞれ独立しています。</p>
+
+      <div style="display:flex;flex-direction:column;gap:18px">
+        <sc-for list="{{ products }}" as="p" hint-placeholder-count="5">
+          <div onClick="{{ p.open }}" style="display:grid;grid-template-columns:auto 1fr auto;gap:28px;align-items:center;border:1px solid var(--line);border-left:4px solid {{ p.accent }};background:var(--surface);border-radius:18px;padding:28px 32px;cursor:pointer;box-shadow:0 1px 2px rgba(16,24,40,.03)" style-hover="box-shadow:0 14px 40px -18px rgba(16,24,40,.22)">
+            <!-- logo tile -->
+            <svg width="60" height="60" viewBox="0 0 40 40" style="display:block;flex-shrink:0">
+              <rect x="1" y="1" width="38" height="38" rx="11" fill="{{ p.tileBg }}"></rect>
+              <sc-if value="{{ p.isT }}" hint-placeholder-val="">
+                <path d="M9 13.5h13M15.5 13.5V27" fill="none" stroke="{{ p.mark }}" stroke-width="2.7" stroke-linecap="round" stroke-linejoin="round"></path>
+              </sc-if>
+              <sc-if value="{{ p.isD }}" hint-placeholder-val="{{ true }}">
+                <path d="M11 13h6c4 0 7 2.8 7 7s-3 7-7 7h-6z" fill="none" stroke="{{ p.mark }}" stroke-width="2.7" stroke-linejoin="round"></path>
+              </sc-if>
+              <path d="M25 20l6-5m-6 5l6 5" fill="none" stroke="{{ p.mark }}" stroke-width="2.7" stroke-linecap="round" stroke-linejoin="round"></path>
+            </svg>
+            <div style="min-width:0">
+              <div style="display:flex;align-items:baseline;gap:12px;flex-wrap:wrap;margin-bottom:6px">
+                <h3 style="font-family:var(--inter);font-size:23px;font-weight:800;letter-spacing:-.01em;margin:0;color:var(--text)">{{ p.name }}</h3>
+                <span style="font-size:12px;font-weight:700;color:{{ p.accent }};background:{{ p.chipBg }};border-radius:6px;padding:3px 10px">{{ p.tag }}</span>
+              </div>
+              <p style="margin:0;font-size:14.5px;color:var(--sub);line-height:1.7">{{ p.desc }}</p>
+            </div>
+            <div style="text-align:right;white-space:nowrap">
+              <div style="font-family:var(--inter);font-size:12px;font-weight:700;color:var(--dim)">{{ p.status }}</div>
+              <div style="font-size:13px;font-weight:700;color:{{ p.accent }};margin-top:4px">詳しく →</div>
+            </div>
+          </div>
+        </sc-for>
+      </div>
+    </div>
+  </section>
+
+  <!-- ░░ STORY ░░ -->
+  <section style="padding:130px 30px;border-bottom:1px solid var(--line)">
+    <div style="max-width:1100px;margin:0 auto">
+      <div style="display:flex;align-items:baseline;gap:20px;margin-bottom:54px">
+        <span style="font-family:var(--inter);font-size:13px;font-weight:700;color:var(--cyan)">03</span>
+        <span style="font-family:var(--inter);font-size:12px;letter-spacing:.22em;font-weight:700;color:var(--dim)">WHY D</span>
+        <div style="flex:1;height:1px;background:var(--line)"></div>
+      </div>
+      <div style="display:grid;grid-template-columns:1fr 1fr;gap:64px;align-items:center">
+        <div>
+          <h2 style="font-family:var(--serif);font-size:clamp(26px,3.6vw,42px);line-height:1.35;font-weight:700;margin:0 0 26px">「D」は、<br>意思決定の頭文字。</h2>
+          <p style="font-size:15.5px;line-height:2.1;color:var(--sub);margin:0 0 18px">Decision（決める）、Data（読む）、Develop（創る）——私たちのプロダクトはすべて、個人が次の一手を選ぶための道具です。ロゴの <b style="color:var(--text)">「&gt;」</b> は、その一歩を前へ進めるスワイプの記号。</p>
+          <p style="font-size:15.5px;line-height:2.1;color:var(--sub);margin:0">ネイビーのタイルはどのプロダクトにも共通する土台。色や世界観は変えても、「個人をエンパワーする」という芯だけは、すべてのDで変わりません。</p>
+        </div>
+        <div style="display:flex;align-items:center;justify-content:center;background:linear-gradient(135deg,var(--navy),var(--navy-deep));border-radius:24px;padding:60px;aspect-ratio:1/1">
+          <svg width="180" height="180" viewBox="0 0 40 40" style="display:block;filter:drop-shadow(0 20px 40px rgba(0,0,0,.4))">
+            <rect x="1" y="1" width="38" height="38" rx="11" fill="#0b1f3a" stroke="#1c3252" stroke-width="0.6"></rect>
+            <path d="M11 13h6c4 0 7 2.8 7 7s-3 7-7 7h-6z" fill="none" stroke="url(#dcMaster)" stroke-width="2.6" stroke-linejoin="round"></path>
+            <path d="M25 20l6-5m-6 5l6 5" fill="none" stroke="url(#dcMaster)" stroke-width="2.6" stroke-linecap="round" stroke-linejoin="round"></path>
+          </svg>
+        </div>
+      </div>
+    </div>
+  </section>
+
+  <!-- ░░ COMPANY ░░ -->
+  <section id="company" style="padding:130px 30px;background:var(--paper2);border-bottom:1px solid var(--line)">
+    <div style="max-width:1000px;margin:0 auto">
+      <div style="display:flex;align-items:baseline;gap:20px;margin-bottom:48px">
+        <span style="font-family:var(--inter);font-size:13px;font-weight:700;color:var(--cyan)">04</span>
+        <span style="font-family:var(--inter);font-size:12px;letter-spacing:.22em;font-weight:700;color:var(--dim)">COMPANY</span>
+        <div style="flex:1;height:1px;background:var(--line)"></div>
+      </div>
+      <h2 style="font-family:var(--serif);font-size:clamp(26px,4vw,46px);font-weight:700;margin:0 0 44px">会社概要</h2>
+      <div style="background:var(--surface);border:1px solid var(--line);border-radius:18px;overflow:hidden">
+        <sc-for list="{{ company }}" as="c" hint-placeholder-count="7">
+          <div style="display:grid;grid-template-columns:200px 1fr;gap:24px;padding:22px 32px;border-bottom:1px solid var(--hair)">
+            <div style="font-size:13px;font-weight:700;color:var(--dim);font-family:var(--inter);letter-spacing:.04em">{{ c.k }}<span style="display:block;font-family:var(--sans);font-size:13px;color:var(--sub);margin-top:2px">{{ c.kj }}</span></div>
+            <div style="font-size:15px;color:var(--text);font-weight:500">{{ c.v }}</div>
+          </div>
+        </sc-for>
+      </div>
+      <p style="font-size:12px;color:var(--faint);margin:14px 0 0">※ 一部の項目はサンプル値です。実データに差し替えてください。</p>
+    </div>
+  </section>
+
+  <!-- ░░ NEWS ░░ -->
+  <section id="news" style="padding:120px 30px;border-bottom:1px solid var(--line)">
+    <div style="max-width:1000px;margin:0 auto">
+      <div style="display:flex;align-items:baseline;gap:20px;margin-bottom:40px">
+        <span style="font-family:var(--inter);font-size:13px;font-weight:700;color:var(--cyan)">05</span>
+        <span style="font-family:var(--inter);font-size:12px;letter-spacing:.22em;font-weight:700;color:var(--dim)">NEWS</span>
+        <div style="flex:1;height:1px;background:var(--line)"></div>
+      </div>
+      <div style="border-top:1px solid var(--line)">
+        <sc-for list="{{ news }}" as="n" hint-placeholder-count="4">
+          <div onClick="{{ n.open }}" style="display:grid;grid-template-columns:130px 110px 1fr auto;gap:22px;align-items:center;padding:22px 6px;border-bottom:1px solid var(--line);cursor:pointer" style-hover="background:var(--paper)">
+            <span style="font-family:var(--inter);font-size:13px;font-weight:600;color:var(--dim)">{{ n.date }}</span>
+            <span style="font-size:11px;font-weight:700;color:{{ n.catColor }};background:{{ n.catBg }};border-radius:6px;padding:4px 10px;text-align:center">{{ n.cat }}</span>
+            <span style="font-size:15px;font-weight:500;color:var(--text)">{{ n.title }}</span>
+            <span style="color:var(--faint)">→</span>
+          </div>
+        </sc-for>
+      </div>
+    </div>
+  </section>
+
+  <!-- ░░ RECRUIT ░░ -->
+  <section style="padding:120px 30px;border-bottom:1px solid var(--line)">
+    <div style="max-width:1100px;margin:0 auto">
+      <div style="position:relative;overflow:hidden;border-radius:26px;background:linear-gradient(135deg,var(--navy),var(--navy-deep));color:#eaf2fb;padding:64px 56px">
+        <div style="position:absolute;top:-30%;right:-8%;width:420px;height:420px;border-radius:50%;background:radial-gradient(circle,rgba(34,184,230,.16),transparent 65%)"></div>
+        <div style="position:relative;display:flex;flex-wrap:wrap;align-items:center;justify-content:space-between;gap:32px">
+          <div>
+            <div style="font-family:var(--inter);font-size:12px;font-weight:700;letter-spacing:.22em;color:var(--cyan);margin-bottom:18px">RECRUIT</div>
+            <h2 style="font-family:var(--serif);font-size:clamp(26px,3.6vw,40px);font-weight:700;line-height:1.4;margin:0 0 12px">「作れる側」を、<br>一緒に増やす仲間を。</h2>
+            <p style="font-size:15px;color:rgba(234,242,251,.78);margin:0;max-width:34em">エンジニア、デザイナー、AIプロダクトの企画。少人数で大きく動かすチームです。</p>
+          </div>
+          <a href="#contact" style="flex-shrink:0;display:inline-flex;align-items:center;gap:10px;font-size:15px;font-weight:700;padding:17px 32px;border-radius:999px;background:var(--cyan);color:var(--navy-deep);text-decoration:none">採用情報を見る <span>→</span></a>
+        </div>
+      </div>
+    </div>
+  </section>
+
+  <!-- ░░ CONTACT ░░ -->
+  <section id="contact" style="padding:120px 30px 130px">
+    <div style="max-width:720px;margin:0 auto;text-align:center">
+      <div style="font-family:var(--inter);font-size:12px;font-weight:700;letter-spacing:.22em;color:var(--cyan);margin-bottom:22px">CONTACT</div>
+      <h2 style="font-family:var(--serif);font-size:clamp(28px,4.6vw,52px);font-weight:700;line-height:1.3;margin:0 0 20px">お問い合わせ</h2>
+      <p style="font-size:15.5px;color:var(--sub);line-height:2;margin:0 0 40px">取材・協業・採用・各プロダクトに関するお問い合わせは、<br>下記フォームよりお気軽にご連絡ください。</p>
+      <div style="background:var(--surface);border:1px solid var(--line);border-radius:20px;padding:34px;text-align:left;box-shadow:0 1px 2px rgba(16,24,40,.04)">
+        <div style="display:grid;grid-template-columns:1fr 1fr;gap:16px;margin-bottom:16px">
+          <div><label style="display:block;font-size:12px;font-weight:700;color:var(--sub);margin-bottom:8px">お名前</label><input value="{{ fName }}" onInput="{{ onName }}" placeholder="山田 太郎" style="width:100%;border:1px solid var(--line);background:var(--paper);border-radius:10px;padding:12px 14px;font-family:inherit;font-size:14px;color:var(--text);outline:none" style-focus="border-color:var(--cyan)"></div>
+          <div><label style="display:block;font-size:12px;font-weight:700;color:var(--sub);margin-bottom:8px">メール</label><input value="{{ fEmail }}" onInput="{{ onEmail }}" type="email" placeholder="you@example.com" style="width:100%;border:1px solid var(--line);background:var(--paper);border-radius:10px;padding:12px 14px;font-family:inherit;font-size:14px;color:var(--text);outline:none" style-focus="border-color:var(--cyan)"></div>
+        </div>
+        <div style="margin-bottom:16px"><label style="display:block;font-size:12px;font-weight:700;color:var(--sub);margin-bottom:8px">種別</label>
+          <div style="display:flex;flex-wrap:wrap;gap:8px">
+            <sc-for list="{{ topics }}" as="t" hint-placeholder-count="4">
+              <button onClick="{{ t.pick }}" style="cursor:pointer;font-family:inherit;font-size:13px;font-weight:700;padding:8px 16px;border-radius:999px;border:1px solid {{ t.border }};background:{{ t.bg }};color:{{ t.color }}">{{ t.label }}</button>
+            </sc-for>
+          </div>
+        </div>
+        <div style="margin-bottom:22px"><label style="display:block;font-size:12px;font-weight:700;color:var(--sub);margin-bottom:8px">内容</label><textarea onInput="{{ onMsg }}" rows="4" placeholder="お問い合わせ内容をご記入ください" style="width:100%;border:1px solid var(--line);background:var(--paper);border-radius:10px;padding:12px 14px;font-family:inherit;font-size:14px;color:var(--text);outline:none;resize:none" style-focus="border-color:var(--cyan)">{{ fMsg }}</textarea></div>
+        <button onClick="{{ submit }}" style="width:100%;cursor:pointer;font-family:inherit;font-weight:700;font-size:15px;padding:15px;border:none;border-radius:12px;background:var(--navy);color:#fff">送信する</button>
+      </div>
+    </div>
+  </section>
+
+  <!-- ░░ FOOTER ░░ -->
+  <footer style="background:var(--navy-deep);color:rgba(234,242,251,.7);padding:72px 30px 40px">
+    <div style="max-width:1280px;margin:0 auto">
+      <div style="display:grid;grid-template-columns:1.6fr 1fr 1fr 1fr;gap:44px;margin-bottom:54px">
+        <div>
+          <div style="display:flex;align-items:center;gap:11px;margin-bottom:16px">
+            <svg width="30" height="30" viewBox="0 0 40 40"><rect x="1" y="1" width="38" height="38" rx="11" fill="#0b1f3a" stroke="#1c3252" stroke-width="0.6"></rect><path d="M11 13h6c4 0 7 2.8 7 7s-3 7-7 7h-6z" fill="none" stroke="url(#dcMaster)" stroke-width="2.7" stroke-linejoin="round"></path><path d="M25 20l6-5m-6 5l6 5" fill="none" stroke="url(#dcMaster)" stroke-width="2.7" stroke-linecap="round" stroke-linejoin="round"></path></svg>
+            <span style="font-family:var(--inter);font-weight:800;font-size:18px;color:#fff">D Inc.</span>
+          </div>
+          <p style="font-size:13px;line-height:1.9;color:rgba(234,242,251,.55);margin:0;max-width:24em">AIで個人の「できる」を増やすプロダクトスタジオ。Dファミリーを企画・開発・運営しています。</p>
+        </div>
+        <sc-for list="{{ footerCols }}" as="c" hint-placeholder-count="3">
+          <div>
+            <div style="font-family:var(--inter);font-size:11px;font-weight:700;letter-spacing:.16em;color:rgba(234,242,251,.4);margin-bottom:16px">{{ c.title }}</div>
+            <div style="display:flex;flex-direction:column;gap:11px">
+              <sc-for list="{{ c.links }}" as="l" hint-placeholder-count="4">
+                <a href="{{ l.href }}" onClick="{{ l.go }}" style="font-size:13px;color:rgba(234,242,251,.7);text-decoration:none">{{ l.label }}</a>
+              </sc-for>
+            </div>
+          </div>
+        </sc-for>
+      </div>
+      <div style="border-top:1px solid rgba(255,255,255,.1);padding-top:26px;display:flex;justify-content:space-between;flex-wrap:wrap;gap:10px;font-size:12px;color:rgba(234,242,251,.4)">
+        <span>© 2026 D Inc. 株式会社D</span>
+        <span style="font-family:var(--inter);letter-spacing:.04em">D-market · D-swipe · Dlogic · D-lab · Togel</span>
+      </div>
+    </div>
+  </footer>
+
+  <sc-if value="{{ toast }}" hint-placeholder-val="">
+    <div style="position:fixed;left:50%;bottom:28px;transform:translateX(-50%);z-index:90;background:var(--navy);color:#fff;padding:13px 26px;border-radius:999px;font-size:14px;font-weight:700;box-shadow:0 16px 40px rgba(11,31,58,.35);animation:dcToast .25s ease">{{ toast }}</div>
+  </sc-if>
+</div>
+</x-dc>
+<script type="text/x-dc" data-dc-script data-props="{&quot;$preview&quot;:{&quot;width&quot;:1280,&quot;height&quot;:900}}">
+class Component extends DCLogic {
+  constructor(props){
+    super(props);
+    this.state = { scrolled:false, toast:null, topic:'協業・取材', fName:'', fEmail:'', fMsg:'' };
+  }
+  componentDidMount(){
+    this._onScroll=()=>{ const s=window.scrollY>30; if(s!==this.state.scrolled) this.setState({scrolled:s}); };
+    window.addEventListener('scroll',this._onScroll,{passive:true});
+  }
+  componentWillUnmount(){ window.removeEventListener('scroll',this._onScroll); }
+  flash(m){ this.setState({toast:m}); clearTimeout(this._t); this._t=setTimeout(()=>this.setState({toast:null}),2400); }
+
+  renderVals(){
+    const sc=this.state.scrolled;
+    const flash=(m)=>this.flash(m);
+
+    const products=[
+      {name:'D-market', tag:'予測市場', mono:'D', accent:'#22b8e6', mark:'#22b8e6', tileBg:'#0b1f3a', status:'運営中',
+        desc:'ポイント制の予測市場。世界の出来事の確率を、換金なしのポイントで売買。勝つのは称号とランキング。'},
+      {name:'D-swipe', tag:'LP生成', mono:'D', accent:'#2a6fdb', mark:'#36a7e6', tileBg:'#0b1f3a', status:'運営中',
+        desc:'スワイプ型のノーコードLP生成サービス。指でめくる感覚で、伝わるランディングページを誰でも。'},
+      {name:'Dlogic', tag:'競馬予想AI', mono:'D', accent:'#c9a84c', mark:'#FCD535', tileBg:'#0b1f3a', status:'運営中',
+        desc:'独自の12項目分析で競走馬を評価する競馬予想AI。市場と同等精度の「参考勝率」を正直に提示。'},
+      {name:'D-lab', tag:'AI開発スクール', mono:'D', accent:'#c9a84c', mark:'#e8c96a', tileBg:'#0b1f3a', status:'開講準備中',
+        desc:'Claude Codeに日本語で指示するだけでWebサービスを作る、8週間のオンライン講座。'},
+      {name:'Togel', tag:'性格診断マッチング', mono:'T', accent:'#e0518a', mark:'#ff6fa5', tileBg:'#0b1f3a', status:'運営中',
+        desc:'Big Five理論ベースの24タイプ性格診断＋相性マッチング。相性の良い5名と、悪い5名を提示。'}
+    ].map(p=>({ ...p, isT:p.mono==='T', isD:p.mono==='D', chipBg:p.accent+'1a',
+      open:()=>this.flash(p.name+' のサイトへ（デモ）') }));
+
+    return {
+      // nav
+      navBg: sc?'rgba(246,248,251,.85)':'transparent',
+      navBorder: sc?'var(--line)':'transparent',
+      navInk: sc?'var(--ink)':'#fff',
+      navSub: sc?'var(--sub)':'rgba(234,242,251,.7)',
+      navFaint: sc?'var(--faint)':'rgba(234,242,251,.45)',
+      navLinkColor: sc?'var(--text)':'rgba(234,242,251,.85)',
+      navCtaBg: sc?'var(--navy)':'rgba(255,255,255,.1)',
+      navCtaColor:'#fff',
+      navCtaBorder: sc?'var(--navy)':'rgba(255,255,255,.25)',
+      navLinks:[['私たちについて','ABOUT','#about'],['プロダクト','PRODUCTS','#products'],['会社概要','COMPANY','#company'],['ニュース','NEWS','#news']].map(([label,en,href])=>({label,en,href})),
+
+      heroStats:[['5','プロダクト'],['2026','設立'],['10K+','累計ユーザー'],['∞','つくれる可能性']].map(([n,l],i)=>({n,l,bl:i?'1px solid rgba(255,255,255,.12)':'none',pl:i?'20px':'0'})),
+      marquee:[['D-market','#22b8e6'],['D-swipe','#36a7e6'],['Dlogic','#FCD535'],['D-lab','#e8c96a'],['Togel','#ff6fa5'],['D-market','#22b8e6'],['D-swipe','#36a7e6'],['Dlogic','#FCD535'],['D-lab','#e8c96a'],['Togel','#ff6fa5']].map(([label,dot])=>({label,dot})),
+
+      values:[
+        {no:'VALUE 01',color:'var(--cyan)',title:'翻訳する',body:'難しい技術を、誰もが直感で使えるプロダクトへ。専門知識の壁を、私たちが引き受ける。'},
+        {no:'VALUE 02',color:'var(--gold)',title:'正直である',body:'誇張も、過度な期待もあおらない。できること・できないことを、まっすぐ伝える。'},
+        {no:'VALUE 03',color:'var(--pink)',title:'楽しくする',body:'学びも意思決定も、ワクワクする体験に。続けたくなる手触りを、何より大切に。'}
+      ],
+
+      products,
+
+      company:[
+        {k:'COMPANY',kj:'会社名',v:'株式会社D（D Inc.）'},
+        {k:'FOUNDED',kj:'設立',v:'2026年'},
+        {k:'CEO',kj:'代表者',v:'代表取締役 ◯◯ ◯◯'},
+        {k:'BUSINESS',kj:'事業内容',v:'AIプロダクトの企画・開発・運営（Dファミリー）'},
+        {k:'ADDRESS',kj:'所在地',v:'東京都◯◯区 ◯◯ 0-0-0'},
+        {k:'PRODUCTS',kj:'運営サービス',v:'D-market / D-swipe / Dlogic / D-lab / Togel'},
+        {k:'CONTACT',kj:'連絡先',v:'contact@d-inc.example'}
+      ],
+
+      news:[
+        {date:'2026.06.20',cat:'PRODUCT',title:'Dlogic「参考勝率」ページをリニューアルしました',catColor:'var(--gold)',catBg:'rgba(201,168,76,.12)'},
+        {date:'2026.05.15',cat:'PRODUCT',title:'D-lab 1期生の募集に向けたティザーを公開',catColor:'var(--gold)',catBg:'rgba(201,168,76,.12)'},
+        {date:'2026.04.10',cat:'COMPANY',title:'ブランドロゴをDファミリーで統一しました',catColor:'var(--cyan)',catBg:'rgba(34,184,230,.12)'},
+        {date:'2026.03.01',cat:'PRODUCT',title:'Togel 同性マッチング機能を追加',catColor:'var(--pink)',catBg:'rgba(224,81,138,.12)'}
+      ].map(n=>({...n,open:()=>this.flash('ニュース記事へ（デモ）')})),
+
+      topics:['協業・取材','採用','プロダクト','その他'].map(label=>{ const on=this.state.topic===label; return {
+        label, bg:on?'var(--navy)':'transparent', color:on?'#fff':'var(--sub)', border:on?'var(--navy)':'var(--line)',
+        pick:()=>this.setState({topic:label}) }; }),
+      fName:this.state.fName, fEmail:this.state.fEmail, fMsg:this.state.fMsg,
+      onName:e=>this.setState({fName:e.target.value}), onEmail:e=>this.setState({fEmail:e.target.value}), onMsg:e=>this.setState({fMsg:e.target.value}),
+      submit:()=>{ if(!this.state.fName.trim()||!this.state.fEmail.trim()){ this.flash('お名前とメールをご入力ください'); return; } this.flash('送信しました（デモ）。ありがとうございます'); },
+
+      footerCols:[
+        {title:'PRODUCTS',links:[['D-market'],['D-swipe'],['Dlogic'],['D-lab'],['Togel']].map(([label])=>({label,href:'#products',go:()=>{}}))},
+        {title:'COMPANY',links:[['私たちについて','#about'],['会社概要','#company'],['ニュース','#news'],['採用','#contact']].map(([label,href])=>({label,href,go:()=>{}}))},
+        {title:'LEGAL',links:[['プライバシーポリシー'],['利用規約'],['特定商取引法']].map(([label])=>({label,href:'#',go:(e)=>{ if(e&&e.preventDefault)e.preventDefault(); flash(label+'（準備中）'); }}))}
+      ],
+
+      toast:this.state.toast
+    };
+  }
+}
+</script>
+</body>
+</html>

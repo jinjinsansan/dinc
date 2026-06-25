@@ -1,0 +1,1178 @@
+<!DOCTYPE html>
+<html>
+<head>
+<meta charset="utf-8">
+<meta name="viewport" content="width=device-width, initial-scale=1">
+<script src="./support.js"></script>
+</head>
+<body>
+<x-dc>
+<helmet>
+<link rel="preconnect" href="https://fonts.googleapis.com">
+<link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+<link href="https://fonts.googleapis.com/css2?family=Roboto:wght@400;500;700&family=Noto+Sans+JP:wght@400;500;700&family=Roboto+Mono:wght@500;600;700&display=swap" rel="stylesheet">
+<style>
+:root{
+  --bg:#f7f9fb; --surface:#ffffff; --surface2:#f1f4f8; --border:#e7ebf1;
+  --text:#0f1722; --dim:#5b6876; --faint:#9aa6b4;
+  --primary:#1d70d6; --primary-weak:#e9f1fc; --accent2:#06b6d4;
+  --pos:#199a5a; --pos-weak:#e7f6ee; --neg:#dd3d4a; --neg-weak:#fcebec;
+  --radius:13px; --radius-sm:10px; --radius-card:12px;
+  --grad:linear-gradient(135deg,#0ea5e9,#06b6d4);
+  --shadow:0 1px 2px rgba(15,23,34,.05), 0 1px 1px rgba(15,23,34,.04);
+}
+*{box-sizing:border-box}
+html,body{margin:0;padding:0}
+body{background:var(--bg);font-family:'Roboto','Noto Sans JP',system-ui,sans-serif;-webkit-font-smoothing:antialiased}
+.dm-themed,.dm-themed *{transition:background-color .25s ease,border-color .25s ease,color .15s ease}
+.mono{font-family:'Roboto Mono',ui-monospace,monospace;font-variant-numeric:tabular-nums}
+.scrollx{scrollbar-width:thin}
+.scrollx::-webkit-scrollbar{height:6px}
+.scrollx::-webkit-scrollbar-thumb{background:var(--border);border-radius:6px}
+.dm-card{transition:border-color .15s ease, box-shadow .15s ease, transform .15s ease}
+.dm-card:hover{border-color:var(--faint);box-shadow:0 6px 22px -12px rgba(15,23,34,.28);transform:translateY(-1px)}
+.dm-ybtn:hover{filter:brightness(.97)}
+.dm-mobilebar{display:none}
+@keyframes dmIn{from{opacity:0;transform:translateY(6px)}to{opacity:1;transform:none}}
+@keyframes dmToast{from{opacity:0;transform:translateY(8px)}to{opacity:1;transform:none}}
+@media (max-width:880px){
+  .dm-desktop-nav{display:none!important}
+  .dm-mobilebar{display:flex!important}
+  .dm-headrow{gap:10px!important;padding-left:14px!important;padding-right:14px!important}
+  .dm-pad{padding-left:14px!important;padding-right:14px!important}
+  .dm-hero{padding:22px 20px!important}
+  .dm-hero-h1{font-size:24px!important}
+  .dm-claim{padding:0 12px!important}
+  .dm-claim-txt{display:none!important}
+  body{padding-bottom:60px}
+}
+@media (max-width:560px){
+  .dm-search{display:none!important}
+}
+</style>
+</helmet>
+
+<div class="dm-themed" style="min-height:100vh;background:var(--bg);color:var(--text)">
+
+  <!-- ───────── NAV ───────── -->
+  <header style="position:sticky;top:0;z-index:40;background:var(--surface);border-bottom:1px solid var(--border)">
+    <div class="dm-headrow" style="max-width:1240px;margin:0 auto;padding:0 22px;height:64px;display:flex;align-items:center;gap:18px">
+      <div onClick="{{ goHome }}" style="display:flex;align-items:center;gap:10px;cursor:pointer;flex-shrink:0">
+        <svg width="34" height="34" viewBox="0 0 40 40" style="display:block">
+          <defs><linearGradient id="dmLogo" x1="0" y1="0" x2="40" y2="40" gradientUnits="userSpaceOnUse"><stop stop-color="#0ea5e9"></stop><stop offset="1" stop-color="#06b6d4"></stop></linearGradient></defs>
+          <rect x="1" y="1" width="38" height="38" rx="11" fill="#0b1f3a"></rect>
+          <path d="M11 13h6c4 0 7 2.8 7 7s-3 7-7 7h-6z" fill="none" stroke="url(#dmLogo)" stroke-width="2.6" stroke-linejoin="round"></path>
+          <path d="M25 20l6-5m-6 5l6 5" fill="none" stroke="url(#dmLogo)" stroke-width="2.6" stroke-linecap="round" stroke-linejoin="round"></path>
+        </svg>
+        <span style="font-weight:700;font-size:20px;letter-spacing:-.01em;color:var(--text)">D-<span style="color:var(--dim);font-weight:500">market</span></span>
+      </div>
+
+      <div class="dm-search" style="flex:1;max-width:440px;position:relative">
+        <svg width="16" height="16" viewBox="0 0 24 24" fill="none" stroke="var(--faint)" stroke-width="2" style="position:absolute;left:13px;top:50%;transform:translateY(-50%)"><circle cx="11" cy="11" r="7"></circle><path d="M21 21l-4.3-4.3"></path></svg>
+        <input value="{{ search }}" onInput="{{ onSearch }}" placeholder="市場を検索  /  Search markets" style="width:100%;height:40px;padding:0 14px 0 36px;border:1px solid var(--border);background:var(--surface2);border-radius:11px;font-size:14px;font-family:inherit;color:var(--text);outline:none">
+      </div>
+
+      <nav class="dm-desktop-nav" style="display:flex;align-items:center;gap:4px;flex-shrink:0">
+        <button onClick="{{ goHome }}" style="border:none;background:none;cursor:pointer;font-family:inherit;font-size:14px;font-weight:600;padding:8px 10px;border-radius:9px;color:{{ lkHome }}">マーケット</button>
+        <button onClick="{{ goLead }}" style="border:none;background:none;cursor:pointer;font-family:inherit;font-size:14px;font-weight:600;padding:8px 10px;border-radius:9px;color:{{ lkLead }}">ランキング</button>
+        <button onClick="{{ goPort }}" style="border:none;background:none;cursor:pointer;font-family:inherit;font-size:14px;font-weight:600;padding:8px 10px;border-radius:9px;color:{{ lkPort }}">マイページ</button>
+        <button onClick="{{ goAdmin }}" style="border:none;background:none;cursor:pointer;font-family:inherit;font-size:14px;font-weight:600;padding:8px 10px;border-radius:9px;color:{{ lkAdmin }}">管理</button>
+      </nav>
+
+      <div style="display:flex;align-items:center;gap:10px;flex-shrink:0">
+        <button onClick="{{ toggleTheme }}" title="テーマ切替" style="width:38px;height:38px;border:1px solid var(--border);background:var(--surface);border-radius:10px;cursor:pointer;display:flex;align-items:center;justify-content:center;color:var(--dim)">
+          <sc-if value="{{ isDark }}" hint-placeholder-val="">
+            <svg width="17" height="17" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round"><circle cx="12" cy="12" r="4.4"></circle><path d="M12 2v2M12 20v2M4 12H2M22 12h-2M5 5l1.5 1.5M17.5 17.5L19 19M19 5l-1.5 1.5M6.5 17.5L5 19"></path></svg>
+          </sc-if>
+          <sc-if value="{{ isLight }}" hint-placeholder-val="{{ true }}">
+            <svg width="16" height="16" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><path d="M21 12.8A8.5 8.5 0 1 1 11.2 3a6.6 6.6 0 0 0 9.8 9.8z"></path></svg>
+          </sc-if>
+        </button>
+        <div style="display:flex;align-items:center;gap:7px;height:38px;padding:0 12px;background:var(--surface2);border:1px solid var(--border);border-radius:10px">
+          <svg width="14" height="14" viewBox="0 0 24 24"><circle cx="12" cy="12" r="10" fill="#0891b2"></circle><circle cx="12" cy="12" r="4.4" fill="#e6faff"></circle></svg>
+          <span class="mono" style="font-size:14px;font-weight:700">{{ balanceLabel }}</span>
+          <span style="font-size:12px;color:var(--dim);font-weight:600">pt</span>
+        </div>
+        <button onClick="{{ claim }}" class="dm-claim" style="height:38px;padding:0 16px;background:var(--grad);color:#fff;border:none;border-radius:10px;cursor:pointer;font-family:inherit;font-weight:700;font-size:13.5px;box-shadow:0 8px 20px -8px rgba(6,182,212,.55);display:flex;align-items:center;gap:6px"><svg width="15" height="15" viewBox="0 0 24 24" fill="none" stroke="#fff" stroke-width="2.2" stroke-linecap="round"><path d="M12 5v14M5 12h14"></path></svg><span class="dm-claim-txt">受取 / Claim</span></button>
+      </div>
+    </div>
+
+    <!-- category bar -->
+    <sc-if value="{{ isHome }}" hint-placeholder-val="{{ true }}">
+      <div class="scrollx" style="max-width:1240px;margin:0 auto;padding:0 22px 11px;display:flex;gap:8px;overflow-x:auto">
+        <sc-for list="{{ cats }}" as="c" hint-placeholder-count="7">
+          <button onClick="{{ c.pick }}" style="white-space:nowrap;cursor:pointer;font-family:inherit;display:flex;flex-direction:column;align-items:flex-start;gap:1px;padding:7px 14px;border-radius:10px;font-weight:700;font-size:13.5px;border:1px solid {{ c.border }};background:{{ c.bg }};color:{{ c.color }}">
+            <span>{{ c.label }}</span>
+            <span style="font-size:10px;font-weight:600;letter-spacing:.04em;opacity:.6">{{ c.sub }}</span>
+          </button>
+        </sc-for>
+      </div>
+    </sc-if>
+  </header>
+
+  <!-- ───────── HOME ───────── -->
+  <sc-if value="{{ isHome }}" hint-placeholder-val="{{ true }}">
+  <main class="dm-pad" style="max-width:1240px;margin:0 auto;padding:24px 22px 80px;animation:dmIn .3s ease">
+
+    <!-- hero -->
+    <div style="display:flex;flex-wrap:wrap;gap:16px;margin-bottom:26px">
+      <div class="dm-hero" style="flex:2 1 480px;position:relative;overflow:hidden;border-radius:var(--radius);padding:30px 32px;background:linear-gradient(135deg,#0b1f3a,#143a63);color:#eaf2fb;border:1px solid rgba(56,189,248,.22);box-shadow:0 20px 50px -28px rgba(8,20,40,.55)">
+        <div style="position:absolute;right:-40px;top:-40px;width:240px;height:240px;border-radius:50%;background:radial-gradient(circle,rgba(56,189,248,.28),transparent 70%)"></div>
+        <div style="position:absolute;right:46px;bottom:-70px;width:170px;height:170px;border-radius:50%;background:radial-gradient(circle,rgba(6,182,212,.22),transparent 70%)"></div>
+        <span style="display:inline-block;font-size:11px;font-weight:700;letter-spacing:.28em;text-transform:uppercase;color:#38bdf8;background:rgba(56,189,248,.12);border:1px solid rgba(56,189,248,.3);padding:6px 11px;border-radius:8px">D-MARKET · 予測市場</span>
+        <h1 class="dm-hero-h1" style="margin:16px 0 8px;font-size:30px;line-height:1.18;font-weight:800;letter-spacing:-.02em;max-width:440px">ポイントで読む、<br>世界の確率。</h1>
+        <p style="margin:0;font-size:14.5px;opacity:.85;max-width:420px;line-height:1.5">Trade the world's probabilities — in points. 換金なし、勝つのは称号とランキングだけ。</p>
+        <div style="display:flex;gap:18px;margin-top:22px">
+          <div><div class="mono" style="font-size:22px;font-weight:700;color:#5fcdf0">31.2M</div><div style="font-size:12px;opacity:.8">総出来高 pt</div></div>
+          <div style="width:1px;background:rgba(255,255,255,.2)"></div>
+          <div><div class="mono" style="font-size:22px;font-weight:700;color:#5fcdf0">142</div><div style="font-size:12px;opacity:.8">開催中の市場</div></div>
+          <div style="width:1px;background:rgba(255,255,255,.2)"></div>
+          <div><div class="mono" style="font-size:22px;font-weight:700;color:#5fcdf0">8,940</div><div style="font-size:12px;opacity:.8">トレーダー</div></div>
+        </div>
+      </div>
+
+      <!-- trending strip -->
+      <div style="flex:1 1 300px;min-width:0;border:1px solid var(--border);background:var(--surface);border-radius:var(--radius);padding:16px 18px;box-shadow:var(--shadow)">
+        <div style="display:flex;align-items:center;gap:7px;margin-bottom:6px">
+          <svg width="15" height="15" viewBox="0 0 24 24" fill="none" stroke="var(--primary)" stroke-width="2.4"><path d="M3 17l6-6 4 4 7-8"></path><path d="M14 7h6v6"></path></svg>
+          <span style="font-weight:800;font-size:14px">トレンド <span style="color:var(--dim);font-weight:600">/ Trending</span></span>
+        </div>
+        <sc-for list="{{ trending }}" as="t" hint-placeholder-count="4">
+          <div onClick="{{ t.open }}" style="display:flex;align-items:center;gap:11px;padding:9px 4px;cursor:pointer;border-top:1px solid var(--border)">
+            <span style="width:22px;text-align:center;font-weight:800;color:var(--faint);font-size:14px">{{ t.rank }}</span>
+            <div style="width:34px;height:34px;border-radius:9px;flex-shrink:0;display:flex;align-items:center;justify-content:center;font-weight:800;font-size:14px;color:#fff;background:{{ t.tint }}">{{ t.glyph }}</div>
+            <span style="flex:1;font-size:13px;font-weight:600;line-height:1.25;display:-webkit-box;-webkit-line-clamp:2;-webkit-box-orient:vertical;overflow:hidden">{{ t.q }}</span>
+            <span class="mono" style="font-size:15px;font-weight:700;color:{{ t.arcColor }}">{{ t.chanceLabel }}</span>
+          </div>
+        </sc-for>
+      </div>
+    </div>
+
+    <!-- toolbar -->
+    <div style="display:flex;align-items:center;justify-content:space-between;margin-bottom:16px">
+      <h2 style="margin:0;font-size:18px;font-weight:800;letter-spacing:-.01em">{{ catTitle }} <span style="color:var(--faint);font-weight:600;font-size:14px">{{ resultCount }}</span></h2>
+      <div style="display:flex;gap:4px;padding:3px;background:var(--surface2);border:1px solid var(--border);border-radius:11px">
+        <button onClick="{{ layoutCards }}" style="cursor:pointer;font-family:inherit;font-size:12.5px;font-weight:700;padding:6px 13px;border:none;border-radius:8px;background:{{ tabCardsBg }};color:{{ tabCardsColor }};display:flex;align-items:center;gap:6px">
+          <svg width="13" height="13" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><rect x="3" y="3" width="7" height="7" rx="1"></rect><rect x="14" y="3" width="7" height="7" rx="1"></rect><rect x="3" y="14" width="7" height="7" rx="1"></rect><rect x="14" y="14" width="7" height="7" rx="1"></rect></svg>カード
+        </button>
+        <button onClick="{{ layoutCompact }}" style="cursor:pointer;font-family:inherit;font-size:12.5px;font-weight:700;padding:6px 13px;border:none;border-radius:8px;background:{{ tabCompactBg }};color:{{ tabCompactColor }};display:flex;align-items:center;gap:6px">
+          <svg width="13" height="13" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><line x1="4" y1="6" x2="20" y2="6"></line><line x1="4" y1="12" x2="20" y2="12"></line><line x1="4" y1="18" x2="20" y2="18"></line></svg>リスト
+        </button>
+      </div>
+    </div>
+
+    <!-- CARDS layout -->
+    <sc-if value="{{ isCards }}" hint-placeholder-val="{{ true }}">
+      <div style="display:grid;grid-template-columns:repeat(auto-fill,minmax(286px,1fr));gap:12px">
+        <sc-for list="{{ cards }}" as="c" hint-placeholder-count="8">
+          <div onClick="{{ c.open }}" class="dm-card" style="border:1px solid var(--border);background:var(--surface);border-radius:var(--radius-card);padding:14px;cursor:pointer;box-shadow:var(--shadow);display:flex;flex-direction:column;gap:12px">
+            <div style="display:flex;gap:11px;align-items:flex-start">
+              <div style="width:40px;height:40px;border-radius:8px;flex-shrink:0;display:flex;align-items:center;justify-content:center;font-weight:800;font-size:15px;color:#fff;background:{{ c.tint }}">{{ c.glyph }}</div>
+              <h3 style="margin:0;flex:1;font-size:15px;font-weight:500;line-height:1.3;display:-webkit-box;-webkit-line-clamp:2;-webkit-box-orient:vertical;overflow:hidden">{{ c.q }}</h3>
+              <sc-if value="{{ c.isBinary }}" hint-placeholder-val="{{ true }}">
+                <div style="position:relative;width:48px;height:48px;flex-shrink:0;text-align:center">
+                  <svg width="48" height="26" viewBox="0 0 48 26" style="display:block"><path d="M5 24 A19 19 0 0 1 43 24" fill="none" stroke="var(--surface2)" stroke-width="5" stroke-linecap="round"></path><path d="M5 24 A19 19 0 0 1 43 24" fill="none" stroke="{{ c.arcColor }}" stroke-width="5" stroke-linecap="round" stroke-dasharray="{{ c.arcDash }}"></path></svg>
+                  <div class="mono" style="font-size:14px;font-weight:700;line-height:1;margin-top:-3px;color:{{ c.arcColor }}">{{ c.chance }}</div>
+                  <div style="font-size:8.5px;font-weight:700;color:var(--faint);letter-spacing:.04em">YES</div>
+                </div>
+              </sc-if>
+            </div>
+
+            <sc-if value="{{ c.isBinary }}" hint-placeholder-val="{{ true }}">
+              <div style="display:flex;gap:8px;margin-top:auto">
+                <button onClick="{{ c.buyYes }}" class="dm-ybtn" style="flex:1;cursor:pointer;font-family:inherit;font-weight:700;font-size:13.5px;padding:10px;border:none;border-radius:8px;background:var(--pos-weak);color:var(--pos);display:flex;align-items:center;justify-content:center;gap:5px"><svg width="12" height="12" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="3" stroke-linecap="round" stroke-linejoin="round"><path d="M5 15l7-7 7 7"></path></svg>Yes <span class="mono">{{ c.yesLabel }}</span></button>
+                <button onClick="{{ c.buyNo }}" class="dm-ybtn" style="flex:1;cursor:pointer;font-family:inherit;font-weight:700;font-size:13.5px;padding:10px;border:none;border-radius:8px;background:var(--neg-weak);color:var(--neg);display:flex;align-items:center;justify-content:center;gap:5px"><svg width="12" height="12" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="3" stroke-linecap="round" stroke-linejoin="round"><path d="M5 9l7 7 7-7"></path></svg>No <span class="mono">{{ c.noLabel }}</span></button>
+              </div>
+            </sc-if>
+            <sc-if value="{{ c.isMulti }}" hint-placeholder-val="{{ true }}">
+              <div style="display:flex;flex-direction:column;gap:9px;margin-top:auto">
+                <sc-for list="{{ c.rows }}" as="r" hint-placeholder-count="3">
+                  <div style="display:flex;align-items:center;gap:9px">
+                    <span style="flex:1;min-width:0;font-size:13px;font-weight:600;white-space:nowrap;overflow:hidden;text-overflow:ellipsis">{{ r.label }}</span>
+                    <span class="mono" style="font-size:13.5px;font-weight:700;width:34px;text-align:right">{{ r.pct }}</span>
+                    <button onClick="{{ r.open }}" class="dm-ybtn" style="cursor:pointer;font-family:inherit;font-weight:700;font-size:11.5px;padding:5px 9px;border:none;border-radius:7px;background:var(--pos-weak);color:var(--pos)">Yes</button>
+                    <button onClick="{{ r.open }}" class="dm-ybtn" style="cursor:pointer;font-family:inherit;font-weight:700;font-size:11.5px;padding:5px 9px;border:none;border-radius:7px;background:var(--neg-weak);color:var(--neg)">No</button>
+                  </div>
+                </sc-for>
+                <div style="font-size:11.5px;color:var(--faint);font-weight:600">{{ c.moreLabel }}</div>
+              </div>
+            </sc-if>
+
+            <div style="display:flex;align-items:center;justify-content:space-between;border-top:1px solid var(--border);padding-top:10px">
+              <span class="mono" style="font-size:11.5px;color:var(--dim);font-weight:600">{{ c.volLabel }} pt Vol.</span>
+              <div style="display:flex;align-items:center;gap:13px;color:var(--faint)">
+                <svg width="14" height="14" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><rect x="3" y="8" width="18" height="13" rx="1.5"></rect><path d="M12 8v13M3 12h18M12 8C12 5 10 3 8 3a2.5 2.5 0 0 0 0 5M12 8c0-3 2-5 4-5a2.5 2.5 0 0 1 0 5"></path></svg>
+                <svg width="13" height="13" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linejoin="round"><path d="M6 3h12a1 1 0 0 1 1 1v17l-7-4-7 4V4a1 1 0 0 1 1-1z"></path></svg>
+              </div>
+            </div>
+          </div>
+        </sc-for>
+      </div>
+    </sc-if>
+
+    <!-- COMPACT layout -->
+    <sc-if value="{{ isCompact }}" hint-placeholder-val="{{ true }}">
+      <div style="display:flex;flex-direction:column;gap:10px">
+        <sc-for list="{{ cards }}" as="c" hint-placeholder-count="6">
+          <div onClick="{{ c.open }}" style="border:1px solid var(--border);background:var(--surface);border-radius:var(--radius-sm);padding:14px 18px;cursor:pointer;box-shadow:var(--shadow);display:flex;align-items:center;gap:16px">
+            <div style="width:40px;height:40px;border-radius:10px;flex-shrink:0;display:flex;align-items:center;justify-content:center;font-weight:800;font-size:15px;color:#fff;background:{{ c.tint }}">{{ c.glyph }}</div>
+            <div style="flex:1;min-width:0">
+              <h3 style="margin:0 0 3px;font-size:14.5px;font-weight:700;line-height:1.25;white-space:nowrap;overflow:hidden;text-overflow:ellipsis">{{ c.q }}</h3>
+              <div style="font-size:12px;color:var(--dim)"><span style="color:var(--primary);font-weight:700">{{ c.catLabel }}</span> · <span class="mono">{{ c.volLabel }}</span> 出来高 · {{ c.closeLabel }}</div>
+            </div>
+            <sc-if value="{{ c.isBinary }}" hint-placeholder-val="{{ true }}">
+              <div style="text-align:right"><div class="mono" style="font-size:18px;font-weight:700;color:{{ c.arcColor }};line-height:1">{{ c.chanceLabel }}</div><div style="font-size:11px;color:var(--dim);font-weight:600">YES確率</div></div>
+              <div style="display:flex;gap:7px;width:188px">
+                <button onClick="{{ c.buyYes }}" style="flex:1;cursor:pointer;font-family:inherit;font-weight:700;font-size:13px;padding:9px;border:none;border-radius:9px;background:var(--pos-weak);color:var(--pos)">YES <span class="mono">{{ c.yesLabel }}</span></button>
+                <button onClick="{{ c.buyNo }}" style="flex:1;cursor:pointer;font-family:inherit;font-weight:700;font-size:13px;padding:9px;border:none;border-radius:9px;background:var(--neg-weak);color:var(--neg)">NO <span class="mono">{{ c.noLabel }}</span></button>
+              </div>
+            </sc-if>
+            <sc-if value="{{ c.isMulti }}" hint-placeholder-val="{{ true }}">
+              <div style="display:flex;flex-direction:column;gap:5px;width:236px">
+                <sc-for list="{{ c.rows }}" as="r" hint-placeholder-count="3">
+                  <div style="display:flex;align-items:center;gap:9px"><span style="flex:1;font-size:12.5px;font-weight:600;white-space:nowrap;overflow:hidden;text-overflow:ellipsis">{{ r.label }}</span><span class="mono" style="font-size:13px;font-weight:700">{{ r.pct }}</span></div>
+                </sc-for>
+              </div>
+            </sc-if>
+          </div>
+        </sc-for>
+      </div>
+    </sc-if>
+  </main>
+  </sc-if>
+
+  <!-- ───────── DETAIL ───────── -->
+  <sc-if value="{{ isDetail }}" hint-placeholder-val="{{ true }}">
+  <main class="dm-pad" style="max-width:1240px;margin:0 auto;padding:22px 22px 80px;animation:dmIn .3s ease">
+    <button onClick="{{ goHome }}" style="border:none;background:none;cursor:pointer;font-family:inherit;color:var(--dim);font-size:13px;font-weight:600;padding:0 0 14px;display:flex;align-items:center;gap:6px">← マーケット一覧へ戻る</button>
+
+    <div style="display:grid;grid-template-columns:repeat(auto-fit,minmax(330px,1fr));gap:24px;align-items:flex-start">
+      <!-- left -->
+      <div style="flex:1 1 460px;min-width:0;display:flex;flex-direction:column;gap:18px">
+        <div style="display:flex;gap:16px;align-items:flex-start">
+          <div style="width:56px;height:56px;border-radius:14px;flex-shrink:0;display:flex;align-items:center;justify-content:center;font-weight:800;font-size:22px;color:#fff;background:{{ dTint }}">{{ dGlyph }}</div>
+          <div style="flex:1">
+            <div style="font-size:12.5px;color:var(--dim);margin-bottom:5px"><span style="color:var(--primary);font-weight:700">{{ dCatLabel }}</span> · <span class="mono">{{ dVolLabel }}</span> 出来高 · {{ dCloseLabel }}</div>
+            <h1 style="margin:0;font-size:23px;font-weight:800;line-height:1.25;letter-spacing:-.01em">{{ dQ }}</h1>
+            <p style="margin:5px 0 0;font-size:13.5px;color:var(--dim)">{{ dQEn }}</p>
+          </div>
+        </div>
+
+        <!-- chance + chart -->
+        <div style="border:1px solid var(--border);background:var(--surface);border-radius:var(--radius);padding:20px;box-shadow:var(--shadow)">
+          <div style="display:flex;align-items:flex-end;justify-content:space-between;margin-bottom:8px">
+            <div style="display:flex;align-items:baseline;gap:10px">
+              <span class="mono" style="font-size:38px;font-weight:700;color:{{ dArcColor }};line-height:1">{{ dChanceLabel }}</span>
+              <span style="font-size:14px;font-weight:700;color:var(--dim)">{{ dTopLabel }}の確率</span>
+              <span class="mono" style="font-size:13px;font-weight:700;color:{{ dChgColor }}">{{ dChgLabel }}</span>
+            </div>
+            <div class="scrollx" style="display:flex;gap:3px;padding:3px;background:var(--surface2);border-radius:9px">
+              <sc-for list="{{ tfs }}" as="t" hint-placeholder-count="6">
+                <button onClick="{{ t.pick }}" style="cursor:pointer;font-family:inherit;font-size:12px;font-weight:700;padding:5px 10px;border:none;border-radius:6px;background:{{ t.bg }};color:{{ t.color }}">{{ t.label }}</button>
+              </sc-for>
+            </div>
+          </div>
+          <svg viewBox="0 0 660 220" preserveAspectRatio="none" style="width:100%;height:220px;display:block">
+            <defs><linearGradient id="dmArea" x1="0" y1="0" x2="0" y2="1"><stop offset="0" stop-color="{{ dArcColor }}" stop-opacity="0.18"></stop><stop offset="1" stop-color="{{ dArcColor }}" stop-opacity="0"></stop></linearGradient></defs>
+            <path d="{{ dArea }}" fill="url(#dmArea)"></path>
+            <path d="{{ dLine }}" fill="none" stroke="{{ dArcColor }}" stroke-width="2.5" stroke-linejoin="round" stroke-linecap="round"></path>
+          </svg>
+        </div>
+
+        <!-- outcomes -->
+        <div style="border:1px solid var(--border);background:var(--surface);border-radius:var(--radius);padding:8px;box-shadow:var(--shadow)">
+          <div style="padding:10px 12px 8px;font-size:13px;font-weight:800;color:var(--dim)">アウトカム / Outcomes</div>
+          <sc-for list="{{ dOutcomes }}" as="o" hint-placeholder-count="2">
+            <div onClick="{{ o.pick }}" style="display:flex;align-items:center;gap:14px;padding:12px;border-radius:12px;cursor:pointer;border:1.5px solid {{ o.selBorder }};background:{{ o.selBg }};margin:2px 0">
+              <div style="width:9px;height:9px;border-radius:50%;background:{{ o.col }};flex-shrink:0"></div>
+              <span style="flex:1;font-size:14.5px;font-weight:700">{{ o.label }}</span>
+              <div style="width:160px;height:7px;border-radius:5px;background:var(--surface2);overflow:hidden"><div style="height:100%;width:{{ o.barW }};background:{{ o.col }};border-radius:5px"></div></div>
+              <span class="mono" style="width:54px;text-align:right;font-size:16px;font-weight:700">{{ o.cents }}</span>
+            </div>
+          </sc-for>
+        </div>
+
+        <!-- tabs: book / holders / activity / comments -->
+        <div style="border:1px solid var(--border);background:var(--surface);border-radius:var(--radius);box-shadow:var(--shadow);overflow:hidden">
+          <div class="scrollx" style="display:flex;gap:2px;padding:8px;border-bottom:1px solid var(--border);overflow-x:auto">
+            <sc-for list="{{ detailTabs }}" as="t" hint-placeholder-count="4">
+              <button onClick="{{ t.pick }}" style="cursor:pointer;font-family:inherit;font-size:13px;font-weight:700;padding:8px 14px;border:none;border-radius:9px;white-space:nowrap;background:{{ t.bg }};color:{{ t.color }}">{{ t.label }}</button>
+            </sc-for>
+          </div>
+
+          <!-- order book -->
+          <sc-if value="{{ isTabBook }}" hint-placeholder-val="{{ true }}">
+            <div style="padding:16px 18px">
+              <div style="display:grid;grid-template-columns:1fr 1fr 1fr;gap:8px;font-size:11px;font-weight:700;color:var(--faint);padding-bottom:8px"><span>価格</span><span style="text-align:right">数量(pt)</span><span style="text-align:right">深さ</span></div>
+              <sc-for list="{{ obAsks }}" as="a" hint-placeholder-count="3">
+                <div style="position:relative;display:grid;grid-template-columns:1fr 1fr 1fr;gap:8px;padding:5px 0;font-size:13px;align-items:center">
+                  <div style="position:absolute;right:0;top:0;bottom:0;width:{{ a.depth }};background:var(--neg-weak);border-radius:5px;z-index:0"></div>
+                  <span class="mono" style="position:relative;z-index:1;font-weight:700;color:var(--neg)">{{ a.px }}</span>
+                  <span class="mono" style="position:relative;z-index:1;text-align:right;color:var(--dim)">{{ a.size }}</span>
+                  <span class="mono" style="position:relative;z-index:1;text-align:right;color:var(--faint);font-size:11.5px">売り</span>
+                </div>
+              </sc-for>
+              <div style="display:flex;align-items:center;justify-content:space-between;padding:9px 0;margin:4px 0;border-top:1px dashed var(--border);border-bottom:1px dashed var(--border)">
+                <span style="font-size:11.5px;color:var(--dim);font-weight:600">スプレッド {{ obSpread }}</span>
+                <span class="mono" style="font-size:15px;font-weight:700">中値 {{ obMid }}</span>
+              </div>
+              <sc-for list="{{ obBids }}" as="b" hint-placeholder-count="3">
+                <div style="position:relative;display:grid;grid-template-columns:1fr 1fr 1fr;gap:8px;padding:5px 0;font-size:13px;align-items:center">
+                  <div style="position:absolute;right:0;top:0;bottom:0;width:{{ b.depth }};background:var(--pos-weak);border-radius:5px;z-index:0"></div>
+                  <span class="mono" style="position:relative;z-index:1;font-weight:700;color:var(--pos)">{{ b.px }}</span>
+                  <span class="mono" style="position:relative;z-index:1;text-align:right;color:var(--dim)">{{ b.size }}</span>
+                  <span class="mono" style="position:relative;z-index:1;text-align:right;color:var(--faint);font-size:11.5px">買い</span>
+                </div>
+              </sc-for>
+            </div>
+          </sc-if>
+
+          <!-- holders -->
+          <sc-if value="{{ isTabHolders }}" hint-placeholder-val="">
+            <div style="display:grid;grid-template-columns:1fr 1fr;gap:0">
+              <div style="padding:16px 18px;border-right:1px solid var(--border)">
+                <div style="font-size:12px;font-weight:800;color:var(--pos);margin-bottom:10px">YES 保有者</div>
+                <sc-for list="{{ holdersYes }}" as="h" hint-placeholder-count="4">
+                  <div style="display:flex;align-items:center;gap:9px;padding:6px 0">
+                    <div style="width:28px;height:28px;border-radius:50%;flex-shrink:0;display:flex;align-items:center;justify-content:center;font-weight:700;font-size:12px;color:#fff;background:{{ h.col }}">{{ h.init }}</div>
+                    <span style="flex:1;font-size:13px;font-weight:600;min-width:0;white-space:nowrap;overflow:hidden;text-overflow:ellipsis">{{ h.name }}</span>
+                    <span class="mono" style="font-size:12.5px;color:var(--dim)">{{ h.shares }}</span>
+                  </div>
+                </sc-for>
+              </div>
+              <div style="padding:16px 18px">
+                <div style="font-size:12px;font-weight:800;color:var(--neg);margin-bottom:10px">NO 保有者</div>
+                <sc-for list="{{ holdersNo }}" as="h" hint-placeholder-count="4">
+                  <div style="display:flex;align-items:center;gap:9px;padding:6px 0">
+                    <div style="width:28px;height:28px;border-radius:50%;flex-shrink:0;display:flex;align-items:center;justify-content:center;font-weight:700;font-size:12px;color:#fff;background:{{ h.col }}">{{ h.init }}</div>
+                    <span style="flex:1;font-size:13px;font-weight:600;min-width:0;white-space:nowrap;overflow:hidden;text-overflow:ellipsis">{{ h.name }}</span>
+                    <span class="mono" style="font-size:12.5px;color:var(--dim)">{{ h.shares }}</span>
+                  </div>
+                </sc-for>
+              </div>
+            </div>
+          </sc-if>
+
+          <!-- activity -->
+          <sc-if value="{{ isTabActivity }}" hint-placeholder-val="">
+            <div style="padding:8px 0">
+              <sc-for list="{{ activity }}" as="a" hint-placeholder-count="6">
+                <div style="display:flex;align-items:center;gap:11px;padding:10px 18px;border-top:1px solid var(--border)">
+                  <span style="flex:1;font-size:13px;min-width:0"><b style="font-weight:700">{{ a.name }}</b> が <span style="color:{{ a.actColor }};font-weight:700">{{ a.act }}</span> · <span style="color:{{ a.sideCol }};font-weight:700">{{ a.side }}</span></span>
+                  <span class="mono" style="font-size:12.5px;color:var(--dim)">{{ a.amt }}</span>
+                  <span class="mono" style="font-size:12.5px;font-weight:700;width:34px;text-align:right">{{ a.px }}</span>
+                  <span style="font-size:11px;color:var(--faint);width:54px;text-align:right">{{ a.time }}</span>
+                </div>
+              </sc-for>
+            </div>
+          </sc-if>
+
+          <!-- comments -->
+          <sc-if value="{{ isTabComments }}" hint-placeholder-val="">
+            <div style="padding:16px 18px">
+              <div style="display:flex;gap:9px;margin-bottom:16px">
+                <input value="{{ commentText }}" onInput="{{ onComment }}" placeholder="コメントを書く / Add a comment" style="flex:1;height:40px;padding:0 13px;border:1px solid var(--border);background:var(--surface2);border-radius:10px;font-size:13.5px;font-family:inherit;color:var(--text);outline:none">
+                <button onClick="{{ postComment }}" style="cursor:pointer;font-family:inherit;font-weight:700;font-size:13px;padding:0 16px;border:none;border-radius:10px;background:var(--grad);color:#fff">投稿</button>
+              </div>
+              <sc-for list="{{ comments }}" as="c" hint-placeholder-count="3">
+                <div style="display:flex;gap:11px;padding:11px 0;border-top:1px solid var(--border)">
+                  <div style="width:32px;height:32px;border-radius:50%;flex-shrink:0;display:flex;align-items:center;justify-content:center;font-weight:700;font-size:13px;color:#fff;background:{{ c.col }}">{{ c.init }}</div>
+                  <div style="flex:1;min-width:0">
+                    <div style="font-size:12.5px;margin-bottom:2px"><b style="font-weight:700">{{ c.user }}</b> <span style="color:var(--faint)">· {{ c.time }}</span></div>
+                    <p style="margin:0 0 6px;font-size:13.5px;line-height:1.5;color:var(--text)">{{ c.text }}</p>
+                    <button onClick="{{ c.like }}" style="display:inline-flex;align-items:center;gap:5px;cursor:pointer;border:none;background:none;font-family:inherit;font-size:12px;font-weight:600;color:var(--dim);padding:0"><svg width="13" height="13" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linejoin="round"><path d="M7 10v11M2 13v6a2 2 0 0 0 2 2h13.5a2 2 0 0 0 2-1.6l1.3-7A1.6 1.6 0 0 0 19 11h-6l1-5a2 2 0 0 0-2-2.5L7 10"></path></svg>{{ c.up }}</button>
+                  </div>
+                </div>
+              </sc-for>
+            </div>
+          </sc-if>
+        </div>
+
+        <!-- rules -->
+        <div style="border:1px solid var(--border);background:var(--surface);border-radius:var(--radius);padding:20px;box-shadow:var(--shadow)">
+          <div style="font-size:13px;font-weight:800;margin-bottom:8px">ルール / Resolution</div>
+          <p style="margin:0;font-size:13.5px;color:var(--dim);line-height:1.6">{{ dRule }} 価格は LMSR により取引で変動し、確率＝価格として表示されます。獲得できるのは称号とランキング順位のみで、ポイントは換金できません。</p>
+        </div>
+      </div>
+
+      <!-- right: trade panel -->
+      <div style="flex:1 1 320px;max-width:392px;position:sticky;top:88px;border:1px solid var(--border);background:var(--surface);border-radius:var(--radius);padding:18px;box-shadow:var(--shadow)">
+        <div style="display:grid;grid-template-columns:1fr 1fr;gap:4px;padding:4px;background:var(--surface2);border-radius:11px;margin-bottom:16px">
+          <button onClick="{{ sideBuy }}" style="cursor:pointer;font-family:inherit;font-weight:700;font-size:14px;padding:9px;border:none;border-radius:8px;background:{{ buyBg }};color:{{ buyColor }};box-shadow:{{ buyShadow }}">買う / Buy</button>
+          <button onClick="{{ sideSell }}" style="cursor:pointer;font-family:inherit;font-weight:700;font-size:14px;padding:9px;border:none;border-radius:8px;background:{{ sellBg }};color:{{ sellColor }};box-shadow:{{ sellShadow }}">売る / Sell</button>
+        </div>
+
+        <div style="font-size:12.5px;font-weight:700;color:var(--dim);margin-bottom:8px">アウトカム</div>
+        <div style="display:flex;flex-direction:column;gap:7px;margin-bottom:16px">
+          <sc-for list="{{ dOutcomes }}" as="o" hint-placeholder-count="2">
+            <button onClick="{{ o.pick }}" style="display:flex;align-items:center;justify-content:space-between;cursor:pointer;font-family:inherit;padding:11px 13px;border-radius:10px;border:1.5px solid {{ o.selBorder }};background:{{ o.selBg }};font-weight:700;font-size:14px;color:var(--text)"><span>{{ o.label }}</span><span class="mono">{{ o.cents }}</span></button>
+          </sc-for>
+        </div>
+
+        <div style="font-size:12.5px;font-weight:700;color:var(--dim);margin-bottom:8px">金額 (pt)</div>
+        <div style="display:flex;align-items:center;border:1px solid var(--border);border-radius:11px;background:var(--surface2);padding:0 14px;margin-bottom:8px">
+          <span style="color:var(--dim);font-size:15px;font-weight:700">pt</span>
+          <input type="number" value="{{ amount }}" onInput="{{ onAmount }}" class="mono" style="flex:1;border:none;background:none;outline:none;text-align:right;font-size:22px;font-weight:700;padding:13px 0;color:var(--text);font-family:'Roboto Mono',monospace">
+        </div>
+        <div style="display:flex;gap:7px;margin-bottom:18px">
+          <sc-for list="{{ chips }}" as="ch" hint-placeholder-count="4">
+            <button onClick="{{ ch.add }}" style="flex:1;cursor:pointer;font-family:inherit;font-weight:700;font-size:12.5px;padding:7px;border:1px solid var(--border);border-radius:8px;background:var(--surface);color:var(--dim)">{{ ch.label }}</button>
+          </sc-for>
+        </div>
+
+        <div style="display:flex;flex-direction:column;gap:9px;padding:14px 0;border-top:1px solid var(--border);border-bottom:1px solid var(--border);margin-bottom:16px">
+          <div style="display:flex;justify-content:space-between;font-size:13.5px"><span style="color:var(--dim)">平均価格 / Avg</span><span class="mono" style="font-weight:700">{{ tAvg }}</span></div>
+          <div style="display:flex;justify-content:space-between;font-size:13.5px"><span style="color:var(--dim)">株数 / Shares</span><span class="mono" style="font-weight:700">{{ tShares }}</span></div>
+          <div style="display:flex;justify-content:space-between;font-size:13.5px"><span style="color:var(--dim)">{{ tR3Label }}</span><span class="mono" style="font-weight:700;color:{{ tR3Color }}">{{ tR3Val }}</span></div>
+          <div style="display:flex;justify-content:space-between;font-size:13.5px"><span style="color:var(--dim)">{{ tR4Label }}</span><span class="mono" style="font-weight:700;color:{{ tR4Color }}">{{ tR4Val }}</span></div>
+        </div>
+
+        <sc-if value="{{ hasHold }}" hint-placeholder-val="">
+          <div style="display:flex;align-items:center;justify-content:space-between;gap:8px;padding:11px 13px;border:1px solid var(--border);background:var(--surface2);border-radius:11px;margin-bottom:14px">
+            <div><div style="font-size:11.5px;color:var(--dim);font-weight:600">保有 / Position</div><div class="mono" style="font-size:14px;font-weight:700">{{ holdShares }}株 <span style="color:var(--dim);font-weight:500">@{{ holdAvg }}</span></div></div>
+            <div style="text-align:right"><div class="mono" style="font-size:14px;font-weight:700">{{ holdValue }} pt</div><div class="mono" style="font-size:12px;font-weight:700;color:{{ holdPnlColor }}">{{ holdPnl }}</div></div>
+          </div>
+        </sc-if>
+
+        <button onClick="{{ doTrade }}" style="width:100%;cursor:pointer;font-family:inherit;font-weight:800;font-size:15.5px;padding:14px;border:none;border-radius:12px;background:{{ ctaBg }};color:#fff">{{ ctaLabel }}</button>
+        <p style="margin:11px 0 0;text-align:center;font-size:11.5px;color:var(--faint);line-height:1.4">換金不可・賞品ゼロ / No cash-out — glory only</p>
+
+        <div style="margin-top:14px;padding-top:14px;border-top:1px dashed var(--border)">
+          <sc-if value="{{ isResolved }}" hint-placeholder-val="">
+            <div style="display:flex;align-items:center;gap:8px;font-size:12.5px;font-weight:700;color:var(--pos)"><svg width="15" height="15" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.4" stroke-linecap="round" stroke-linejoin="round"><path d="M20 6L9 17l-5-5"></path></svg>解決済み: 「{{ winnerLabel }}」が確定</div>
+          </sc-if>
+          <sc-if value="{{ notResolved }}" hint-placeholder-val="{{ true }}">
+            <button onClick="{{ resolveDemo }}" style="width:100%;cursor:pointer;font-family:inherit;font-weight:700;font-size:12.5px;padding:10px;border:1px dashed var(--border);border-radius:10px;background:none;color:var(--dim)">結果をシミュレート / Resolve (demo)</button>
+            <p style="margin:7px 0 0;text-align:center;font-size:10.5px;color:var(--faint);line-height:1.4">本番は締切後に一次ソースで解決。当たり=1株100pt / ハズレ=0pt</p>
+          </sc-if>
+        </div>
+      </div>
+    </div>
+  </main>
+  </sc-if>
+
+  <!-- ───────── MY PAGE ───────── -->
+  <sc-if value="{{ isPort }}" hint-placeholder-val="{{ true }}">
+  <main class="dm-pad" style="max-width:1100px;margin:0 auto;padding:28px 22px 80px;animation:dmIn .3s ease">
+
+    <!-- profile header -->
+    <div style="position:relative;overflow:hidden;display:flex;align-items:center;gap:20px;border:1px solid var(--border);background:var(--surface);border-radius:var(--radius);padding:24px;box-shadow:var(--shadow);margin-bottom:16px">
+      <div style="position:absolute;right:-40px;top:-40px;width:200px;height:200px;border-radius:50%;background:radial-gradient(circle,rgba(56,189,248,.14),transparent 70%)"></div>
+      <div style="width:76px;height:76px;border-radius:22px;flex-shrink:0;display:flex;align-items:center;justify-content:center;font-weight:700;font-size:30px;color:#fff;background:linear-gradient(135deg,#0ea5e9,#06b6d4);box-shadow:0 12px 26px -12px rgba(6,182,212,.75)">{{ user.initial }}</div>
+      <div style="flex:1;min-width:0">
+        <div style="display:flex;align-items:center;gap:10px;flex-wrap:wrap">
+          <h1 style="margin:0;font-size:23px;font-weight:700">{{ user.name }}</h1>
+          <span style="font-size:13px;color:var(--dim)">{{ user.handle }}</span>
+          <span style="display:inline-flex;align-items:center;gap:5px;font-size:12px;font-weight:700;color:var(--primary);background:var(--primary-weak);border:1px solid var(--accent2);padding:3px 11px;border-radius:999px">★ {{ user.title }}</span>
+        </div>
+        <div style="display:flex;align-items:center;gap:7px;font-size:12.5px;color:var(--dim);margin-top:8px;flex-wrap:wrap"><span>{{ user.joined }}</span><span>·</span><span>総合 <b style="color:var(--text)">{{ user.rank }}</b></span><span>·</span><span style="display:inline-flex;align-items:center;gap:4px"><svg width="13" height="13" viewBox="0 0 24 24" fill="#f97316"><path d="M12 2c1.2 3-1 5-2.6 6.6C8 10.2 7 12 7 14a5 5 0 0 0 10 0c0-1.8-.6-3.2-1.6-4.4-.3 1-1.1 1.8-2 1.8 1.1-2.4.3-5-1.4-9.4z"></path></svg>{{ user.streak }}日連続ログイン</span></div>
+      </div>
+      <button onClick="{{ claim }}" style="height:42px;padding:0 18px;background:var(--grad);color:#fff;border:none;border-radius:12px;cursor:pointer;font-family:inherit;font-weight:700;font-size:13.5px;box-shadow:0 8px 20px -8px rgba(6,182,212,.7);flex-shrink:0">デイリー受取 / Claim</button>
+    </div>
+
+    <!-- stats -->
+    <div style="display:grid;grid-template-columns:repeat(auto-fill,minmax(150px,1fr));gap:12px;margin-bottom:22px">
+      <div style="border:1px solid var(--border);background:var(--surface);border-radius:16px;padding:16px;box-shadow:var(--shadow)"><div style="font-size:12px;color:var(--dim);font-weight:600;margin-bottom:6px">残高 / Balance</div><div class="mono" style="font-size:22px;font-weight:700">{{ balanceLabel }}<span style="font-size:12px;color:var(--dim)"> pt</span></div></div>
+      <div style="border:1px solid var(--border);background:var(--surface);border-radius:16px;padding:16px;box-shadow:var(--shadow)"><div style="font-size:12px;color:var(--dim);font-weight:600;margin-bottom:6px">評価額 / Positions</div><div class="mono" style="font-size:22px;font-weight:700">{{ posValue }}<span style="font-size:12px;color:var(--dim)"> pt</span></div></div>
+      <div style="border:1px solid var(--border);background:var(--surface);border-radius:16px;padding:16px;box-shadow:var(--shadow)"><div style="font-size:12px;color:var(--dim);font-weight:600;margin-bottom:6px">合計損益 / P&L</div><div class="mono" style="font-size:22px;font-weight:700;color:{{ pnlColor }}">{{ pnlValue }}</div></div>
+      <div style="border:1px solid var(--border);background:var(--surface);border-radius:16px;padding:16px;box-shadow:var(--shadow)"><div style="font-size:12px;color:var(--dim);font-weight:600;margin-bottom:6px">的中率 / Hit rate</div><div class="mono" style="font-size:22px;font-weight:700">61%</div></div>
+      <div style="border:1px solid var(--border);background:var(--surface);border-radius:16px;padding:16px;box-shadow:var(--shadow)"><div style="font-size:12px;color:var(--dim);font-weight:600;margin-bottom:6px">連勝 / Streak</div><div class="mono" style="font-size:22px;font-weight:700;color:var(--primary)">{{ user.streak }}</div></div>
+    </div>
+
+    <!-- badges -->
+    <div style="border:1px solid var(--border);background:var(--surface);border-radius:var(--radius);padding:20px;box-shadow:var(--shadow);margin-bottom:20px">
+      <div style="display:flex;align-items:center;justify-content:space-between;margin-bottom:14px">
+        <h2 style="margin:0;font-size:15px;font-weight:700">称号コレクション <span style="color:var(--dim);font-weight:500">/ Badges</span></h2>
+        <span style="font-size:12.5px;color:var(--dim);font-weight:600">{{ badgeCount }}</span>
+      </div>
+      <div style="display:grid;grid-template-columns:repeat(auto-fill,minmax(190px,1fr));gap:12px">
+        <sc-for list="{{ badges }}" as="b" hint-placeholder-count="8">
+          <div style="display:flex;align-items:center;gap:12px;padding:12px;border-radius:14px;border:1px solid var(--border);background:{{ b.cardBg }};opacity:{{ b.op }}">
+            <div style="width:42px;height:42px;border-radius:12px;flex-shrink:0;display:flex;align-items:center;justify-content:center;font-weight:700;font-size:18px;color:#fff;background:{{ b.iconBg }}">{{ b.icon }}</div>
+            <div style="min-width:0"><div style="font-size:13px;font-weight:700;white-space:nowrap;overflow:hidden;text-overflow:ellipsis">{{ b.name }}</div><div style="font-size:11px;color:var(--dim)">{{ b.sub }}</div></div>
+          </div>
+        </sc-for>
+      </div>
+    </div>
+
+    <!-- holdings -->
+    <h2 style="margin:0 0 12px;font-size:15px;font-weight:700">保有ポジション <span style="color:var(--dim);font-weight:500">/ Positions</span></h2>
+    <div style="border:1px solid var(--border);background:var(--surface);border-radius:var(--radius);box-shadow:var(--shadow);overflow:hidden">
+      <div style="display:grid;grid-template-columns:2.4fr 1fr 1fr 1fr 1fr;gap:12px;padding:13px 20px;font-size:12px;font-weight:700;color:var(--dim);border-bottom:1px solid var(--border);background:var(--surface2)">
+        <span>市場 / アウトカム</span><span style="text-align:right">株数</span><span style="text-align:right">平均</span><span style="text-align:right">現在</span><span style="text-align:right">損益</span>
+      </div>
+      <sc-for list="{{ positions }}" as="p" hint-placeholder-count="4">
+        <div onClick="{{ p.open }}" style="display:grid;grid-template-columns:2.4fr 1fr 1fr 1fr 1fr;gap:12px;padding:14px 20px;align-items:center;border-bottom:1px solid var(--border);cursor:pointer">
+          <div style="display:flex;align-items:center;gap:11px;min-width:0">
+            <div style="width:34px;height:34px;border-radius:9px;flex-shrink:0;display:flex;align-items:center;justify-content:center;font-weight:800;font-size:13px;color:#fff;background:{{ p.tint }}">{{ p.glyph }}</div>
+            <div style="min-width:0"><div style="font-size:13.5px;font-weight:700;white-space:nowrap;overflow:hidden;text-overflow:ellipsis">{{ p.q }}</div><div style="font-size:12px;color:{{ p.col }};font-weight:700">{{ p.label }}</div></div>
+          </div>
+          <span class="mono" style="text-align:right;font-size:13.5px;font-weight:600">{{ p.shares }}</span>
+          <span class="mono" style="text-align:right;font-size:13.5px;color:var(--dim)">{{ p.avg }}</span>
+          <span class="mono" style="text-align:right;font-size:13.5px;font-weight:600">{{ p.cur }}</span>
+          <span class="mono" style="text-align:right;font-size:13.5px;font-weight:700;color:{{ p.pnlColor }}">{{ p.pnl }}</span>
+        </div>
+      </sc-for>
+    </div>
+
+    <!-- ledger -->
+    <h2 style="margin:22px 0 12px;font-size:15px;font-weight:700">取引履歴 <span style="color:var(--dim);font-weight:500">/ Activity</span></h2>
+    <div style="border:1px solid var(--border);background:var(--surface);border-radius:var(--radius);box-shadow:var(--shadow);overflow:hidden">
+      <sc-for list="{{ ledger }}" as="l" hint-placeholder-count="6">
+        <div style="display:flex;align-items:center;gap:14px;padding:13px 20px;border-bottom:1px solid var(--border)">
+          <span class="mono" style="font-size:12px;color:var(--faint);width:92px;flex-shrink:0">{{ l.time }}</span>
+          <span style="flex:1;font-size:13.5px;font-weight:600;min-width:0;white-space:nowrap;overflow:hidden;text-overflow:ellipsis">{{ l.label }}</span>
+          <span class="mono" style="font-size:14px;font-weight:700;color:{{ l.col }}">{{ l.delta }}</span>
+          <span class="mono" style="font-size:12.5px;color:var(--dim);width:64px;text-align:right">{{ l.after }}</span>
+        </div>
+      </sc-for>
+    </div>
+  </main>
+  </sc-if>
+
+  <!-- ───────── LEADERBOARD ───────── -->
+  <sc-if value="{{ isLead }}" hint-placeholder-val="{{ true }}">
+  <main class="dm-pad" style="max-width:880px;margin:0 auto;padding:28px 22px 80px;animation:dmIn .3s ease">
+    <div style="display:flex;align-items:center;justify-content:space-between;margin-bottom:22px">
+      <h1 style="margin:0;font-size:24px;font-weight:800;letter-spacing:-.01em">ランキング <span style="color:var(--faint);font-weight:600;font-size:16px">/ Leaderboard</span></h1>
+      <div style="display:flex;gap:4px;padding:3px;background:var(--surface2);border:1px solid var(--border);border-radius:11px">
+        <button onClick="{{ lbProfit }}" style="cursor:pointer;font-family:inherit;font-size:13px;font-weight:700;padding:7px 15px;border:none;border-radius:8px;background:{{ lbProfitBg }};color:{{ lbProfitColor }}">利益</button>
+        <button onClick="{{ lbVolume }}" style="cursor:pointer;font-family:inherit;font-size:13px;font-weight:700;padding:7px 15px;border:none;border-radius:8px;background:{{ lbVolumeBg }};color:{{ lbVolumeColor }}">出来高</button>
+      </div>
+    </div>
+
+    <div style="display:grid;grid-template-columns:repeat(3,1fr);gap:14px;margin-bottom:20px">
+      <sc-for list="{{ podium }}" as="p" hint-placeholder-count="3">
+        <div style="border:1px solid var(--border);background:var(--surface);border-radius:var(--radius);padding:20px 16px;text-align:center;box-shadow:var(--shadow);transform:{{ p.lift }}">
+          <div style="display:inline-flex;align-items:center;justify-content:center;width:30px;height:30px;border-radius:50%;font-weight:800;font-size:14px;color:#fff;background:{{ p.medalColor }};margin-bottom:10px">{{ p.place }}</div>
+          <div style="width:52px;height:52px;border-radius:50%;margin:0 auto 10px;display:flex;align-items:center;justify-content:center;font-weight:800;font-size:20px;color:#fff;background:{{ p.color }}">{{ p.initial }}</div>
+          <div style="font-size:14.5px;font-weight:700">{{ p.name }}</div>
+          <div class="mono" style="font-size:17px;font-weight:700;color:var(--primary);margin-top:4px">{{ p.value }}</div>
+          <div style="font-size:11px;color:var(--dim);font-weight:600">{{ p.unit }}</div>
+        </div>
+      </sc-for>
+    </div>
+
+    <div style="border:1px solid var(--border);background:var(--surface);border-radius:var(--radius);box-shadow:var(--shadow);overflow:hidden">
+      <sc-for list="{{ ranks }}" as="r" hint-placeholder-count="6">
+        <div style="display:flex;align-items:center;gap:14px;padding:13px 18px;border-bottom:1px solid var(--border);background:{{ r.rowBg }}">
+          <span class="mono" style="width:26px;text-align:center;font-size:15px;font-weight:700;color:var(--faint)">{{ r.rank }}</span>
+          <div style="width:38px;height:38px;border-radius:50%;display:flex;align-items:center;justify-content:center;font-weight:800;font-size:15px;color:#fff;background:{{ r.color }}">{{ r.initial }}</div>
+          <span style="flex:1;font-size:14.5px;font-weight:700">{{ r.name }} {{ r.you }}</span>
+          <span style="font-size:12.5px;color:var(--dim)">{{ r.streak }}</span>
+          <span class="mono" style="font-size:15.5px;font-weight:700;color:{{ r.valueColor }}">{{ r.value }}</span>
+        </div>
+      </sc-for>
+    </div>
+  </main>
+  </sc-if>
+
+  <!-- ───────── ADMIN ───────── -->
+  <sc-if value="{{ isAdmin }}" hint-placeholder-val="">
+  <main class="dm-pad" style="max-width:1180px;margin:0 auto;padding:24px 22px 80px;animation:dmIn .3s ease">
+    <div style="display:flex;align-items:center;justify-content:space-between;flex-wrap:wrap;gap:12px;margin-bottom:18px">
+      <div style="display:flex;align-items:center;gap:10px">
+        <h1 style="margin:0;font-size:23px;font-weight:700">管理コンソール <span style="color:var(--dim);font-weight:500;font-size:15px">/ Admin</span></h1>
+        <span style="font-size:11px;font-weight:700;letter-spacing:.1em;color:var(--primary);background:var(--primary-weak);padding:3px 8px;border-radius:6px">SPEC-07</span>
+      </div>
+      <div class="scrollx" style="display:flex;gap:4px;padding:3px;background:var(--surface2);border:1px solid var(--border);border-radius:12px;overflow-x:auto">
+        <sc-for list="{{ adminTabs }}" as="t" hint-placeholder-count="4">
+          <button onClick="{{ t.pick }}" style="cursor:pointer;font-family:inherit;font-size:13px;font-weight:700;padding:7px 14px;border:none;border-radius:9px;white-space:nowrap;background:{{ t.bg }};color:{{ t.color }}">{{ t.label }}</button>
+        </sc-for>
+      </div>
+    </div>
+
+    <!-- dashboard -->
+    <sc-if value="{{ isAdminDash }}" hint-placeholder-val="{{ true }}">
+      <div style="display:grid;grid-template-columns:repeat(auto-fill,minmax(150px,1fr));gap:12px;margin-bottom:22px">
+        <sc-for list="{{ kpis }}" as="k" hint-placeholder-count="6">
+          <div style="border:1px solid {{ k.border }};background:var(--surface);border-radius:14px;padding:16px;box-shadow:var(--shadow)">
+            <div style="font-size:11.5px;color:var(--dim);font-weight:700">{{ k.label }}</div>
+            <div style="font-size:9px;color:var(--faint);letter-spacing:.06em;margin-bottom:8px">{{ k.sub }}</div>
+            <div class="mono" style="font-size:24px;font-weight:700;color:{{ k.color }}">{{ k.v }}</div>
+          </div>
+        </sc-for>
+      </div>
+      <div style="border:1px solid var(--border);background:var(--surface);border-radius:var(--radius);box-shadow:var(--shadow);overflow:hidden">
+        <div style="padding:14px 20px;font-size:14px;font-weight:700;border-bottom:1px solid var(--border)">カテゴリ別フィード現況 <span style="color:var(--dim);font-weight:500;font-size:12.5px">/ Feed coverage</span></div>
+        <div style="display:grid;grid-template-columns:1.4fr 1fr 1fr 1fr 1fr 1.2fr;gap:8px;padding:11px 20px;font-size:11.5px;font-weight:700;color:var(--dim);background:var(--surface2)">
+          <span>カテゴリ</span><span style="text-align:center">目標</span><span style="text-align:center">admin</span><span style="text-align:center">template</span><span style="text-align:center">mirror</span><span style="text-align:center">次回Poly生成</span>
+        </div>
+        <sc-for list="{{ feedRows }}" as="r" hint-placeholder-count="6">
+          <div style="display:grid;grid-template-columns:1.4fr 1fr 1fr 1fr 1fr 1.2fr;gap:8px;padding:12px 20px;align-items:center;border-top:1px solid var(--border);font-size:13.5px">
+            <span style="font-weight:700">{{ r.name }}</span>
+            <span class="mono" style="text-align:center;color:var(--dim)">{{ r.target }}</span>
+            <span class="mono" style="text-align:center">{{ r.admin }}</span>
+            <span class="mono" style="text-align:center">{{ r.tpl }}</span>
+            <span class="mono" style="text-align:center">{{ r.mirror }}</span>
+            <span class="mono" style="text-align:center;font-weight:700;color:var(--primary)">+{{ r.gen }}</span>
+          </div>
+        </sc-for>
+      </div>
+      <p style="font-size:12px;color:var(--dim);margin-top:10px;line-height:1.6">「次回Poly生成」＝ gap。管理者市場やテンプレを増やすと自動で縮みます（走行中の市場は消えません）。</p>
+    </sc-if>
+
+    <!-- create -->
+    <sc-if value="{{ isAdminCreate }}" hint-placeholder-val="">
+      <div style="border:1px solid var(--border);background:var(--surface);border-radius:var(--radius);box-shadow:var(--shadow);padding:22px;max-width:680px">
+        <h2 style="margin:0 0 16px;font-size:15px;font-weight:700">新規市場を作成 <span style="color:var(--dim);font-weight:500">/ Create market</span></h2>
+        <label style="display:block;font-size:12.5px;font-weight:700;color:var(--dim);margin-bottom:6px">質問 / Question</label>
+        <input value="{{ adm.q }}" onInput="{{ adm.onQ }}" placeholder="例: BTCは6/30に$150,000を超えるか？" style="width:100%;height:44px;padding:0 14px;border:1px solid var(--border);background:var(--surface2);border-radius:11px;font-size:14px;font-family:inherit;color:var(--text);outline:none;margin-bottom:16px">
+        <div style="display:grid;grid-template-columns:1fr 1fr;gap:14px;margin-bottom:16px">
+          <div>
+            <label style="display:block;font-size:12.5px;font-weight:700;color:var(--dim);margin-bottom:6px">カテゴリ</label>
+            <select value="{{ adm.cat }}" onChange="{{ adm.onCat }}" style="width:100%;height:42px;padding:0 12px;border:1px solid var(--border);background:var(--surface2);border-radius:10px;font-size:14px;font-family:inherit;color:var(--text);outline:none">
+              <sc-for list="{{ adm.cats }}" as="ct" hint-placeholder-count="6"><option value="{{ ct }}">{{ ct }}</option></sc-for>
+            </select>
+          </div>
+          <div>
+            <label style="display:block;font-size:12.5px;font-weight:700;color:var(--dim);margin-bottom:6px">締切 / Close</label>
+            <input type="datetime-local" value="{{ adm.close }}" onInput="{{ adm.onClose }}" style="width:100%;height:42px;padding:0 12px;border:1px solid var(--border);background:var(--surface2);border-radius:10px;font-size:14px;font-family:inherit;color:var(--text);outline:none">
+          </div>
+        </div>
+        <div style="display:grid;grid-template-columns:1fr 1fr;gap:14px;margin-bottom:20px">
+          <div>
+            <label style="display:block;font-size:12.5px;font-weight:700;color:var(--dim);margin-bottom:6px">初期YES確率 (%)</label>
+            <input type="number" value="{{ adm.yes }}" onInput="{{ adm.onYes }}" class="mono" style="width:100%;height:42px;padding:0 12px;border:1px solid var(--border);background:var(--surface2);border-radius:10px;font-size:14px;font-family:'Roboto Mono',monospace;color:var(--text);outline:none">
+          </div>
+          <div>
+            <label style="display:block;font-size:12.5px;font-weight:700;color:var(--dim);margin-bottom:6px">流動性 b</label>
+            <input type="number" value="{{ adm.b }}" onInput="{{ adm.onB }}" class="mono" style="width:100%;height:42px;padding:0 12px;border:1px solid var(--border);background:var(--surface2);border-radius:10px;font-size:14px;font-family:'Roboto Mono',monospace;color:var(--text);outline:none">
+          </div>
+        </div>
+        <button onClick="{{ adm.create }}" style="height:44px;padding:0 24px;background:var(--grad);color:#fff;border:none;border-radius:12px;cursor:pointer;font-family:inherit;font-weight:700;font-size:14px;box-shadow:0 8px 20px -8px rgba(6,182,212,.7)">市場を作成</button>
+      </div>
+    </sc-if>
+
+    <!-- resolve -->
+    <sc-if value="{{ isAdminResolve }}" hint-placeholder-val="">
+      <div style="display:flex;flex-direction:column;gap:12px;max-width:840px">
+        <sc-if value="{{ queueEmpty }}" hint-placeholder-val="">
+          <div style="border:1px dashed var(--border);border-radius:var(--radius);padding:48px;text-align:center;color:var(--dim);font-size:14px">解決待ちの市場はありません ✓</div>
+        </sc-if>
+        <sc-for list="{{ queue }}" as="qm" hint-placeholder-count="3">
+          <div style="border:1px solid var(--border);background:var(--surface);border-radius:var(--radius);box-shadow:var(--shadow);padding:18px">
+            <p style="margin:0 0 12px;font-size:14.5px;font-weight:700">{{ qm.q }}</p>
+            <div style="display:flex;gap:10px;flex-wrap:wrap;align-items:center">
+              <select style="height:40px;padding:0 12px;border:1px solid var(--border);background:var(--surface2);border-radius:10px;font-size:13.5px;font-family:inherit;color:var(--text);outline:none"><option>{{ qm.a }}</option><option>{{ qm.b }}</option></select>
+              <input placeholder="根拠ソースURL" style="flex:1;min-width:200px;height:40px;padding:0 12px;border:1px solid var(--border);background:var(--surface2);border-radius:10px;font-size:13.5px;font-family:inherit;color:var(--text);outline:none">
+              <button onClick="{{ qm.resolve }}" style="height:40px;padding:0 18px;background:var(--grad);color:#fff;border:none;border-radius:10px;cursor:pointer;font-family:inherit;font-weight:700;font-size:13.5px">確定</button>
+              <button onClick="{{ qm.voidIt }}" style="height:40px;padding:0 16px;background:none;color:var(--dim);border:1px solid var(--border);border-radius:10px;cursor:pointer;font-family:inherit;font-weight:700;font-size:13.5px">中止</button>
+            </div>
+          </div>
+        </sc-for>
+      </div>
+    </sc-if>
+
+    <!-- templates -->
+    <sc-if value="{{ isAdminTpl }}" hint-placeholder-val="">
+      <div style="display:flex;flex-direction:column;gap:12px;max-width:840px;margin-bottom:18px">
+        <sc-for list="{{ tpls }}" as="t" hint-placeholder-count="3">
+          <div style="border:1px solid var(--border);background:var(--surface);border-radius:14px;box-shadow:var(--shadow);padding:16px;display:flex;align-items:center;gap:14px">
+            <div style="flex:1;min-width:0">
+              <div style="display:flex;align-items:center;gap:8px"><span style="font-size:14px;font-weight:700">{{ t.name }}</span><span style="font-size:11px;font-weight:700;color:{{ t.activeColor }}">● {{ t.activeLabel }}</span></div>
+              <div class="mono" style="font-size:12px;color:var(--dim);margin-top:3px">{{ t.pattern }}</div>
+              <div class="mono" style="font-size:11.5px;color:var(--faint);margin-top:2px">cron: {{ t.cron }}</div>
+            </div>
+            <button onClick="{{ t.remove }}" style="font-size:12.5px;font-weight:700;color:var(--neg);background:var(--neg-weak);border:none;border-radius:9px;padding:8px 14px;cursor:pointer">削除</button>
+          </div>
+        </sc-for>
+      </div>
+      <div style="border:1px dashed var(--border);border-radius:var(--radius);padding:18px;max-width:840px">
+        <p style="margin:0 0 12px;font-size:14px;font-weight:700">テンプレートを追加 <span style="color:var(--dim);font-weight:500">/ Add template</span></p>
+        <div style="display:grid;grid-template-columns:1fr 200px;gap:10px;margin-bottom:10px">
+          <input value="{{ tplForm.name }}" onInput="{{ onTplName }}" placeholder="名前" style="height:42px;padding:0 12px;border:1px solid var(--border);background:var(--surface2);border-radius:10px;font-size:14px;font-family:inherit;color:var(--text);outline:none">
+          <input value="{{ tplForm.cron }}" onInput="{{ onTplCron }}" class="mono" placeholder="cron" style="height:42px;padding:0 12px;border:1px solid var(--border);background:var(--surface2);border-radius:10px;font-size:14px;font-family:'Roboto Mono',monospace;color:var(--text);outline:none">
+        </div>
+        <input value="{{ tplForm.pattern }}" onInput="{{ onTplPattern }}" placeholder="質問パターン（例: BTCは{date}に{threshold}を超えるか）" style="width:100%;height:42px;padding:0 12px;border:1px solid var(--border);background:var(--surface2);border-radius:10px;font-size:14px;font-family:inherit;color:var(--text);outline:none;margin-bottom:12px">
+        <button onClick="{{ addTpl }}" style="height:42px;padding:0 22px;background:var(--grad);color:#fff;border:none;border-radius:11px;cursor:pointer;font-family:inherit;font-weight:700;font-size:13.5px">作成</button>
+      </div>
+    </sc-if>
+  </main>
+  </sc-if>
+
+  <footer style="border-top:1px solid var(--border);background:var(--surface)">
+    <div style="max-width:1240px;margin:0 auto;padding:36px 22px;display:flex;flex-wrap:wrap;gap:32px;justify-content:space-between">
+      <div style="max-width:330px">
+        <div style="display:flex;align-items:center;gap:10px;margin-bottom:12px">
+          <svg width="30" height="30" viewBox="0 0 40 40"><defs><linearGradient id="dmLogoF" x1="0" y1="0" x2="40" y2="40" gradientUnits="userSpaceOnUse"><stop stop-color="#0ea5e9"></stop><stop offset="1" stop-color="#06b6d4"></stop></linearGradient></defs><rect x="1" y="1" width="38" height="38" rx="11" fill="#0b1f3a"></rect><path d="M11 13h6c4 0 7 2.8 7 7s-3 7-7 7h-6z" fill="none" stroke="url(#dmLogoF)" stroke-width="2.6" stroke-linejoin="round"></path><path d="M25 20l6-5m-6 5l6 5" fill="none" stroke="url(#dmLogoF)" stroke-width="2.6" stroke-linecap="round" stroke-linejoin="round"></path></svg>
+          <span style="font-weight:700;font-size:18px;color:var(--text)">D-<span style="color:var(--dim);font-weight:500">market</span></span>
+        </div>
+        <p style="margin:0;font-size:12.5px;color:var(--dim);line-height:1.7">ポイント制の予測市場。換金不可・賞品ゼロ、勝つのは称号とランキングだけ。<b style="color:var(--text);font-weight:700">D-swipe</b> ファミリーのプロダクトです。</p>
+      </div>
+      <div style="display:flex;gap:46px;flex-wrap:wrap">
+        <div>
+          <div style="font-size:11px;font-weight:700;color:var(--faint);letter-spacing:.1em;margin-bottom:12px">プロダクト</div>
+          <div style="display:flex;flex-direction:column;gap:9px">
+            <button onClick="{{ goHome }}" style="border:none;background:none;text-align:left;cursor:pointer;font-family:inherit;font-size:13px;font-weight:600;color:var(--dim);padding:0">マーケット</button>
+            <button onClick="{{ goLead }}" style="border:none;background:none;text-align:left;cursor:pointer;font-family:inherit;font-size:13px;font-weight:600;color:var(--dim);padding:0">ランキング</button>
+            <button onClick="{{ goPort }}" style="border:none;background:none;text-align:left;cursor:pointer;font-family:inherit;font-size:13px;font-weight:600;color:var(--dim);padding:0">マイページ</button>
+          </div>
+        </div>
+        <div>
+          <div style="font-size:11px;font-weight:700;color:var(--faint);letter-spacing:.1em;margin-bottom:12px">法的情報</div>
+          <div style="display:flex;flex-direction:column;gap:9px">
+            <button onClick="{{ soon }}" style="border:none;background:none;text-align:left;cursor:pointer;font-family:inherit;font-size:13px;font-weight:600;color:var(--dim);padding:0">利用規約</button>
+            <button onClick="{{ soon }}" style="border:none;background:none;text-align:left;cursor:pointer;font-family:inherit;font-size:13px;font-weight:600;color:var(--dim);padding:0">プライバシー</button>
+            <button onClick="{{ soon }}" style="border:none;background:none;text-align:left;cursor:pointer;font-family:inherit;font-size:13px;font-weight:600;color:var(--dim);padding:0">特定商取引法</button>
+          </div>
+        </div>
+        <div>
+          <div style="font-size:11px;font-weight:700;color:var(--faint);letter-spacing:.1em;margin-bottom:12px">アカウント</div>
+          <div style="display:flex;flex-direction:column;gap:9px">
+            <button onClick="{{ login }}" style="border:none;background:none;text-align:left;cursor:pointer;font-family:inherit;font-size:13px;font-weight:600;color:var(--primary);padding:0">ログイン</button>
+            <button onClick="{{ login }}" style="border:none;background:none;text-align:left;cursor:pointer;font-family:inherit;font-size:13px;font-weight:600;color:var(--dim);padding:0">新規登録</button>
+          </div>
+        </div>
+      </div>
+    </div>
+    <div style="border-top:1px solid var(--border)"><div style="max-width:1240px;margin:0 auto;padding:14px 22px;display:flex;justify-content:space-between;flex-wrap:wrap;gap:8px;font-size:11.5px;color:var(--faint)"><span>© 2026 D-market</span><span>本サービスは賠博に該当しません（換金不可・有償発行なし・譲渡禁止・賞品ゼロ）。</span></div></div>
+  </footer>
+
+  <!-- mobile bottom tab bar -->
+  <nav class="dm-mobilebar dm-themed" style="position:fixed;left:0;right:0;bottom:0;z-index:50;height:58px;background:var(--surface);border-top:1px solid var(--border);align-items:stretch;justify-content:space-around;padding-bottom:env(safe-area-inset-bottom)">
+    <button onClick="{{ goHome }}" style="flex:1;border:none;background:none;cursor:pointer;font-family:inherit;display:flex;flex-direction:column;align-items:center;justify-content:center;gap:3px;color:{{ lkHome }}">
+      <svg width="21" height="21" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linejoin="round"><rect x="3" y="3" width="7" height="9" rx="1"></rect><rect x="14" y="3" width="7" height="5" rx="1"></rect><rect x="14" y="12" width="7" height="9" rx="1"></rect><rect x="3" y="16" width="7" height="5" rx="1"></rect></svg>
+      <span style="font-size:10px;font-weight:700">マーケット</span>
+    </button>
+    <button onClick="{{ goLead }}" style="flex:1;border:none;background:none;cursor:pointer;font-family:inherit;display:flex;flex-direction:column;align-items:center;justify-content:center;gap:3px;color:{{ lkLead }}">
+      <svg width="21" height="21" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round"><path d="M5 21V10M12 21V4M19 21v-7"></path></svg>
+      <span style="font-size:10px;font-weight:700">ランキング</span>
+    </button>
+    <button onClick="{{ goPort }}" style="flex:1;border:none;background:none;cursor:pointer;font-family:inherit;display:flex;flex-direction:column;align-items:center;justify-content:center;gap:3px;color:{{ lkPort }}">
+      <svg width="21" height="21" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><circle cx="12" cy="8" r="3.6"></circle><path d="M5.5 20a6.5 6.5 0 0 1 13 0"></path></svg>
+      <span style="font-size:10px;font-weight:700">マイページ</span>
+    </button>
+    <button onClick="{{ goAdmin }}" style="flex:1;border:none;background:none;cursor:pointer;font-family:inherit;display:flex;flex-direction:column;align-items:center;justify-content:center;gap:3px;color:{{ lkAdmin }}">
+      <svg width="21" height="21" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><path d="M12 3l7 4v5c0 4-3 7-7 9-4-2-7-5-7-9V7z"></path></svg>
+      <span style="font-size:10px;font-weight:700">管理</span>
+    </button>
+  </nav>
+
+  <!-- result modal -->
+  <sc-if value="{{ showResult }}" hint-placeholder-val="">
+    <div onClick="{{ closeResult }}" style="position:fixed;inset:0;z-index:70;background:rgba(8,16,28,.55);display:flex;align-items:center;justify-content:center;padding:20px;animation:dmToast .2s ease">
+      <div style="width:340px;max-width:100%;background:var(--surface);border:1px solid var(--border);border-radius:18px;box-shadow:0 30px 70px -20px rgba(0,0,0,.5);padding:28px;text-align:center;animation:dmIn .3s ease">
+        <sc-if value="{{ resultWin }}" hint-placeholder-val="{{ true }}">
+          <div style="width:66px;height:66px;margin:0 auto 14px;border-radius:50%;background:var(--pos-weak);display:flex;align-items:center;justify-content:center"><svg width="34" height="34" viewBox="0 0 24 24" fill="none" stroke="var(--pos)" stroke-width="2.6" stroke-linecap="round" stroke-linejoin="round"><path d="M20 6L9 17l-5-5"></path></svg></div>
+          <h2 style="margin:0 0 6px;font-size:22px;font-weight:800;color:var(--pos)">的中！ / You won</h2>
+          <p style="margin:0 0 4px;font-size:13.5px;color:var(--dim)">結果は「{{ resultLabel }}」で確定</p>
+          <div class="mono" style="font-size:30px;font-weight:700;color:var(--pos);margin:10px 0">+{{ resultPayout }} pt</div>
+        </sc-if>
+        <sc-if value="{{ resultLose }}" hint-placeholder-val="">
+          <div style="width:66px;height:66px;margin:0 auto 14px;border-radius:50%;background:var(--neg-weak);display:flex;align-items:center;justify-content:center"><svg width="32" height="32" viewBox="0 0 24 24" fill="none" stroke="var(--neg)" stroke-width="2.6" stroke-linecap="round"><path d="M18 6L6 18M6 6l12 12"></path></svg></div>
+          <h2 style="margin:0 0 6px;font-size:22px;font-weight:800;color:var(--neg)">ハズレ / Missed</h2>
+          <p style="margin:0 0 4px;font-size:13.5px;color:var(--dim)">結果は「{{ resultLabel }}」で確定。獲得 0 pt</p>
+          <div class="mono" style="font-size:30px;font-weight:700;color:var(--neg);margin:10px 0">0 pt</div>
+        </sc-if>
+        <sc-if value="{{ resultNone }}" hint-placeholder-val="">
+          <div style="width:66px;height:66px;margin:0 auto 14px;border-radius:50%;background:var(--surface2);display:flex;align-items:center;justify-content:center"><svg width="30" height="30" viewBox="0 0 24 24" fill="none" stroke="var(--dim)" stroke-width="2.4" stroke-linecap="round" stroke-linejoin="round"><path d="M20 6L9 17l-5-5"></path></svg></div>
+          <h2 style="margin:0 0 6px;font-size:20px;font-weight:800">解決しました</h2>
+          <p style="margin:0;font-size:13.5px;color:var(--dim)">結果は「{{ resultLabel }}」。この市場の保有はありませんでした。</p>
+        </sc-if>
+        <button onClick="{{ closeResult }}" style="margin-top:16px;width:100%;cursor:pointer;font-family:inherit;font-weight:700;font-size:14px;padding:12px;border:none;border-radius:11px;background:var(--grad);color:#fff">閉じる</button>
+      </div>
+    </div>
+  </sc-if>
+
+  <!-- toast -->
+  <sc-if value="{{ toast }}" hint-placeholder-val="">
+    <div style="position:fixed;left:50%;bottom:30px;transform:translateX(-50%);z-index:60;background:var(--text);color:var(--bg);padding:12px 22px;border-radius:12px;font-size:14px;font-weight:700;box-shadow:0 8px 30px rgba(0,0,0,.22);animation:dmToast .25s ease">{{ toast }}</div>
+  </sc-if>
+</div>
+</x-dc>
+<script type="text/x-dc" data-dc-script data-props="{&quot;$preview&quot;:{&quot;width&quot;:1240,&quot;height&quot;:900},&quot;accent&quot;:{&quot;editor&quot;:&quot;color&quot;,&quot;default&quot;:&quot;#0284c7&quot;,&quot;tsType&quot;:&quot;string&quot;},&quot;theme&quot;:{&quot;editor&quot;:&quot;enum&quot;,&quot;options&quot;:[&quot;light&quot;,&quot;dark&quot;],&quot;default&quot;:&quot;light&quot;,&quot;tsType&quot;:&quot;string&quot;},&quot;cardLayout&quot;:{&quot;editor&quot;:&quot;enum&quot;,&quot;options&quot;:[&quot;cards&quot;,&quot;compact&quot;],&quot;default&quot;:&quot;compact&quot;,&quot;tsType&quot;:&quot;string&quot;}}">
+class Component extends DCLogic {
+  constructor(props){
+    super(props);
+    this.state = {
+      screen:'home', theme: ((typeof localStorage!=='undefined' && localStorage.getItem('dm-theme')) || props.theme || 'light'), cat:'trending', search:'',
+      layout: props.cardLayout || 'cards', mid:'m1', tf:'1W', side:'buy',
+      pickIdx:0, amount:25, balance:1840, toast:null, lb:'profit',
+      holdings:{}, resolved:{}, result:null, detailTab:'book', commentText:'',
+      comments:[
+        {id:'c1',user:'カイ',init:'カ',col:'#0284c7',time:'12分前',text:'出来高が伸びてる。直近のニュース次第で一気に動きそう。',up:14},
+        {id:'c2',user:'みお',init:'み',col:'#10b981',time:'34分前',text:'YES少し買い増し。チャートのトレンドが効いてる。',up:8},
+        {id:'c3',user:'レン',init:'レ',col:'#f59e0b',time:'1時間前',text:'過熱気味では？自分は逆張りでNOに入った。',up:3}
+      ],
+      adminTab:'dashboard',
+      admForm:{q:'',cat:'政治',yes:50,b:200,close:''},
+      tplForm:{name:'',cron:'0 9 * * *',pattern:''},
+      templates:[
+        {id:'t1',name:'BTC日次しきい値',pattern:'BTCは{date}までに{threshold}を超えるか',cron:'0 9 * * *',active:true},
+        {id:'t2',name:'為替クローズ判定',pattern:'ドル円は{date}に{level}を超えるか',cron:'0 18 * * *',active:true},
+        {id:'t3',name:'週次スポーツ',pattern:'{team}は今節勝利するか',cron:'0 10 * * 1',active:false}
+      ],
+      admQueue:[
+        {id:'q1',q:'日経平均は本日終値で前日比プラスか？',a:'はい / Yes',b:'いいえ / No'},
+        {id:'q2',q:'今夜のMLBでドジャースは勝利するか？',a:'はい / Yes',b:'いいえ / No'},
+        {id:'q3',q:'今週中にAppleの新製品発表はあるか？',a:'はい / Yes',b:'いいえ / No'}
+      ]
+    };
+  }
+
+  PALETTES = {
+    light:{'--bg':'#f7f9fb','--surface':'#ffffff','--surface2':'#f1f4f8','--border':'#e7ebf1','--text':'#0f1722','--dim':'#5b6876','--faint':'#9aa6b4','--primary':'#1d70d6','--primary-weak':'#e9f1fc','--accent2':'#06b6d4','--pos':'#199a5a','--pos-weak':'#e7f6ee','--neg':'#dd3d4a','--neg-weak':'#fcebec'},
+    dark:{'--bg':'#0e1117','--surface':'#181c23','--surface2':'#222732','--border':'#2a313d','--text':'#e9edf3','--dim':'#8b95a3','--faint':'#5b6573','--primary':'#3b9bf0','--primary-weak':'#16263a','--accent2':'#22d3ee','--pos':'#2bbf75','--pos-weak':'#15311f','--neg':'#f0616b','--neg-weak':'#361a1d'}
+  };
+
+  CATS = [
+    {slug:'trending',label:'トレンド',sub:'TRENDING'},
+    {slug:'politics',label:'政治',sub:'POLITICS'},
+    {slug:'economy',label:'経済',sub:'ECONOMY'},
+    {slug:'crypto',label:'暗号資産',sub:'CRYPTO'},
+    {slug:'sports',label:'スポーツ',sub:'SPORTS'},
+    {slug:'tech',label:'テック',sub:'TECH'},
+    {slug:'culture',label:'エンタメ',sub:'CULTURE'}
+  ];
+
+  MARKETS = [
+    {id:'m1',cat:'politics',catLabel:'政治',q:'日銀は2026年内に追加利上げを行うか？',qEn:'Will the BOJ hike rates again in 2026?',kind:'binary',tint:'#0284c7',glyph:'政',volume:2400000,close:178,seed:11,outcomes:[{label:'はい / Yes',p:0.64},{label:'いいえ / No',p:0.36}]},
+    {id:'m2',cat:'crypto',catLabel:'暗号資産',q:'ビットコインは2026年内に$150,000を超えるか？',qEn:'Bitcoin above $150,000 in 2026?',kind:'binary',tint:'#f59e0b',glyph:'₿',volume:5800000,close:201,seed:23,outcomes:[{label:'はい / Yes',p:0.41},{label:'いいえ / No',p:0.59}]},
+    {id:'m3',cat:'sports',catLabel:'スポーツ',q:'2026 FIFAワールドカップの優勝国は？',qEn:'Who wins the 2026 FIFA World Cup?',kind:'multi',tint:'#10b981',glyph:'球',volume:9100000,close:142,seed:7,outcomes:[{label:'アルゼンチン / Argentina',p:0.22},{label:'フランス / France',p:0.18},{label:'ブラジル / Brazil',p:0.15},{label:'スペイン / Spain',p:0.12},{label:'イングランド / England',p:0.11}]},
+    {id:'m4',cat:'tech',catLabel:'テック',q:'OpenAIは2026年内にIPOを申請するか？',qEn:'Will OpenAI file for IPO in 2026?',kind:'binary',tint:'#14b8a6',glyph:'AI',volume:1200000,close:198,seed:31,outcomes:[{label:'はい / Yes',p:0.19},{label:'いいえ / No',p:0.81}]},
+    {id:'m5',cat:'sports',catLabel:'スポーツ',q:'大谷翔平は今季50本塁打を達成するか？',qEn:'Will Ohtani hit 50+ HRs this season?',kind:'binary',tint:'#f43f5e',glyph:'球',volume:3300000,close:96,seed:5,outcomes:[{label:'はい / Yes',p:0.57},{label:'いいえ / No',p:0.43}]},
+    {id:'m6',cat:'economy',catLabel:'経済',q:'ドル円は年末までに160円を超えるか？',qEn:'Will USD/JPY exceed 160 by year end?',kind:'binary',tint:'#0e9488',glyph:'¥',volume:2900000,close:197,seed:17,outcomes:[{label:'はい / Yes',p:0.38},{label:'いいえ / No',p:0.62}]},
+    {id:'m7',cat:'politics',catLabel:'政治',q:'次期衆院選で第一党になるのは？',qEn:'Largest party in the next general election?',kind:'multi',tint:'#8b5cf6',glyph:'票',volume:4500000,close:233,seed:13,outcomes:[{label:'自民党 / LDP',p:0.46},{label:'立憲民主党 / CDP',p:0.21},{label:'国民民主党 / DPP',p:0.13},{label:'日本維新の会 / Ishin',p:0.11},{label:'その他 / Other',p:0.09}]},
+    {id:'m8',cat:'culture',catLabel:'エンタメ',q:'今年の紅白歌合戦の視聴率は前年を上回るか？',qEn:'Will Kohaku ratings beat last year?',kind:'binary',tint:'#ec4899',glyph:'映',volume:680000,close:188,seed:29,outcomes:[{label:'はい / Yes',p:0.33},{label:'いいえ / No',p:0.67}]},
+    {id:'m9',cat:'tech',catLabel:'テック',q:'Appleは2026年にAI検索を発表するか？',qEn:'Will Apple announce AI search in 2026?',kind:'binary',tint:'#6366f1',glyph:'技',volume:1900000,close:160,seed:3,outcomes:[{label:'はい / Yes',p:0.47},{label:'いいえ / No',p:0.53}]}
+  ];
+
+  componentDidMount(){ this.applyTheme(this.state.theme); }
+
+  applyTheme(t){
+    const p = this.PALETTES[t]; const r = document.documentElement;
+    Object.keys(p).forEach(k=>r.style.setProperty(k,p[k]));
+    const acc=this.props.accent;
+    if(acc && acc!=='#0284c7') r.style.setProperty('--primary', acc);
+  }
+  toggleTheme(){ const t = this.state.theme==='light'?'dark':'light'; this.setState({theme:t}); this.applyTheme(t); try{localStorage.setItem('dm-theme',t);}catch(e){} }
+
+  selMarket(){ return this.MARKETS.find(m=>m.id===this.state.mid) || this.MARKETS[0]; }
+  openMarket(id, pick){ this.setState({screen:'detail', mid:id, pickIdx:pick||0, amount:25, tf:'1W'}); window.scrollTo(0,0); }
+  flash(msg){ this.setState({toast:msg}); clearTimeout(this._t); this._t=setTimeout(()=>this.setState({toast:null}),2600); }
+
+  fmtVol(n){ if(n>=1e6) return (n/1e6).toFixed(1).replace(/\.0$/,'')+'M'; if(n>=1e3) return Math.round(n/1e3)+'K'; return ''+n; }
+  fmtN(n){ return Math.round(n).toLocaleString('en-US'); }
+  closeLabel(d){ return d>30 ? '締切まで'+Math.round(d/30)+'ヶ月' : '締切まで'+d+'日'; }
+
+  seededSeries(end, seed){
+    let v = end + ((seed%7)/7-0.5)*0.28, s = seed*9973+7;
+    const a=[];
+    for(let i=0;i<40;i++){ s=(s*1103515245+12345)&0x7fffffff; const r=(s/0x7fffffff)-0.5; v+=r*0.045; v+=(end-v)*(i/40)*0.09; v=Math.max(0.04,Math.min(0.96,v)); a.push(v); }
+    a[a.length-1]=end; return a;
+  }
+  buildPath(ser,w,h,pad){
+    const n=ser.length, mn=Math.min(...ser), mx=Math.max(...ser), rng=(mx-mn)||0.1;
+    const X=i=>pad+(w-2*pad)*(i/(n-1)), Y=v=>pad+(h-2*pad)*(1-(v-mn)/rng);
+    let line=''; ser.forEach((v,i)=>{ line+=(i?' L':'M')+X(i).toFixed(1)+' '+Y(v).toFixed(1); });
+    const area=line+' L'+X(n-1).toFixed(1)+' '+(h-pad)+' L'+X(0).toFixed(1)+' '+(h-pad)+' Z';
+    return {line,area};
+  }
+
+  toCard(m){
+    const o=m.outcomes, isBinary=m.kind==='binary';
+    const yes=o[0].p, chance=Math.round(yes*100), C=Math.PI*19;
+    const sorted = o.map((x,idx)=>({label:x.label, p:x.p, idx})).sort((a,b)=>b.p-a.p);
+    const rows = !isBinary ? sorted.slice(0,3).map(x=>({
+      label:x.label.split(' / ')[0], pct:Math.round(x.p*100)+'%', barW:Math.round(x.p*100)+'%',
+      open:(e)=>{ if(e&&e.stopPropagation)e.stopPropagation(); this.openMarket(m.id, x.idx); }
+    })) : [];
+    return {
+      id:m.id, cat:m.cat, catLabel:m.catLabel, q:m.q, qEn:m.qEn,
+      isBinary, isMulti:!isBinary, tint:m.tint, glyph:m.glyph,
+      volLabel:this.fmtVol(m.volume), closeLabel:this.closeLabel(m.close),
+      chance:chance+'%', chanceLabel:chance+'%', yesLabel:Math.round(yes*100)+'¢',
+      noLabel:isBinary?Math.round((1-yes)*100)+'¢':'',
+      arcDash:(chance/100*C).toFixed(1)+' '+C.toFixed(1),
+      arcColor: chance>=50?'var(--pos)':(chance<=35?'var(--neg)':'var(--text)'),
+      rows, moreLabel: (!isBinary && o.length>3) ? ('+ 他'+(o.length-3)+'件のアウトカム') : '',
+      open:()=>this.openMarket(m.id),
+      buyYes:(e)=>{ if(e&&e.stopPropagation)e.stopPropagation(); this.openMarket(m.id,0); },
+      buyNo:(e)=>{ if(e&&e.stopPropagation)e.stopPropagation(); this.openMarket(m.id,1); }
+    };
+  }
+
+  renderVals(){
+    const st=this.state, screen=st.screen;
+    const seg=(on,col)=>on?(col||'var(--surface)'):'transparent';
+
+    // nav
+    const lk=s=> screen===s?'var(--text)':'var(--dim)';
+    const base={
+      goHome:()=>this.setState({screen:'home'}),
+      goLead:()=>this.setState({screen:'leaderboard'}),
+      goPort:()=>this.setState({screen:'portfolio'}),
+      toggleTheme:()=>this.toggleTheme(),
+      themeIcon: st.theme==='light'?'🌙':'☀️',
+      isLight: st.theme==='light', isDark: st.theme==='dark',
+      claim:()=>{ this.setState(s=>({balance:s.balance+100})); this.flash('デイリーボーナス +100 pt / Daily claimed'); },
+      onSearch:(e)=>this.setState({search:e.target.value}),
+      search:st.search,
+      balanceLabel:this.fmtN(st.balance),
+      lkHome:lk('home'), lkLead:lk('leaderboard'), lkPort:lk('portfolio'),
+      isHome:screen==='home', isDetail:screen==='detail', isPort:screen==='portfolio', isLead:screen==='leaderboard',
+      toast:st.toast
+    };
+
+    // categories
+    base.cats = this.CATS.map(c=>{ const on=st.cat===c.slug; return {
+      label:c.label, sub:c.sub,
+      bg:on?'var(--primary)':'var(--surface)', color:on?'#fff':'var(--dim)', border:on?'var(--primary)':'var(--border)',
+      pick:()=>this.setState({cat:c.slug})
+    };});
+
+    // home list
+    const q=st.search.trim().toLowerCase();
+    let list=this.MARKETS.filter(m=>{
+      if(st.cat!=='trending' && m.cat!==st.cat) return false;
+      if(q && !(m.q.toLowerCase().includes(q)||m.qEn.toLowerCase().includes(q))) return false;
+      return true;
+    });
+    if(st.cat==='trending') list=list.slice().sort((a,b)=>b.volume-a.volume);
+    base.cards=list.map(m=>this.toCard(m));
+    base.resultCount=list.length+'件';
+    base.catTitle = st.cat==='trending'?'すべての市場':(this.CATS.find(c=>c.slug===st.cat)||{}).label+'の市場';
+    base.trending = ['m3','m2','m1','m7'].map((id,i)=>{ const c=this.toCard(this.MARKETS.find(m=>m.id===id)); c.rank=i+1; return c; });
+    base.isCards=st.layout==='cards'; base.isCompact=st.layout==='compact';
+    base.layoutCards=()=>this.setState({layout:'cards'}); base.layoutCompact=()=>this.setState({layout:'compact'});
+    base.tabCardsBg=seg(st.layout==='cards'); base.tabCardsColor=st.layout==='cards'?'var(--text)':'var(--dim)';
+    base.tabCompactBg=seg(st.layout==='compact'); base.tabCompactColor=st.layout==='compact'?'var(--text)':'var(--dim)';
+
+    // detail
+    const m=this.selMarket(), o=m.outcomes, isBinary=m.kind==='binary';
+    const yes=o[0].p, chance=Math.round(yes*100);
+    const series=this.seededSeries(yes, m.seed);
+    const tfLen={'1H':8,'6H':14,'1D':20,'1W':28,'1M':34,'ALL':40}[st.tf];
+    const ser=series.slice(40-tfLen);
+    const path=this.buildPath(ser,660,220,8);
+    const chg=Math.round((ser[ser.length-1]-ser[0])*100);
+    const arcColor=chance>=50?'var(--pos)':(chance<=35?'var(--neg)':'var(--text)');
+    Object.assign(base,{
+      dTint:m.tint, dGlyph:m.glyph, dCatLabel:m.catLabel, dQ:m.q, dQEn:m.qEn,
+      dVolLabel:this.fmtVol(m.volume), dCloseLabel:this.closeLabel(m.close),
+      dChanceLabel:chance+'%', dArcColor:arcColor, dTopLabel:o[0].label.split(' / ')[0],
+      dChgLabel:(chg>=0?'▲ +':'▼ ')+chg+'pt', dChgColor:chg>=0?'var(--pos)':'var(--neg)',
+      dLine:path.line, dArea:path.area,
+      dRule:'信頼できる公的情報・一次ソースに基づき締切後に解決します。'
+    });
+    base.tfs=['1H','6H','1D','1W','1M','ALL'].map(t=>({label:t, bg:st.tf===t?'var(--surface)':'transparent', color:st.tf===t?'var(--text)':'var(--dim)', pick:()=>this.setState({tf:t})}));
+    base.dOutcomes=o.map((x,i)=>{ const on=i===st.pickIdx; const col=isBinary?(i===0?'var(--pos)':'var(--neg)'):'var(--primary)'; return {
+      label:x.label, cents:Math.round(x.p*100)+'¢', barW:Math.round(x.p*100)+'%', col,
+      selBorder:on?'var(--primary)':'var(--border)', selBg:on?'var(--primary-weak)':'transparent',
+      pick:()=>this.setState({pickIdx:i})
+    };});
+
+    // trade panel + positions + resolution
+    const isResolved = st.resolved[m.id]!==undefined;
+    const p=o[st.pickIdx].p, amt=Math.max(0,st.amount||0), isBuy=st.side==='buy';
+    const shares=p>0?amt/(p*100):0;        // shares bought (1 share pays 100pt)
+    const payout=shares*100;               // 的中時の受取 pt
+    const retPct=p>0?Math.round((1/p-1)*100):0;
+    const hkey=m.id+'#'+st.pickIdx;
+    const hold=st.holdings[hkey]||{shares:0,cost:0};
+    const holdVal=hold.shares*p*100;
+    Object.assign(base,{
+      isResolved, notResolved:!isResolved,
+      sideBuy:()=>this.setState({side:'buy'}), sideSell:()=>this.setState({side:'sell'}),
+      buyBg:isBuy?'var(--surface)':'transparent', buyColor:isBuy?'var(--pos)':'var(--dim)', buyShadow:isBuy?'var(--shadow)':'none',
+      sellBg:!isBuy?'var(--surface)':'transparent', sellColor:!isBuy?'var(--neg)':'var(--dim)', sellShadow:!isBuy?'var(--shadow)':'none',
+      amount:st.amount, onAmount:(e)=>this.setState({amount:Math.max(0,Math.floor(Number(e.target.value)||0))}),
+      chips:[{label:'+25',v:25},{label:'+100',v:100},{label:'+500',v:500},{label:'MAX',v:-1}].map(ch=>({label:ch.label, add:()=>this.setState(s=>({amount: ch.v<0? s.balance : (s.amount||0)+ch.v}))})),
+      tAvg:Math.round(p*100)+'¢', tShares:shares.toFixed(1),
+      tR3Label:isBuy?'的中なら獲得 / To win':'受取見込み / Proceeds', tR3Val:(isBuy?this.fmtN(payout):this.fmtN(holdVal||amt))+' pt', tR3Color:'var(--pos)',
+      tR4Label:isBuy?'想定リターン / Return':'現在価格 / Price', tR4Val:isBuy?('+'+retPct+'%'):(Math.round(p*100)+'¢'), tR4Color:isBuy?'var(--pos)':'var(--text)',
+      // your position on the selected outcome
+      hasHold: hold.shares>0,
+      holdShares: hold.shares.toFixed(1),
+      holdAvg: hold.shares>0?Math.round(hold.cost/hold.shares)+'¢':'—',
+      holdValue: this.fmtN(holdVal),
+      holdPnl: (()=>{ const pl=holdVal-hold.cost; return (pl>=0?'+':'')+this.fmtN(pl); })(),
+      holdPnlColor: holdVal-hold.cost>=0?'var(--pos)':'var(--neg)',
+      ctaBg:isResolved?'var(--faint)':(isBuy?'var(--pos)':'var(--neg)'),
+      ctaLabel:isResolved?'この市場は解決済み':((isBuy?'買う':'売る')+' · '+o[st.pickIdx].label.split(' / ')[0]+' '+Math.round(p*100)+'¢'),
+      doTrade:()=>{
+        if(isResolved){ this.flash('解決済みの市場では取引できません'); return; }
+        if(amt<=0)return;
+        if(isBuy){
+          if(amt>st.balance){ this.flash('ポイントが不足しています / Insufficient balance'); return; }
+          this.setState(s=>{ const h={...s.holdings}; const cur=h[hkey]||{shares:0,cost:0}; h[hkey]={shares:cur.shares+shares,cost:cur.cost+amt}; return {balance:s.balance-amt, holdings:h}; });
+          this.flash(o[st.pickIdx].label.split(' / ')[0]+' を '+amt+' pt 購入 → '+shares.toFixed(1)+'株');
+        } else {
+          if(hold.shares<=0){ this.flash('このアウトカムの保有がありません'); return; }
+          const proceeds=Math.round(holdVal);
+          this.setState(s=>{ const h={...s.holdings}; delete h[hkey]; return {balance:s.balance+proceeds, holdings:h}; });
+          this.flash(o[st.pickIdx].label.split(' / ')[0]+' を売却 → +'+this.fmtN(proceeds)+' pt');
+        }
+      },
+      // resolution (demo): winner = highest current probability
+      resolveDemo:()=>{
+        if(isResolved) return;
+        let win=0,best=-1; o.forEach((x,i)=>{ if(x.p>best){best=x.p;win=i;} });
+        let gained=0, hadAny=false;
+        const keep={...st.holdings};
+        o.forEach((x,i)=>{ const k=m.id+'#'+i; const hh=st.holdings[k]; if(hh&&hh.shares>0){ hadAny=true; if(i===win) gained+=hh.shares*100; delete keep[k]; } });
+        this.setState(s=>({ resolved:{...s.resolved,[m.id]:win}, holdings:keep, balance:s.balance+Math.round(gained),
+          result: hadAny ? {win:gained>0, payout:Math.round(gained), label:o[win].label.split(' / ')[0]} : {none:true, label:o[win].label.split(' / ')[0]} }));
+      },
+      resultData: st.result,
+      showResult: !!st.result,
+      resultWin: !!(st.result && st.result.win),
+      resultLose: !!(st.result && !st.result.win && !st.result.none),
+      resultNone: !!(st.result && st.result.none),
+      resultPayout: st.result ? this.fmtN(st.result.payout||0) : '0',
+      resultLabel: st.result ? st.result.label : '',
+      closeResult:()=>this.setState({result:null}),
+      winnerLabel: isResolved ? o[st.resolved[m.id]].label.split(' / ')[0] : ''
+    });
+    base.login=()=>this.flash('LINEログインは準備中です / Login coming soon');
+    base.soon=()=>this.flash('このページは準備中です / Coming soon');
+
+    // ── detail tabs: order book / holders / activity / comments ──
+    const dt=st.detailTab;
+    base.detailTabs=[['book','注文板'],['holders','保有者'],['activity','取引履歴'],['comments','コメント']].map(([k,label])=>({ label, k,
+      bg:dt===k?'var(--surface)':'transparent', color:dt===k?'var(--text)':'var(--dim)',
+      pick:()=>this.setState({detailTab:k}) }));
+    base.isTabBook=dt==='book'; base.isTabHolders=dt==='holders'; base.isTabActivity=dt==='activity'; base.isTabComments=dt==='comments';
+    // order book around current YES price (top outcome)
+    const mid=Math.round(o[0].p*100);
+    const asks=[], bids=[];
+    for(let i=3;i>=1;i--){ const px=Math.min(99,mid+i); asks.push({px:px+'¢', size:this.fmtN(((4-i)*1300+420)), depth:(100-(4-i)*22)+'%'}); }
+    for(let i=1;i<=3;i++){ const px=Math.max(1,mid-i); bids.push({px:px+'¢', size:this.fmtN((i*1500+380)), depth:(100-(i-1)*22)+'%'}); }
+    base.obAsks=asks; base.obBids=bids; base.obSpread=Math.max(1,2)+'¢'; base.obMid=mid+'¢';
+    // holders (deterministic from seed)
+    const HN=[['カ','#0284c7','カイ'],['み','#10b981','みお'],['レ','#f59e0b','レン'],['ソ','#8b5cf6','ソラ'],['ハ','#0e9488','ハル']];
+    base.holdersYes=HN.slice(0,4).map((h,i)=>({init:h[0],col:h[1],name:h[2],shares:this.fmtN((4-i)*640+210+m.seed*3)}));
+    base.holdersNo=HN.slice(1,5).map((h,i)=>({init:h[0],col:h[1],name:h[2],shares:this.fmtN((4-i)*520+160+m.seed*2)}));
+    // recent activity (deterministic)
+    const acts=[];
+    const names=['カイ','みお','レン','ソラ','ハル','ナギ'];
+    for(let i=0;i<6;i++){ const sd=(m.seed*7+i*13); const isBuy2=sd%2===0; const sideYes=(sd%3)!==0;
+      acts.push({ name:names[i%names.length], act:isBuy2?'購入':'売却', actColor:isBuy2?'var(--pos)':'var(--neg)',
+        side:sideYes?o[0].label.split(' / ')[0]:(o[1]?o[1].label.split(' / ')[0]:'—'),
+        sideCol:sideYes?'var(--pos)':'var(--neg)', amt:this.fmtN((sd%9+1)*120+80)+' pt', px:(sideYes?mid:100-mid)+'¢',
+        time:(i*7+3)+'分前' }); }
+    base.activity=acts;
+    // comments
+    base.comments=st.comments.map(c=>({ init:c.init, col:c.col, user:c.user, time:c.time, text:c.text, up:c.up,
+      like:()=>this.setState(s=>({comments:s.comments.map(x=>x.id===c.id?{...x,up:x.up+1}:x)})) }));
+    base.commentText=st.commentText;
+    base.onComment=e=>this.setState({commentText:e.target.value});
+    base.postComment=()=>{ const t=st.commentText.trim(); if(!t){return;} this.setState(s=>({comments:[{id:'c'+Date.now(),user:'あなた',init:'あ',col:'#ec4899',time:'たった今',text:t,up:0},...s.comments],commentText:''})); this.flash('コメントを投稿しました'); };
+    base.commentCount=st.comments.length+'件';
+
+    // portfolio
+    const POS=[
+      {mid:'m1',label:'はい / Yes',shares:42,avg:0.58,cur:0.64},
+      {mid:'m2',label:'いいえ / No',shares:30,avg:0.55,cur:0.59},
+      {mid:'m5',label:'はい / Yes',shares:18,avg:0.49,cur:0.57},
+      {mid:'m3',label:'アルゼンチン',shares:25,avg:0.18,cur:0.22}
+    ];
+    let totVal=0, totCost=0;
+    base.positions=POS.map(pp=>{ const mk=this.MARKETS.find(x=>x.id===pp.mid); const val=pp.shares*pp.cur*100, cost=pp.shares*pp.avg*100, pnl=val-cost; totVal+=val; totCost+=cost; return {
+      q:mk.q, tint:mk.tint, glyph:mk.glyph, label:pp.label,
+      shares:pp.shares, avg:Math.round(pp.avg*100)+'¢', cur:Math.round(pp.cur*100)+'¢',
+      pnl:(pnl>=0?'+':'')+this.fmtN(pnl), pnlColor:pnl>=0?'var(--pos)':'var(--neg)',
+      col: pp.label.includes('いいえ')?'var(--neg)':'var(--pos)',
+      open:()=>this.openMarket(pp.mid)
+    };});
+    const totPnl=totVal-totCost;
+    base.posValue=this.fmtN(totVal); base.pnlValue=(totPnl>=0?'+':'')+this.fmtN(totPnl); base.pnlColor=totPnl>=0?'var(--pos)':'var(--neg)';
+
+    // leaderboard
+    const LB=[
+      {name:'カイ / Kai',c:'#2d6cdf',profit:184200,vol:2410000,streak:'12連勝'},
+      {name:'みお / Mio',c:'#15a35b',profit:151800,vol:1980000,streak:'7連勝'},
+      {name:'レン / Ren',c:'#f7931a',profit:139400,vol:3120000,streak:'4連勝'},
+      {name:'ソラ / Sora',c:'#6c5ce7',profit:96100,vol:1440000,streak:'9連勝'},
+      {name:'あなた / You',c:'#e0518a',profit:74300,vol:910000,streak:'3連勝',you:true},
+      {name:'ハル / Haru',c:'#0e9488',profit:61200,vol:880000,streak:'2連勝'},
+      {name:'ナギ / Nagi',c:'#bf2f38',profit:52800,vol:1210000,streak:'5連勝'},
+      {name:'ユウ / Yu',c:'#334155',profit:41500,vol:760000,streak:'1連勝'}
+    ];
+    const mode=st.lb;
+    const sorted=LB.slice().sort((a,b)=>b[mode]-a[mode]);
+    const fmtVal=v=> mode==='profit'?'+'+this.fmtN(v):this.fmtN(v);
+    base.lbProfit=()=>this.setState({lb:'profit'}); base.lbVolume=()=>this.setState({lb:'volume'});
+    base.lbProfitBg=seg(mode==='profit'); base.lbProfitColor=mode==='profit'?'var(--text)':'var(--dim)';
+    base.lbVolumeBg=seg(mode==='volume'); base.lbVolumeColor=mode==='volume'?'var(--text)':'var(--dim)';
+    base.podium=sorted.slice(0,3).map((r,i)=>({ place:i+1, medalColor:['#eab308','#94a3b8','#cd7f32'][i], initial:r.name[0], color:r.c, name:r.name, value:fmtVal(r[mode]), unit:mode==='profit'?'pt 利益':'pt 出来高', lift:i===0?'translateY(-8px)':'none' }));
+    base.ranks=sorted.map((r,i)=>({ rank:i+1, initial:r.name[0], color:r.c, name:r.name.split(' / ')[0], you:r.you?'（あなた）':'', streak:r.streak, value:fmtVal(r[mode]), valueColor:mode==='profit'?'var(--pos)':'var(--text)', rowBg:r.you?'var(--primary-weak)':'transparent' }));
+
+    // ── My Page ──
+    base.user={ initial:'あ', name:'あなた', handle:'@you', title:'予言者 / Oracle', rank:'#5', joined:'2025年11月から', streak:12 };
+    const BADGES=[
+      {name:'初トレード',sub:'First trade',icon:'初',tint:'#0284c7',earned:true},
+      {name:'10連勝',sub:'Win streak ×10',icon:'勝',tint:'#f97316',earned:true},
+      {name:'的中王',sub:'Sharpshooter',icon:'王',tint:'#eab308',earned:true},
+      {name:'分散投資',sub:'Diversified',icon:'分',tint:'#06b6d4',earned:true},
+      {name:'大穴的中',sub:'Longshot',icon:'穴',tint:'#8b5cf6',earned:false},
+      {name:'皆勤賞',sub:'30-day streak',icon:'皆',tint:'#10b981',earned:false},
+      {name:'市場の賢者',sub:'Top 1%',icon:'賢',tint:'#0b1f3a',earned:false},
+      {name:'百戦錬磨',sub:'100 trades',icon:'戦',tint:'#ef4444',earned:false}
+    ];
+    base.badges=BADGES.map(b=>({ name:b.name, sub:b.sub, icon:b.icon,
+      iconBg:b.earned?b.tint:'var(--faint)', cardBg:b.earned?'var(--surface2)':'transparent', op:b.earned?'1':'.5' }));
+    base.badgeCount=BADGES.filter(b=>b.earned).length+' / '+BADGES.length+' 獲得';
+    base.ledger=[
+      {time:'06/17 09:02',label:'デイリーボーナス / Daily',delta:'+100',col:'var(--pos)',after:'1,840'},
+      {time:'06/16 21:40',label:'購入 · 日銀利上げ YES',delta:'−1,200',col:'var(--neg)',after:'1,740'},
+      {time:'06/16 12:15',label:'的中償還 · 大谷50本 YES',delta:'+2,500',col:'var(--pos)',after:'2,940'},
+      {time:'06/15 18:33',label:'売却 · BTC$150k NO',delta:'+640',col:'var(--pos)',after:'440'},
+      {time:'06/15 09:01',label:'デイリーボーナス / Daily',delta:'+100',col:'var(--pos)',after:'—'},
+      {time:'06/14 20:10',label:'購入 · W杯 アルゼンチン',delta:'−450',col:'var(--neg)',after:'200'}
+    ];
+
+    // ── Admin ──
+    base.isAdmin=screen==='admin';
+    base.goAdmin=()=>this.setState({screen:'admin'});
+    base.lkAdmin=screen==='admin'?'var(--text)':'var(--dim)';
+    const at=st.adminTab;
+    base.adminTabs=[['dashboard','ダッシュボード'],['create','市場作成'],['resolve','解決キュー'],['templates','テンプレート']].map(([k,label])=>({ label, bg:at===k?'var(--surface)':'transparent', color:at===k?'var(--text)':'var(--dim)', pick:()=>this.setState({adminTab:k}) }));
+    base.isAdminDash=at==='dashboard'; base.isAdminCreate=at==='create'; base.isAdminResolve=at==='resolve'; base.isAdminTpl=at==='templates';
+    base.kpis=[
+      {label:'アクティブ市場',sub:'ACTIVE MARKETS',v:'142',alert:false},
+      {label:'本日の取引',sub:'TRADES TODAY',v:'3,820',alert:false},
+      {label:'登録者数',sub:'USERS',v:'8,940',alert:false},
+      {label:'手動解決待ち',sub:'MANUAL QUEUE',v:'3',alert:true},
+      {label:'解決失敗',sub:'FAILED JOBS',v:'1',alert:true},
+      {label:'解決済み累計',sub:'RESOLVED',v:'1,284',alert:false}
+    ].map(k=>({ label:k.label, sub:k.sub, v:k.v, border:k.alert?'var(--neg)':'var(--border)', color:k.alert?'var(--neg)':'var(--text)' }));
+    base.feedRows=[
+      {name:'政治',target:24,admin:9,tpl:8,mirror:5,gen:2},
+      {name:'経済',target:20,admin:7,tpl:6,mirror:4,gen:3},
+      {name:'暗号資産',target:18,admin:5,tpl:7,mirror:4,gen:2},
+      {name:'スポーツ',target:30,admin:12,tpl:9,mirror:6,gen:3},
+      {name:'テック',target:16,admin:6,tpl:4,mirror:3,gen:3},
+      {name:'エンタメ',target:12,admin:4,tpl:3,mirror:2,gen:3}
+    ];
+    const af=st.admForm;
+    base.adm={ q:af.q, cat:af.cat, yes:af.yes, b:af.b, close:af.close,
+      cats:this.CATS.filter(c=>c.slug!=='trending').map(c=>c.label),
+      onQ:e=>this.setState({admForm:{...af,q:e.target.value}}),
+      onCat:e=>this.setState({admForm:{...af,cat:e.target.value}}),
+      onYes:e=>this.setState({admForm:{...af,yes:e.target.value}}),
+      onB:e=>this.setState({admForm:{...af,b:e.target.value}}),
+      onClose:e=>this.setState({admForm:{...af,close:e.target.value}}),
+      create:()=>{ if(!af.q){ this.flash('質問を入力してください'); return; } this.flash('市場「'+af.q+'」を作成しました'); this.setState({admForm:{...af,q:''}}); }
+    };
+    base.queueEmpty=st.admQueue.length===0;
+    base.queue=st.admQueue.map(item=>({ q:item.q, a:item.a, b:item.b,
+      resolve:()=>{ this.flash('「'+item.q+'」を解決しました'); this.setState(s=>({admQueue:s.admQueue.filter(x=>x.id!==item.id)})); },
+      voidIt:()=>{ this.flash('「'+item.q+'」を中止しました'); this.setState(s=>({admQueue:s.admQueue.filter(x=>x.id!==item.id)})); }
+    }));
+    base.tpls=st.templates.map(t=>({ name:t.name, pattern:t.pattern, cron:t.cron, activeLabel:t.active?'有効':'無効', activeColor:t.active?'var(--pos)':'var(--faint)',
+      remove:()=>{ this.flash('テンプレ「'+t.name+'」を削除しました'); this.setState(s=>({templates:s.templates.filter(x=>x.id!==t.id)})); } }));
+    const tf=st.tplForm;
+    base.tplForm=tf;
+    base.onTplName=e=>this.setState({tplForm:{...tf,name:e.target.value}});
+    base.onTplCron=e=>this.setState({tplForm:{...tf,cron:e.target.value}});
+    base.onTplPattern=e=>this.setState({tplForm:{...tf,pattern:e.target.value}});
+    base.addTpl=()=>{ if(!tf.name){ this.flash('テンプレ名を入力してください'); return; } this.flash('テンプレ「'+tf.name+'」を追加しました'); this.setState(s=>({templates:[{id:'t'+Date.now(),name:s.tplForm.name,pattern:s.tplForm.pattern||'（未設定）',cron:s.tplForm.cron,active:true},...s.templates],tplForm:{name:'',cron:'0 9 * * *',pattern:''}})); };
+
+    return base;
+  }
+}
+</script>
+</body>
+</html>

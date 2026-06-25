@@ -1,0 +1,140 @@
+:root {
+  --navy: #0b1f3a;
+  --navy2: #0e2747;
+  --navy-deep: #081627;
+  --ink: #101826;
+  --paper: #f6f8fb;
+  --paper2: #eef2f7;
+  --surface: #ffffff;
+  --line: #e3e9f1;
+  --hair: #eef2f7;
+  --text: #15212f;
+  --sub: #5a6b80;
+  --dim: #8a99ac;
+  --faint: #aeb9c7;
+  --cyan: #22b8e6;
+  --gold: #c9a84c;
+  --pink: #e0518a;
+  --green: #1f9d6b;
+  --violet: #7c6bd6;
+  /* --sans / --serif / --inter are injected by next/font in layout.tsx */
+}
+
+* {
+  box-sizing: border-box;
+}
+
+html {
+  scroll-behavior: smooth;
+  -webkit-font-smoothing: antialiased;
+  text-rendering: optimizeLegibility;
+}
+
+body {
+  margin: 0;
+  padding: 0;
+  background: var(--paper);
+  color: var(--text);
+  font-family: var(--sans), system-ui, sans-serif;
+  line-height: 1.75;
+  font-feature-settings: "palt";
+  overflow-x: hidden;
+}
+
+::-webkit-scrollbar {
+  width: 10px;
+}
+::-webkit-scrollbar-track {
+  background: var(--paper2);
+}
+::-webkit-scrollbar-thumb {
+  background: #c9d4e1;
+  border-radius: 6px;
+}
+
+a {
+  color: inherit;
+}
+
+/* ── keyframes ───────────────────────────── */
+@keyframes dcFloat {
+  0%, 100% { transform: translateY(0); }
+  50% { transform: translateY(-10px); }
+}
+@keyframes dcToast {
+  from { opacity: 0; transform: translate(-50%, 8px); }
+  to { opacity: 1; transform: translate(-50%, 0); }
+}
+@keyframes dcMarquee {
+  from { transform: translateX(0); }
+  to { transform: translateX(-50%); }
+}
+
+.dc-marquee-track {
+  display: flex;
+  gap: 48px;
+  width: max-content;
+  animation: dcMarquee 24s linear infinite;
+  white-space: nowrap;
+}
+
+/* ── product card hover ──────────────────── */
+.dc-product-card {
+  box-shadow: 0 1px 2px rgba(16, 24, 40, 0.03);
+  transition: box-shadow 0.25s ease, transform 0.25s ease;
+}
+.dc-product-card:hover {
+  box-shadow: 0 14px 40px -18px rgba(16, 24, 40, 0.22);
+  transform: translateY(-2px);
+}
+
+/* ── news row hover ──────────────────────── */
+.dc-news-row {
+  transition: background 0.2s ease;
+}
+.dc-news-row:hover {
+  background: var(--paper);
+}
+
+/* ── form focus ──────────────────────────── */
+.dc-field:focus {
+  border-color: var(--cyan) !important;
+}
+
+/* ── footer link hover ───────────────────── */
+.dc-footer-link {
+  transition: color 0.2s ease;
+}
+.dc-footer-link:hover {
+  color: #fff;
+}
+
+/* ── responsive: collapse grids on mobile ── */
+@media (max-width: 860px) {
+  .dc-grid-3 { grid-template-columns: 1fr !important; }
+  .dc-grid-2 { grid-template-columns: 1fr !important; gap: 36px !important; }
+  .dc-hero-stats { grid-template-columns: repeat(2, 1fr) !important; }
+  .dc-product-card {
+    grid-template-columns: auto 1fr !important;
+  }
+  .dc-product-status {
+    grid-column: 1 / -1;
+    text-align: left !important;
+  }
+  .dc-news-row {
+    grid-template-columns: 92px 1fr !important;
+    row-gap: 6px !important;
+  }
+  .dc-news-cat { justify-self: start; }
+  .dc-news-title { grid-column: 1 / -1; }
+  .dc-news-arrow { display: none; }
+  .dc-company-row { grid-template-columns: 130px 1fr !important; gap: 14px !important; }
+  .dc-footer-grid { grid-template-columns: 1fr 1fr !important; gap: 32px !important; }
+  .dc-contact-grid { grid-template-columns: 1fr !important; }
+  .dc-nav-links { display: none !important; }
+}
+
+@media (max-width: 520px) {
+  .dc-hero-stats { grid-template-columns: 1fr 1fr !important; }
+  .dc-footer-grid { grid-template-columns: 1fr !important; }
+}

@@ -1,0 +1,505 @@
+<!DOCTYPE html>
+<html>
+<head>
+<meta charset="utf-8">
+<meta name="viewport" content="width=device-width, initial-scale=1">
+<script src="./support.js"></script>
+</head>
+<body>
+<x-dc>
+<helmet>
+<link rel="preconnect" href="https://fonts.googleapis.com">
+<link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+<link href="https://fonts.googleapis.com/css2?family=Noto+Sans+JP:wght@400;500;700;800;900&display=swap" rel="stylesheet">
+<style>
+:root{
+  --bg:#fdeef4; --card:#ffffff; --ink:#23202a; --muted:#6b7280; --faint:#9aa1ad;
+  --pink:#E91E63; --pink-deep:#c2185b; --pink-soft:#FFD1DC; --pink-weak:#ffe9f0;
+  --blue:#4A90E2; --yellow:#FFC107; --purple:#9b6dde;
+  --line:#efe7ec; --line2:#e6e9ef;
+  --dark:#0d0f14; --dark2:#15181f; --dark3:#1e222b; --red:#ef4444; --red-deep:#b91c1c;
+  --radius:20px; --radius-sm:14px;
+  --sans:'Noto Sans JP',system-ui,sans-serif;
+}
+*{box-sizing:border-box}
+html,body{margin:0;padding:0}
+body{background:#e9c6d6;font-family:var(--sans);-webkit-font-smoothing:antialiased;line-height:1.6}
+.scrollx::-webkit-scrollbar{display:none}
+.scrollx{scrollbar-width:none}
+@keyframes tgIn{from{opacity:0;transform:translateY(10px)}to{opacity:1;transform:none}}
+@keyframes tgToast{from{opacity:0;transform:translate(-50%,10px)}to{opacity:1;transform:translate(-50%,0)}}
+@keyframes tgBounce{0%,100%{transform:translateY(0)}50%{transform:translateY(-7px)}}
+@keyframes tgPulse{0%,100%{opacity:1}50%{opacity:.45}}
+@keyframes tgFloat{0%,100%{transform:translateY(0) rotate(0)}50%{transform:translateY(-9px) rotate(3deg)}}
+</style>
+</helmet>
+
+<div style="min-height:100vh;display:flex;justify-content:center;background:linear-gradient(160deg,#f7d5e3,#e6c3d4 60%,#d9b8cb)">
+  <div style="width:100%;max-width:440px;min-height:100vh;background:var(--bg);position:relative;box-shadow:0 0 60px rgba(120,40,80,.18);display:flex;flex-direction:column;overflow:hidden">
+
+    <!-- ░░ TOP BAR ░░ -->
+    <header style="position:sticky;top:0;z-index:50;height:54px;display:flex;align-items:center;justify-content:space-between;padding:0 16px;background:{{ barBg }};backdrop-filter:blur(10px);border-bottom:1px solid {{ barLine }};transition:background .3s">
+      <div onClick="{{ goHome }}" style="display:flex;align-items:center;gap:9px;cursor:pointer">
+        <svg width="28" height="28" viewBox="0 0 40 40" style="display:block">
+          <defs><linearGradient id="tgLogo" x1="0" y1="0" x2="40" y2="40" gradientUnits="userSpaceOnUse"><stop stop-color="#ff6fa5"></stop><stop offset="1" stop-color="#E91E63"></stop></linearGradient></defs>
+          <rect x="1" y="1" width="38" height="38" rx="11" fill="#0b1f3a"></rect>
+          <path d="M9 13.5h13M15.5 13.5V27" fill="none" stroke="url(#tgLogo)" stroke-width="2.7" stroke-linecap="round" stroke-linejoin="round"></path>
+          <path d="M25 20l6-5m-6 5l6 5" fill="none" stroke="url(#tgLogo)" stroke-width="2.7" stroke-linecap="round" stroke-linejoin="round"></path>
+        </svg>
+        <span style="font-weight:900;font-size:20px;letter-spacing:-.02em;color:{{ barInk }}">Togel</span>
+      </div>
+      <div style="display:flex;align-items:center;gap:10px">
+        <div style="display:flex;align-items:center;gap:5px;height:30px;padding:0 11px;background:{{ chipBg }};border-radius:999px">
+          <span style="font-size:13px">💎</span><span style="font-weight:800;font-size:13px;color:{{ barInk }}">{{ points }}</span>
+        </div>
+      </div>
+    </header>
+
+    <!-- ░░ CONTENT ░░ -->
+    <main class="scrollx" style="flex:1;overflow-y:auto;background:{{ pageBg }}">
+
+      <!-- ══════ HOME / LP ══════ -->
+      <sc-if value="{{ isHome }}" hint-placeholder-val="{{ true }}">
+        <!-- hero -->
+        <section style="position:relative;background:radial-gradient(120% 90% at 50% 0%,#ffe0ea,#FFD1DC 55%,#ffc2d6);padding:54px 24px 64px;text-align:center;overflow:hidden">
+          <div style="position:absolute;top:34px;left:18px;font-size:30px;animation:tgFloat 6s ease-in-out infinite">💘</div>
+          <div style="position:absolute;top:88px;right:22px;font-size:26px;animation:tgFloat 7s ease-in-out infinite .6s">✨</div>
+          <div style="position:absolute;bottom:90px;left:28px;font-size:24px;animation:tgFloat 8s ease-in-out infinite 1.1s">💀</div>
+          <div style="font-weight:900;font-size:74px;line-height:.92;letter-spacing:-.05em;color:#1a1320">Togel</div>
+          <div style="margin-top:10px;font-size:18px;font-weight:700;letter-spacing:.42em;color:#1a1320;padding-left:.42em">トゥゲル</div>
+          <p style="margin:26px auto 0;max-width:300px;font-size:15px;font-weight:700;color:var(--pink-deep);line-height:1.7">あなたの本音と相性が一瞬でわかる<br>24タイプTogel型診断 + AIマッチング</p>
+          <button onClick="{{ login }}" style="margin:26px auto 0;display:flex;align-items:center;justify-content:center;gap:11px;width:100%;max-width:300px;height:58px;border:1px solid rgba(0,0,0,.08);background:#fff;border-radius:999px;font-family:inherit;font-weight:800;font-size:16px;color:#0f172a;cursor:pointer;box-shadow:0 14px 30px -10px rgba(0,0,0,.25)">
+            <svg viewBox="0 0 48 48" width="22" height="22"><path fill="#EA4335" d="M24 9.5c3.5 0 6 1.5 7.4 2.8l5.3-5.2C33.6 3.6 29.3 1.5 24 1.5 15 1.5 6.9 6.9 3.5 15l6.6 5.1C11.5 13.1 17.2 9.5 24 9.5z"></path><path fill="#4285F4" d="M46.5 24.5c0-1.6-.1-3.1-.4-4.6H24v8.7h12.7c-.5 2.8-2.2 5.2-4.7 6.8l7.4 5.7c4.3-4 7.1-9.9 7.1-16.6z"></path><path fill="#FBBC05" d="M10.2 27.2A14.5 14.5 0 0 1 9.5 24c0-1.1.2-2.2.5-3.2l-6.6-5.1A24 24 0 0 0 2 24c0 3.9.9 7.5 2.5 10.7l6.6-5.5z"></path><path fill="#34A853" d="M24 46.5c6.3 0 11.5-2.1 15.4-5.6l-7.4-5.7c-2.1 1.4-4.7 2.2-8 2.2-6.8 0-12.5-3.6-15.4-9.1l-6.6 5.5C6.9 41.1 15 46.5 24 46.5z"></path></svg>
+            Googleで始める
+          </button>
+          <div style="margin-top:30px;color:rgba(20,12,20,.5);font-size:11px;letter-spacing:.3em;animation:tgBounce 2s infinite">SCROLL ↓</div>
+        </section>
+
+        <!-- dark story -->
+        <section style="background:var(--dark);color:#fff;padding:56px 24px;text-align:center">
+          <div style="font-size:12px;font-weight:800;letter-spacing:.45em;color:var(--pink);animation:tgPulse 2s infinite">HOW IT WORKS</div>
+          <h2 style="margin:18px 0 0;font-size:34px;font-weight:900;line-height:1.15">運命なんて、<br><span style="background:linear-gradient(90deg,#ff5a96,#a86bff);-webkit-background-clip:text;background-clip:text;color:transparent">計算できる。</span></h2>
+          <p style="margin:18px auto 0;max-width:300px;color:#9aa0ac;font-size:14px;line-height:1.8">Togelは、あなたの「本性」を暴き出し、最高の相性と最悪の結末を予言するAIマッチングサービス。</p>
+        </section>
+
+        <sc-for list="{{ steps }}" as="s" hint-placeholder-count="4">
+          <section style="background:{{ s.bg }};color:#fff;padding:46px 24px;border-top:1px solid rgba(255,255,255,.05)">
+            <div style="display:inline-block;background:rgba(255,255,255,.07);border:1px solid rgba(255,255,255,.12);border-radius:999px;padding:5px 14px;font-size:12px;font-weight:800;color:#aab0bc;letter-spacing:.1em">{{ s.step }}</div>
+            <div style="font-size:64px;margin:18px 0 6px;animation:tgBounce 2.5s ease-in-out infinite">{{ s.emoji }}</div>
+            <h3 style="margin:6px 0 0;font-size:30px;font-weight:900;line-height:1.15">{{ s.titleA }}<span style="color:{{ s.accent }}">{{ s.titleB }}</span></h3>
+            <p style="margin:14px auto 0;max-width:300px;color:#9aa0ac;font-size:14px;line-height:1.8">{{ s.body }}</p>
+            <sc-if value="{{ s.hasCard }}" hint-placeholder-val="">
+              <div style="margin:24px auto 0;max-width:280px;background:linear-gradient(135deg,#fff,#f4f5f7);border-radius:22px;padding:18px;text-align:left;color:#000;box-shadow:0 20px 40px -16px rgba(233,30,99,.5)">
+                <div style="display:flex;align-items:center;justify-content:space-between;margin-bottom:8px"><span style="font-size:34px">👩</span><span style="font-size:26px;font-weight:900;color:var(--pink)">98%</span></div>
+                <div style="font-weight:800;font-size:17px">運命の相手候補</div>
+                <p style="margin:6px 0 0;font-size:12px;color:#6b7280;line-height:1.6">あなたのアクティブさと、相手の慎重さが完璧に補完し合う関係。</p>
+                <div style="margin-top:12px;padding-top:12px;border-top:1px solid #eee"><div style="font-size:10px;font-weight:800;color:#9aa1ad;letter-spacing:.1em">ADVICE</div><div style="font-weight:800;font-size:13px;margin-top:3px">初デートは静かなカフェで ☕️</div></div>
+              </div>
+            </sc-if>
+          </section>
+        </sc-for>
+
+        <!-- CTA -->
+        <section style="background:radial-gradient(100% 80% at 50% 0%,rgba(233,30,99,.4),var(--dark) 60%);color:#fff;padding:66px 24px;text-align:center">
+          <h2 style="margin:0 0 28px;font-size:32px;font-weight:900">準備はいいですか？</h2>
+          <button onClick="{{ startDiagnosis }}" style="width:100%;max-width:320px;height:64px;border:none;border-radius:999px;background:#fff;color:var(--pink);font-family:inherit;font-weight:900;font-size:20px;cursor:pointer;box-shadow:0 0 50px -8px rgba(255,255,255,.6)">今すぐ診断する</button>
+          <p style="margin:18px 0 0;font-size:11px;color:rgba(255,255,255,.5)">※ エンタメ目的の診断です</p>
+        </section>
+      </sc-if>
+
+      <!-- ══════ DIAGNOSIS SELECT ══════ -->
+      <sc-if value="{{ isSelect }}" hint-placeholder-val="">
+        <div style="padding:26px 20px 30px">
+          <div style="font-size:12px;font-weight:800;letter-spacing:.3em;color:var(--pink)">START DIAGNOSIS</div>
+          <h1 style="margin:8px 0 6px;font-size:26px;font-weight:900;color:var(--ink)">診断を始める</h1>
+          <p style="margin:0;color:var(--muted);font-size:13px">5分・全{{ totalQ }}問。直感で選ぶだけ。</p>
+
+          <div style="margin-top:22px;background:var(--card);border:1px solid var(--line);border-radius:var(--radius);padding:18px">
+            <div style="font-size:13px;font-weight:800;color:var(--ink);margin-bottom:12px">あなたについて</div>
+            <div style="font-size:12px;font-weight:700;color:var(--muted);margin-bottom:8px">性別</div>
+            <div style="display:flex;gap:8px;margin-bottom:18px">
+              <sc-for list="{{ genders }}" as="g" hint-placeholder-count="2">
+                <button onClick="{{ g.pick }}" style="flex:1;cursor:pointer;font-family:inherit;font-weight:800;font-size:14px;padding:13px;border-radius:13px;border:1.5px solid {{ g.border }};background:{{ g.bg }};color:{{ g.color }}">{{ g.label }}</button>
+              </sc-for>
+            </div>
+            <div style="font-size:12px;font-weight:700;color:var(--muted);margin-bottom:8px">マッチ対象</div>
+            <div style="display:flex;gap:8px">
+              <sc-for list="{{ targets }}" as="t" hint-placeholder-count="2">
+                <button onClick="{{ t.pick }}" style="flex:1;cursor:pointer;font-family:inherit;font-weight:800;font-size:14px;padding:13px;border-radius:13px;border:1.5px solid {{ t.border }};background:{{ t.bg }};color:{{ t.color }}">{{ t.label }}</button>
+              </sc-for>
+            </div>
+          </div>
+
+          <div style="margin-top:16px;display:flex;gap:10px;background:var(--pink-weak);border:1px solid #fbd0e0;border-radius:var(--radius-sm);padding:14px">
+            <span style="font-size:20px">🔒</span>
+            <p style="margin:0;font-size:12px;color:var(--pink-deep);line-height:1.6">18歳以上限定。診断結果はあなただけに表示され、安全に管理されます。</p>
+          </div>
+
+          <button onClick="{{ beginAnswer }}" style="margin-top:22px;width:100%;height:58px;border:none;border-radius:999px;background:linear-gradient(135deg,#ff5e93,var(--pink));color:#fff;font-family:inherit;font-weight:900;font-size:17px;cursor:pointer;box-shadow:0 16px 34px -12px rgba(233,30,99,.7)">診断スタート →</button>
+        </div>
+      </sc-if>
+
+      <!-- ══════ ANSWER ══════ -->
+      <sc-if value="{{ isAnswer }}" hint-placeholder-val="">
+        <div style="padding:22px 20px 30px">
+          <div style="display:flex;align-items:center;justify-content:space-between;margin-bottom:10px">
+            <span style="font-size:12px;font-weight:800;color:var(--pink)">Q{{ qNum }} / {{ totalQ }}</span>
+            <span style="font-size:12px;font-weight:700;color:var(--muted)">{{ qPct }}%</span>
+          </div>
+          <div style="height:8px;background:var(--line2);border-radius:6px;overflow:hidden;margin-bottom:30px"><div style="height:100%;width:{{ qPct }}%;background:linear-gradient(90deg,#ff7caa,var(--pink));border-radius:6px;transition:width .3s"></div></div>
+
+          <div style="font-size:44px;text-align:center;margin-bottom:14px">{{ qEmoji }}</div>
+          <h2 style="font-size:22px;font-weight:900;color:var(--ink);text-align:center;line-height:1.5;min-height:96px">{{ qText }}</h2>
+
+          <div style="display:flex;flex-direction:column;gap:10px;margin-top:18px">
+            <sc-for list="{{ choices }}" as="c" hint-placeholder-count="5">
+              <button onClick="{{ c.pick }}" style="display:flex;align-items:center;gap:13px;cursor:pointer;font-family:inherit;text-align:left;padding:15px 16px;border-radius:15px;border:1.5px solid {{ c.border }};background:{{ c.bg }};color:{{ c.color }};font-weight:700;font-size:15px">
+                <span style="width:24px;height:24px;flex-shrink:0;border-radius:50%;border:2px solid {{ c.dot }};background:{{ c.dotBg }}"></span>{{ c.label }}
+              </button>
+            </sc-for>
+          </div>
+
+          <button onClick="{{ backQ }}" style="margin-top:20px;background:none;border:none;color:var(--muted);font-family:inherit;font-size:13px;font-weight:700;cursor:pointer">← 前の質問</button>
+        </div>
+      </sc-if>
+
+      <!-- ══════ RESULT (BRIGHT) ══════ -->
+      <sc-if value="{{ isResult }}" hint-placeholder-val="">
+        <div style="padding:22px 16px 30px">
+          <div style="text-align:center">
+            <div style="font-size:12px;font-weight:800;color:var(--pink);letter-spacing:.2em">STEP 2 · RESULT</div>
+            <h1 style="margin:6px 0 4px;font-size:26px;font-weight:900;color:var(--ink)">マッチング結果</h1>
+            <p style="margin:0;font-size:13px;color:var(--muted)">相性の良い5名を抽出しました ✨</p>
+          </div>
+
+          <!-- your type -->
+          <div style="margin-top:18px;background:linear-gradient(135deg,var(--pink-weak),#fff 55%,#eef4ff);border:1.5px solid #fbd5e3;border-radius:var(--radius);padding:18px">
+            <div style="font-size:11px;font-weight:800;letter-spacing:.2em;color:var(--pink)">📊 あなたの性格診断結果</div>
+            <h2 style="margin:6px 0 2px;font-size:22px;font-weight:900;color:var(--ink)">{{ myType }}</h2>
+            <p style="margin:0;font-size:14px;font-weight:700;color:var(--purple)">{{ myTypeSub }}</p>
+            <div style="margin-top:14px;display:flex;flex-direction:column;gap:9px">
+              <sc-for list="{{ bigFive }}" as="b" hint-placeholder-count="5">
+                <div style="display:flex;align-items:center;gap:10px">
+                  <span style="width:88px;flex-shrink:0;font-size:12px;font-weight:700;color:var(--muted)">{{ b.label }}</span>
+                  <div style="flex:1;height:8px;background:#fff;border:1px solid var(--line2);border-radius:6px;overflow:hidden"><div style="height:100%;width:{{ b.pct }};background:linear-gradient(90deg,#ff7caa,var(--pink));border-radius:6px"></div></div>
+                  <span style="width:30px;text-align:right;font-size:13px;font-weight:800;color:var(--pink)">{{ b.score }}</span>
+                </div>
+              </sc-for>
+            </div>
+          </div>
+
+          <!-- mode toggles -->
+          <div style="margin-top:16px;display:flex;flex-direction:column;gap:10px;align-items:center">
+            <div style="display:flex;align-items:center;gap:10px">
+              <span style="font-size:13px;font-weight:800;color:{{ prankOffColor }}">通常</span>
+              <button onClick="{{ togglePrank }}" style="width:50px;height:28px;border-radius:999px;border:none;cursor:pointer;background:{{ prankTrack }};position:relative;transition:background .2s"><span style="position:absolute;top:3px;left:{{ prankX }};width:22px;height:22px;border-radius:50%;background:#fff;transition:left .2s;box-shadow:0 2px 6px rgba(0,0,0,.25)"></span></button>
+              <span style="font-size:13px;font-weight:800;color:{{ prankOnColor }}">💖 運命モード</span>
+            </div>
+            <button onClick="{{ toggleMatchMode }}" style="font-family:inherit;font-size:13px;font-weight:700;color:var(--ink);background:#fff;border:1.5px solid var(--line2);border-radius:999px;padding:8px 16px;cursor:pointer">{{ matchModeLabel }}</button>
+          </div>
+
+          <!-- match cards -->
+          <div style="margin-top:16px;display:flex;flex-direction:column;gap:14px">
+            <sc-for list="{{ matches }}" as="m" hint-placeholder-count="5">
+              <div style="background:var(--card);border:1.5px solid {{ m.cardBorder }};border-radius:var(--radius);padding:16px;box-shadow:0 8px 24px -16px rgba(233,30,99,.4)">
+                <div style="display:flex;align-items:center;gap:12px;padding-bottom:12px;border-bottom:1px solid var(--line)">
+                  <img src="{{ m.avatar }}" alt="{{ m.nickname }}" style="width:60px;height:60px;border-radius:50%;border:3px solid var(--pink-soft);object-fit:cover;background:#ffe9f0">
+                  <div style="flex:1;min-width:0">
+                    <div style="display:flex;align-items:center;gap:7px"><span style="font-size:22px;font-weight:900;color:var(--pink)">{{ m.rank }}</span><span style="font-size:17px;font-weight:800;color:var(--ink)">{{ m.nickname }}</span><span style="font-size:12px;color:var(--muted)">{{ m.age }}歳</span></div>
+                    <div style="display:flex;gap:6px;margin-top:5px;flex-wrap:wrap"><span style="font-size:10px;font-weight:700;background:var(--pink-weak);color:var(--pink);padding:3px 9px;border-radius:999px">{{ m.typeLabel }}</span><span style="font-size:10px;background:#f1f3f7;color:var(--muted);padding:3px 9px;border-radius:999px">{{ m.job }}</span></div>
+                  </div>
+                  <div style="text-align:right"><div style="font-size:26px;font-weight:900;color:var(--pink);line-height:1">{{ m.compat }}%</div><div style="font-size:10px;color:var(--muted)">マッチ度</div></div>
+                </div>
+                <div style="margin-top:12px;padding:12px;border-radius:14px;background:linear-gradient(90deg,var(--pink-weak),#eef4ff);text-align:center;font-size:14px;font-weight:800;color:var(--ink)">{{ m.catch }}</div>
+                <div style="margin-top:12px;background:#eef4ff;border-radius:14px;padding:14px">
+                  <div style="font-size:13px;font-weight:800;color:var(--ink);margin-bottom:7px">🤖 なぜあなたとマッチ？</div>
+                  <p style="margin:0;font-size:13px;color:#4b5563;line-height:1.7">{{ m.why }}</p>
+                </div>
+                <details style="margin-top:10px">
+                  <summary style="cursor:pointer;list-style:none;background:#fff7e6;border-radius:13px;padding:12px 14px;font-size:13px;font-weight:800;color:#a16207">💡 最初のデート、どうする？</summary>
+                  <div style="margin-top:8px;background:#fff;border:1px solid var(--line);border-radius:13px;padding:13px;font-size:13px;color:#4b5563;line-height:1.7">{{ m.date }}</div>
+                </details>
+                <button onClick="{{ m.view }}" style="margin-top:12px;width:100%;height:46px;border:none;border-radius:13px;background:linear-gradient(135deg,#ff5e93,var(--pink));color:#fff;font-family:inherit;font-weight:800;font-size:14px;cursor:pointer">プロフィール詳細を見る →</button>
+              </div>
+            </sc-for>
+          </div>
+
+          <!-- mismatch link -->
+          <div style="margin-top:22px;background:linear-gradient(135deg,#1a1d24,#0d0f14);border-radius:var(--radius);padding:22px;text-align:center">
+            <div style="font-size:34px;margin-bottom:6px;animation:tgBounce 1.8s infinite">💀</div>
+            <p style="margin:0 0 14px;font-size:13px;color:#c8ccd4;line-height:1.7">相性の悪い相手も知っておくと、<br>失敗を避けられるかも…？</p>
+            <button onClick="{{ goMismatch }}" style="width:100%;height:52px;border:1.5px solid var(--red);background:rgba(239,68,68,.12);color:#ff6b6b;border-radius:999px;font-family:inherit;font-weight:900;font-size:15px;cursor:pointer">💀 ミスマッチランキングを見る</button>
+          </div>
+        </div>
+      </sc-if>
+
+      <!-- ══════ MISMATCH (DARK) ══════ -->
+      <sc-if value="{{ isMismatch }}" hint-placeholder-val="">
+        <div style="min-height:100%;background:linear-gradient(170deg,#15181f,#0d0f14 60%,#1a0e12);padding:24px 16px 36px">
+          <div style="text-align:center">
+            <div style="display:inline-flex;align-items:center;gap:8px;background:rgba(239,68,68,.14);border:1px solid rgba(239,68,68,.4);border-radius:999px;padding:6px 16px;font-size:12px;font-weight:800;color:#ff6b6b;letter-spacing:.15em"><span style="width:7px;height:7px;border-radius:50%;background:var(--red);animation:tgPulse 1.2s infinite"></span>DANGER ZONE</div>
+            <h1 style="margin:16px 0 6px;font-size:30px;font-weight:900;color:#fff">ミスマッチ<br>ランキング</h1>
+            <p style="margin:0;font-size:13px;color:#9aa0ac;line-height:1.7">AIが選んだ、あなたと絶対に合わない5名。<br>付き合ったら地獄確定。</p>
+          </div>
+
+          <div style="margin-top:22px;display:flex;flex-direction:column;gap:14px">
+            <sc-for list="{{ mismatches }}" as="m" hint-placeholder-count="5">
+              <div style="background:linear-gradient(135deg,rgba(40,20,24,.7),rgba(13,15,20,.9));border:1.5px solid rgba(185,28,28,.4);border-radius:var(--radius);padding:16px">
+                <div style="display:flex;align-items:center;gap:12px;padding-bottom:12px;border-bottom:1px solid rgba(255,255,255,.08)">
+                  <div style="position:relative">
+                    <img src="{{ m.avatar }}" alt="{{ m.nickname }}" style="width:58px;height:58px;border-radius:50%;border:3px solid rgba(185,28,28,.5);object-fit:cover;filter:grayscale(1);background:#2a2430">
+                    <div style="position:absolute;-top:4px;top:-4px;right:-4px;width:26px;height:26px;border-radius:50%;background:var(--red-deep);display:flex;align-items:center;justify-content:center;font-size:13px">💀</div>
+                  </div>
+                  <div style="flex:1;min-width:0">
+                    <div style="display:flex;align-items:center;gap:7px"><span style="font-size:22px;font-weight:900;color:#ff5252">{{ m.rank }}</span><span style="font-size:17px;font-weight:800;color:#fff">{{ m.nickname }}</span><span style="font-size:12px;color:#8b9099">{{ m.age }}歳</span></div>
+                    <div style="display:flex;gap:6px;margin-top:5px;flex-wrap:wrap"><span style="font-size:10px;font-weight:700;background:rgba(185,28,28,.25);color:#ff8a8a;border:1px solid rgba(185,28,28,.5);padding:3px 9px;border-radius:999px">{{ m.typeLabel }}</span><span style="font-size:10px;background:#262b34;color:#9aa0ac;padding:3px 9px;border-radius:999px">{{ m.job }}</span></div>
+                  </div>
+                  <div style="text-align:right"><div style="font-size:26px;font-weight:900;color:#ff5252;line-height:1">{{ m.score }}%</div><div style="font-size:10px;color:#8b9099">ミスマッチ度</div></div>
+                </div>
+                <div style="margin-top:12px;padding:12px;border-radius:14px;background:rgba(185,28,28,.18);border:1px solid rgba(185,28,28,.4);text-align:center;font-size:14px;font-weight:800;color:#ff8a8a">⚠️ {{ m.catch }}</div>
+                <div style="margin-top:12px;background:rgba(185,28,28,.12);border:1px solid rgba(185,28,28,.3);border-radius:14px;padding:14px">
+                  <div style="font-size:13px;font-weight:800;color:#fff;margin-bottom:8px">🚨 なぜあなたとミスマッチ？</div>
+                  <p style="margin:0;font-size:13px;color:#c8ccd4;line-height:1.7">{{ m.why }}</p>
+                </div>
+                <details style="margin-top:10px">
+                  <summary style="cursor:pointer;list-style:none;background:rgba(234,88,12,.14);border:1px solid rgba(234,88,12,.35);border-radius:13px;padding:12px 14px;font-size:13px;font-weight:800;color:#fb923c">🔥 付き合ったら起こる地獄のシナリオ</summary>
+                  <div style="margin-top:8px;background:rgba(0,0,0,.3);border:1px solid rgba(255,255,255,.08);border-radius:13px;padding:13px;font-size:13px;color:#c8ccd4;line-height:1.7">{{ m.disaster }}</div>
+                </details>
+                <button onClick="{{ m.view }}" style="margin-top:12px;width:100%;height:46px;border:1.5px solid rgba(239,68,68,.5);background:none;color:#ff6b6b;border-radius:13px;font-family:inherit;font-weight:800;font-size:13px;cursor:pointer">プロフィール詳細（自己責任）→</button>
+              </div>
+            </sc-for>
+          </div>
+
+          <div style="margin-top:24px;text-align:center">
+            <p style="font-size:11px;color:#6b7280;margin:0 0 14px">※ この診断結果はエンタメ目的です。実際の相性は人それぞれ。</p>
+            <button onClick="{{ goResult }}" style="width:100%;height:50px;border:1.5px solid rgba(255,255,255,.2);background:none;color:#c8ccd4;border-radius:999px;font-family:inherit;font-weight:800;font-size:14px;cursor:pointer">← 明るいマッチング結果に戻る</button>
+          </div>
+        </div>
+      </sc-if>
+
+      <!-- ══════ 24 TYPES ══════ -->
+      <sc-if value="{{ isTypes }}" hint-placeholder-val="">
+        <div style="padding:24px 16px 30px">
+          <div style="font-size:12px;font-weight:800;letter-spacing:.3em;color:var(--pink)">24 TYPES</div>
+          <h1 style="margin:6px 0 4px;font-size:26px;font-weight:900;color:var(--ink)">Togel型 24タイプ</h1>
+          <p style="margin:0 0 18px;color:var(--muted);font-size:13px">あなたはどのタイプ？ 分布も見てみよう。</p>
+
+          <div style="background:var(--card);border:1px solid var(--line);border-radius:var(--radius);padding:16px;margin-bottom:18px">
+            <div style="font-size:13px;font-weight:800;color:var(--ink);margin-bottom:12px">📊 タイプ分布</div>
+            <div style="display:flex;flex-direction:column;gap:8px">
+              <sc-for list="{{ distribution }}" as="d" hint-placeholder-count="5">
+                <div style="display:flex;align-items:center;gap:9px">
+                  <span style="width:18px;font-size:15px">{{ d.emoji }}</span>
+                  <span style="width:96px;flex-shrink:0;font-size:11px;font-weight:700;color:var(--muted);white-space:nowrap;overflow:hidden;text-overflow:ellipsis">{{ d.name }}</span>
+                  <div style="flex:1;height:9px;background:var(--line2);border-radius:6px;overflow:hidden"><div style="height:100%;width:{{ d.pct }};background:{{ d.color }};border-radius:6px"></div></div>
+                  <span style="width:32px;text-align:right;font-size:11px;font-weight:800;color:var(--ink)">{{ d.pct }}</span>
+                </div>
+              </sc-for>
+            </div>
+          </div>
+
+          <div style="display:grid;grid-template-columns:1fr 1fr;gap:10px">
+            <sc-for list="{{ types24 }}" as="t" hint-placeholder-count="8">
+              <div style="background:var(--card);border:1px solid var(--line);border-radius:16px;padding:14px;position:relative;overflow:hidden">
+                <div style="position:absolute;right:-6px;top:-6px;font-size:44px;opacity:.12">{{ t.emoji }}</div>
+                <div style="font-size:10px;font-weight:800;color:{{ t.color }};letter-spacing:.1em">TOGEL {{ t.id }}型</div>
+                <div style="font-size:26px;margin:4px 0">{{ t.emoji }}</div>
+                <div style="font-size:14px;font-weight:900;color:var(--ink);line-height:1.3">{{ t.name }}</div>
+                <div style="font-size:11px;color:var(--muted);margin-top:3px">{{ t.tag }}</div>
+              </div>
+            </sc-for>
+          </div>
+        </div>
+      </sc-if>
+
+      <!-- ══════ MY PAGE ══════ -->
+      <sc-if value="{{ isMypage }}" hint-placeholder-val="">
+        <div style="padding:24px 16px 30px">
+          <div style="background:linear-gradient(135deg,#ff5e93,var(--pink) 55%,#a86bff);border-radius:var(--radius);padding:22px;color:#fff;position:relative;overflow:hidden">
+            <div style="position:absolute;right:-10px;top:-10px;font-size:90px;opacity:.18">🐯</div>
+            <div style="display:flex;align-items:center;gap:14px">
+              <img src="https://api.dicebear.com/8.x/adventurer/svg?seed=togel-you&backgroundColor=ffd5e3" alt="you" style="width:64px;height:64px;border-radius:50%;border:3px solid rgba(255,255,255,.6);background:#ffd5e3">
+              <div><div style="font-size:19px;font-weight:900">あなた</div><div style="font-size:12px;opacity:.85">Togel 05型 · 情熱的リーダー</div></div>
+            </div>
+            <div style="margin-top:16px;display:flex;gap:10px">
+              <div style="flex:1;background:rgba(255,255,255,.18);border-radius:13px;padding:10px;text-align:center"><div style="font-size:20px;font-weight:900">5</div><div style="font-size:10px;opacity:.85">マッチ</div></div>
+              <div style="flex:1;background:rgba(255,255,255,.18);border-radius:13px;padding:10px;text-align:center"><div style="font-size:20px;font-weight:900">{{ points }}</div><div style="font-size:10px;opacity:.85">💎 ポイント</div></div>
+              <div style="flex:1;background:rgba(255,255,255,.18);border-radius:13px;padding:10px;text-align:center"><div style="font-size:20px;font-weight:900">3</div><div style="font-size:10px;opacity:.85">診断回数</div></div>
+            </div>
+          </div>
+
+          <div style="margin-top:16px;background:var(--card);border:1px solid var(--line);border-radius:var(--radius);padding:18px">
+            <div style="font-size:13px;font-weight:800;color:var(--ink);margin-bottom:6px">🎁 友達を招待</div>
+            <p style="margin:0 0 12px;font-size:12px;color:var(--muted);line-height:1.6">招待リンクから友達が診断すると、お互いに 💎100pt プレゼント。</p>
+            <div style="display:flex;gap:8px">
+              <div style="flex:1;background:var(--bg);border:1px solid var(--line2);border-radius:11px;padding:11px 13px;font-size:12px;color:var(--muted);overflow:hidden;white-space:nowrap;text-overflow:ellipsis">togel.app/i/you-05</div>
+              <button onClick="{{ copyInvite }}" style="border:none;background:var(--pink);color:#fff;border-radius:11px;padding:0 16px;font-family:inherit;font-weight:800;font-size:13px;cursor:pointer">コピー</button>
+            </div>
+          </div>
+
+          <div style="margin-top:16px;display:flex;flex-direction:column;gap:1px;background:var(--line);border:1px solid var(--line);border-radius:var(--radius);overflow:hidden">
+            <sc-for list="{{ menu }}" as="m" hint-placeholder-count="4">
+              <div onClick="{{ m.go }}" style="display:flex;align-items:center;gap:13px;background:var(--card);padding:15px 16px;cursor:pointer">
+                <span style="font-size:19px">{{ m.icon }}</span>
+                <span style="flex:1;font-size:14px;font-weight:700;color:var(--ink)">{{ m.label }}</span>
+                <span style="color:var(--faint);font-size:16px">›</span>
+              </div>
+            </sc-for>
+          </div>
+        </div>
+      </sc-if>
+
+    </main>
+
+    <!-- ░░ BOTTOM TAB ░░ -->
+    <sc-if value="{{ showTab }}" hint-placeholder-val="{{ true }}">
+      <nav style="flex-shrink:0;height:64px;display:flex;background:var(--card);border-top:1px solid var(--line);padding-bottom:env(safe-area-inset-bottom)">
+        <sc-for list="{{ tabs }}" as="t" hint-placeholder-count="4">
+          <button onClick="{{ t.go }}" style="flex:1;display:flex;flex-direction:column;align-items:center;justify-content:center;gap:3px;background:none;border:none;cursor:pointer;font-family:inherit;padding:0">
+            <span style="font-size:21px;filter:{{ t.filter }};opacity:{{ t.op }}">{{ t.icon }}</span>
+            <span style="font-size:10px;font-weight:800;color:{{ t.color }}">{{ t.label }}</span>
+          </button>
+        </sc-for>
+      </nav>
+    </sc-if>
+
+  </div>
+
+  <!-- toast -->
+  <sc-if value="{{ toast }}" hint-placeholder-val="">
+    <div style="position:fixed;left:50%;bottom:80px;transform:translateX(-50%);z-index:200;background:var(--ink);color:#fff;padding:12px 22px;border-radius:999px;font-size:13px;font-weight:800;box-shadow:0 14px 36px rgba(0,0,0,.3);animation:tgToast .25s ease">{{ toast }}</div>
+  </sc-if>
+</div>
+</x-dc>
+<script type="text/x-dc" data-dc-script data-props="{&quot;$preview&quot;:{&quot;width&quot;:440,&quot;height&quot;:880}}">
+class Component extends DCLogic {
+  constructor(props){
+    super(props);
+    this.state = { screen:'home', toast:null, points:120,
+      gender:'female', target:'opposite', qIndex:0, answers:[],
+      prank:true, matchMode:'opposite' };
+  }
+  flash(m){ this.setState({toast:m}); clearTimeout(this._t); this._t=setTimeout(()=>this.setState({toast:null}),2200); }
+  go(s){ this.setState({screen:s}); const m=document.querySelector('main'); if(m) m.scrollTo(0,0); window.scrollTo(0,0); }
+
+  QUESTIONS=[
+    {emoji:'🎉',text:'初対面の人が多いパーティー。あなたは？'},
+    {emoji:'🗺️',text:'旅行の計画。どう進める？'},
+    {emoji:'💬',text:'友達が悩み相談。あなたの反応は？'},
+    {emoji:'🎯',text:'新しい趣味を始めるとき、まず？'},
+    {emoji:'😤',text:'予定が急に崩れた。あなたは？'},
+    {emoji:'💞',text:'恋愛で大事にしたいのは？'}
+  ];
+  CHOICES=['とても当てはまる','やや当てはまる','どちらでもない','あまり当てはまらない','まったく当てはまらない'];
+
+  TYPES=[
+    ['01','戦略家','🦊','#9b6dde'],['02','夢想家','🦋','#4A90E2'],['03','守護者','🐻','#0e9488'],['04','冒険者','🦅','#f59e0b'],
+    ['05','情熱的リーダー','🐯','#E91E63'],['06','癒し系','🐰','#ec4899'],['07','分析者','🦉','#6366f1'],['08','ムードメーカー','🐬','#06b6d4'],
+    ['09','職人','🐺','#0e9488'],['10','カリスマ','🦁','#f43f5e'],['11','聞き上手','🐨','#10b981'],['12','挑戦者','🐆','#ef4444'],
+    ['13','調停者','🕊️','#8b5cf6'],['14','研究者','🐢','#0284c7'],['15','エンタメ王','🦚','#d946ef'],['16','献身家','🐶','#f97316'],
+    ['17','自由人','🐱','#14b8a6'],['18','努力家','🐝','#eab308'],['19','理想家','🦄','#a855f7'],['20','現実派','🐘','#64748b'],
+    ['21','感性派','🦢','#3b82f6'],['22','行動派','🐎','#dc2626'],['23','調和派','🐑','#22c55e'],['24','神秘家','🐉','#7c3aed']
+  ];
+
+  MATCHES=[
+    {nickname:'みう',age:26,job:'デザイナー',type:'06',compat:98,catch:'一緒にいると時間を忘れる、運命級の相性。',why:'あなたの行動力と、みうの慎重さが完璧に補完。衝動と計画のバランスが絶妙で、長続きしやすい組み合わせ。',date:'静かなカフェで2時間。共通の「ものづくり」話で一気に距離が縮まります。'},
+    {nickname:'さき',age:24,job:'看護師',type:'11',compat:94,catch:'あなたの情熱を、そっと受け止めてくれる人。',why:'共感力が高く、あなたのリードを心地よく感じるタイプ。ケンカになっても修復が早い。',date:'夜景の見えるレストラン。聞き上手な相手なので、素の自分を出して◎。'},
+    {nickname:'ゆい',age:28,job:'マーケター',type:'08',compat:91,catch:'笑いの絶えない、最高の冒険パートナー。',why:'お互い社交的で、新しい体験を一緒に楽しめる。テンポの良い会話が続きます。',date:'話題のポップアップ巡り→食べ歩き。アクティブデートが吉。'},
+    {nickname:'のあ',age:23,job:'学生',type:'02',compat:88,catch:'あなたの世界を、もっと広げてくれる存在。',why:'好奇心旺盛で、あなたの突飛なアイデアも面白がってくれる。刺激し合える関係。',date:'美術館やプラネタリウム。感性を共有できる場所が相性◎。'},
+    {nickname:'ひな',age:27,job:'保育士',type:'16',compat:85,catch:'安心感がすごい。一緒にいると落ち着く人。',why:'あなたの忙しさを支えてくれる包容力。家庭的な価値観が合います。',date:'おうちデートで手料理。背伸びしない時間が信頼を育てます。'}
+  ];
+  MISMATCHES=[
+    {nickname:'れい',age:29,job:'起業家',type:'10',score:96,catch:'主導権の奪い合いで、毎日が戦争に。',why:'お互いリーダー気質で一歩も譲らない。小さな決定でも衝突し、消耗戦になりがち。',disaster:'旅行先のレストラン選びで1時間口論→沈黙。記念日が修羅場に変わる未来。'},
+    {nickname:'かい',age:31,job:'研究職',type:'14',score:92,catch:'スピード感が真逆。あなたが先に折れる。',why:'あなたの即断即決と、かいの慎重さがすれ違う。「なんで決めてくれないの」が口癖に。',disaster:'デートの計画が決まらず当日ダラダラ。あなたのイライラが募る悪循環。'},
+    {nickname:'そら',age:25,job:'フリーランス',type:'17',score:89,catch:'自由すぎて、あなたが振り回される。',why:'束縛を嫌うそらと、深く繋がりたいあなた。距離感の価値観が決定的にズレる。',disaster:'連絡が3日途絶える→不安で詰める→さらに距離を取られる地獄のループ。'},
+    {nickname:'じん',age:33,job:'営業',type:'22',score:86,catch:'熱量が衝突して、すぐ燃え尽きる。',why:'似すぎていて刺激はあるが、ぶつかると止まらない。瞬間最大風速型の関係。',disaster:'付き合って3週間で大喧嘩→号泣→復縁→また喧嘩のジェットコースター。'},
+    {nickname:'みなと',age:30,job:'公務員',type:'20',score:83,catch:'刺激ゼロ。あなたが退屈してしまう。',why:'安定志向のみなとと、変化を求めるあなた。日常がマンネリ化しやすい。',disaster:'毎週同じデート→「つまらない」と言えず我慢→ある日突然冷める結末。'}
+  ];
+
+  avatar(seed,g){ const bg=g==='male'?'bee3db':'ffd5e3'; return 'https://api.dicebear.com/8.x/adventurer/svg?seed='+encodeURIComponent('togel-'+seed)+'&backgroundColor='+bg; }
+
+  renderVals(){
+    const st=this.state, screen=st.screen;
+    const dark = screen==='mismatch';
+    const segBtn=(on,col)=> on?{bg:col||'var(--pink)',color:'#fff',border:col||'var(--pink)'}:{bg:'#fff',color:'var(--muted)',border:'var(--line2)'};
+
+    // top bar styling
+    const barLight = !(screen==='home'||dark);
+    const base={
+      goHome:()=>this.go('home'),
+      points:st.points,
+      barBg: dark?'rgba(13,15,20,.9)':(screen==='home'?'rgba(255,209,220,.0)':'rgba(255,255,255,.85)'),
+      barLine: dark?'rgba(255,255,255,.08)':(screen==='home'?'transparent':'var(--line)'),
+      barInk: dark?'#fff':'var(--ink)',
+      chipBg: dark?'rgba(255,255,255,.1)':'var(--pink-weak)',
+      pageBg: dark?'var(--dark)':'var(--bg)',
+      toast:st.toast,
+      isHome:screen==='home', isSelect:screen==='select', isAnswer:screen==='answer',
+      isResult:screen==='result', isMismatch:screen==='mismatch', isTypes:screen==='types', isMypage:screen==='mypage',
+      login:()=>this.flash('Googleでログイン（デモ）'),
+      startDiagnosis:()=>this.go('select'),
+    };
+
+    // home steps
+    base.steps=[
+      {step:'STEP 01',emoji:'🧠',titleA:'まずは',titleB:'診断',accent:'var(--pink)',body:'独自Togel型理論に基づく本格診断。質問に答えるだけで、考え方のクセ・恋愛傾向・隠れた本性が丸裸に。',bg:'#0d0f14',hasCard:false},
+      {step:'STEP 02',emoji:'🐯',titleA:'24タイプ',titleB:'に分類',accent:'var(--purple)',body:'診断結果から、あなたを24種類の「Togel型」に分類。強み・弱み・相性の良いタイプが明確に。',bg:'#101319',hasCard:false},
+      {step:'STEP 03',emoji:'💘',titleA:'AIが',titleB:'導き出す',accent:'var(--blue)',body:'相性の良い異性5名をピックアップ。「なぜ合うのか」「どんなデートをすべきか」まで具体提案。',bg:'#0d0f14',hasCard:true},
+      {step:'STEP 04',emoji:'💀',titleA:'地獄を',titleB:'回避せよ',accent:'#ff5252',body:'最大の特徴は「ミスマッチランキング」。絶対に合わない、付き合うと不幸になる相手も教えます。',bg:'#1a0e12',hasCard:false}
+    ];
+
+    // select
+    const G=segBtn;
+    base.totalQ=this.QUESTIONS.length;
+    base.genders=[['female','女性'],['male','男性']].map(([k,label])=>{ const s=G(st.gender===k); return {label, ...s, pick:()=>this.setState({gender:k})}; });
+    base.targets=[['opposite','異性'],['same','同性']].map(([k,label])=>{ const s=G(st.target===k); return {label, ...s, pick:()=>this.setState({target:k})}; });
+    base.beginAnswer=()=>{ this.setState({qIndex:0,answers:[]}); this.go('answer'); };
+
+    // answer
+    const qi=st.qIndex, q=this.QUESTIONS[qi]||this.QUESTIONS[0];
+    base.qNum=qi+1; base.qPct=Math.round((qi)/this.QUESTIONS.length*100); base.qEmoji=q.emoji; base.qText=q.text;
+    base.choices=this.CHOICES.map((label,i)=>({ label,
+      border:'var(--line2)', bg:'#fff', color:'var(--ink)', dot:'var(--pink)', dotBg:'transparent',
+      pick:()=>{ const ans=[...st.answers]; ans[qi]=i; if(qi+1>=this.QUESTIONS.length){ this.setState({answers:ans}); this.flash('診断完了！結果を集計中…'); setTimeout(()=>this.go('result'),700); } else { this.setState({answers:ans,qIndex:qi+1}); } }
+    }));
+    base.backQ=()=>{ if(qi>0) this.setState({qIndex:qi-1}); else this.go('select'); };
+
+    // result
+    base.myType='Togel 05型'; base.myTypeSub='情熱的リーダー 🐯';
+    base.bigFive=[['アイデア感度',72],['計画遂行力',58],['交流エネルギー',86],['共感スタイル',64],['ストレス耐性',49]].map(([label,v])=>({label,pct:v+'%',score:(v/10).toFixed(1)}));
+    base.prank=st.prank;
+    base.prankTrack=st.prank?'var(--pink)':'#d6dce4'; base.prankX=st.prank?'25px':'3px';
+    base.prankOnColor=st.prank?'var(--pink)':'var(--faint)'; base.prankOffColor=!st.prank?'var(--ink)':'var(--faint)';
+    base.togglePrank=()=>this.setState({prank:!st.prank});
+    base.matchModeLabel=st.matchMode==='opposite'?'同性のマッチング結果も見る':'異性マッチングに戻る';
+    base.toggleMatchMode=()=>{ this.setState({matchMode:st.matchMode==='opposite'?'same':'opposite'}); this.flash('マッチング対象を切り替えました'); };
+    const matchList = st.prank ? this.MATCHES : this.MATCHES.slice(1);
+    base.matches=matchList.map((m,i)=>({ ...m, rank:'#'+(i+1), typeLabel:'Togel '+m.type+'型', avatar:this.avatar(m.nickname,'female'),
+      cardBorder: (st.prank&&i===0)?'var(--pink)':'var(--line)', view:()=>this.flash(m.nickname+' のプロフィールを見る') }));
+    base.goMismatch=()=>this.go('mismatch');
+
+    // mismatch
+    base.mismatches=this.MISMATCHES.map((m,i)=>({ ...m, rank:'#'+(i+1), typeLabel:'Togel '+m.type+'型', avatar:this.avatar(m.nickname,'male'), view:()=>this.flash(m.nickname+' のプロフィール（自己責任）') }));
+    base.goResult=()=>this.go('result');
+
+    // types
+    base.types24=this.TYPES.map(([id,name,emoji,color])=>({id,name,emoji,color,tag:'TOGEL '+id}));
+    base.distribution=[['05','情熱的リーダー','🐯','#E91E63','18%'],['08','ムードメーカー','🐬','#06b6d4','14%'],['11','聞き上手','🐨','#10b981','12%'],['02','夢想家','🦋','#4A90E2','9%'],['10','カリスマ','🦁','#f43f5e','7%']].map(([id,name,emoji,color,pct])=>({name,emoji,color,pct}));
+
+    // mypage
+    base.copyInvite=()=>this.flash('招待リンクをコピーしました 🎁');
+    base.menu=[['📋','診断履歴','history'],['✏️','プロフィール編集','edit'],['🔔','通知設定','notif'],['📄','利用規約・プライバシー','terms']].map(([icon,label,k])=>({icon,label,go:()=>this.flash(label+'（準備中）')}));
+
+    // bottom tab
+    base.showTab = !(screen==='answer'||screen==='mismatch');
+    const TAB=[['home','🏠','ホーム'],['types','🎴','24タイプ'],['select','💘','診断'],['mypage','👤','マイページ']];
+    base.tabs=TAB.map(([k,icon,label])=>{ const on=screen===k||(k==='select'&&['select','answer','result'].includes(screen)); return {
+      icon, label, op:on?'1':'.5', filter:on?'none':'grayscale(.4)', color:on?'var(--pink)':'var(--faint)',
+      go:()=>this.go(k) }; });
+
+    return base;
+  }
+}
+</script>
+</body>
+</html>

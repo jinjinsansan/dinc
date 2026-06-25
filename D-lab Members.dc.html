@@ -1,0 +1,365 @@
+<!DOCTYPE html>
+<html>
+<head>
+<meta charset="utf-8">
+<meta name="viewport" content="width=device-width, initial-scale=1">
+<script src="./support.js"></script>
+</head>
+<body>
+<x-dc>
+<helmet>
+<link rel="preconnect" href="https://fonts.googleapis.com">
+<link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+<link href="https://fonts.googleapis.com/css2?family=Noto+Serif+JP:wght@400;500;600;700&family=Noto+Sans+JP:wght@400;500;700&family=JetBrains+Mono:wght@400;500;700&display=swap" rel="stylesheet">
+<style>
+:root{
+  --bg:#0a0a0f; --bg-deep:#06060a; --surface:#12121e; --surface2:#181828;
+  --gold:#c9a84c; --gold-light:#e8c96a; --gold-dim:#8a7434;
+  --text:#f0f0f0; --muted:#8888aa; --dim:#555571;
+  --border:#2a2a3e; --hair:#1c1c2c;
+  --serif:'Noto Serif JP',serif; --sans:'Noto Sans JP',sans-serif; --mono:'JetBrains Mono',ui-monospace,monospace;
+}
+*{box-sizing:border-box}
+html{-webkit-font-smoothing:antialiased;text-rendering:optimizeLegibility}
+body{margin:0;padding:0;background:var(--bg);color:var(--text);font-family:var(--sans);font-feature-settings:"palt";line-height:1.7}
+::-webkit-scrollbar{width:9px;height:9px}
+::-webkit-scrollbar-track{background:var(--bg-deep)}
+::-webkit-scrollbar-thumb{background:var(--border)}
+@keyframes dlIn{from{opacity:0;transform:translateY(10px)}to{opacity:1;transform:none}}
+@keyframes dlToast{from{opacity:0;transform:translate(-50%,10px)}to{opacity:1;transform:translate(-50%,0)}}
+</style>
+</helmet>
+
+<div style="display:grid;grid-template-columns:280px 1fr;min-height:100vh;background:var(--bg)">
+
+  <!-- ════════ SIDEBAR ════════ -->
+  <aside style="background:var(--bg-deep);border-right:1px solid var(--hair);padding:30px 0;position:sticky;top:0;height:100vh;display:flex;flex-direction:column">
+    <div style="padding:0 28px 26px;border-bottom:1px solid var(--hair)">
+      <div style="display:flex;align-items:center;gap:11px;margin-bottom:8px">
+        <svg width="30" height="30" viewBox="0 0 40 40"><defs><linearGradient id="dlmLogo" x1="0" y1="0" x2="40" y2="40" gradientUnits="userSpaceOnUse"><stop stop-color="#e8c96a"></stop><stop offset="1" stop-color="#c9a84c"></stop></linearGradient></defs><rect x="1" y="1" width="38" height="38" rx="11" fill="#0b1f3a"></rect><path d="M11 13h6c4 0 7 2.8 7 7s-3 7-7 7h-6z" fill="none" stroke="url(#dlmLogo)" stroke-width="2.6" stroke-linejoin="round"></path><path d="M25 20l6-5m-6 5l6 5" fill="none" stroke="url(#dlmLogo)" stroke-width="2.6" stroke-linecap="round" stroke-linejoin="round"></path></svg>
+        <span style="font-family:var(--serif);font-size:19px;font-weight:700">D-<span style="color:var(--gold)">lab</span></span>
+      </div>
+      <span style="font-family:var(--mono);font-size:10px;color:var(--dim);letter-spacing:.18em">MEMBERS · COHORT 01</span>
+    </div>
+
+    <nav style="padding:24px 0;flex:1">
+      <sc-for list="{{ navItems }}" as="n" hint-placeholder-count="7">
+        <div onClick="{{ n.go }}" style="display:grid;grid-template-columns:30px 1fr;gap:14px;align-items:center;padding:13px 28px;cursor:pointer;background:{{ n.bg }};border-left:{{ n.bar }}">
+          <span style="font-family:var(--serif);font-size:12px;color:{{ n.numColor }};font-feature-settings:'tnum'">{{ n.num }}</span>
+          <div>
+            <div style="font-size:14px;color:{{ n.jpColor }};font-weight:{{ n.weight }}">{{ n.jp }}</div>
+            <div style="font-family:var(--mono);font-size:9px;color:var(--dim);letter-spacing:.18em">{{ n.en }}</div>
+          </div>
+        </div>
+      </sc-for>
+    </nav>
+
+    <div style="padding:22px 28px;border-top:1px solid var(--hair);display:flex;align-items:center;gap:12px">
+      <div style="width:36px;height:36px;border-radius:50%;background:var(--surface);border:1px solid var(--border);display:flex;align-items:center;justify-content:center;color:var(--gold);font-family:var(--serif);font-weight:700">{{ userInitial }}</div>
+      <div style="min-width:0;flex:1">
+        <div style="font-size:13px;font-weight:500;white-space:nowrap;overflow:hidden;text-overflow:ellipsis">{{ userName }}</div>
+        <div style="font-family:var(--mono);font-size:10px;color:var(--dim);letter-spacing:.15em">{{ planLabel }}</div>
+      </div>
+    </div>
+  </aside>
+
+  <!-- ════════ MAIN ════════ -->
+  <div style="display:flex;flex-direction:column;min-width:0">
+    <!-- topbar -->
+    <header style="height:62px;border-bottom:1px solid var(--hair);display:flex;align-items:center;justify-content:flex-end;gap:20px;padding:0 36px;background:rgba(10,10,15,.6);backdrop-filter:blur(8px);position:sticky;top:0;z-index:20">
+      <span style="font-size:13px;color:var(--muted)">{{ userName }} さん</span>
+      <button onClick="{{ logout }}" style="font-family:var(--sans);font-size:13px;color:var(--muted);background:none;border:none;cursor:pointer" style-hover="color:var(--text)">ログアウト</button>
+    </header>
+
+    <main style="padding:48px 56px 80px;max-width:1080px;width:100%">
+
+      <!-- ── DASHBOARD ── -->
+      <sc-if value="{{ isDash }}" hint-placeholder-val="{{ true }}">
+        <div style="margin-bottom:36px">
+          <h1 style="font-family:var(--serif);font-size:30px;font-weight:700;margin:0 0 6px">ようこそ、<span style="color:var(--gold)">{{ userName }}</span> さん</h1>
+          <p style="color:var(--muted);font-size:14px;margin:0">現在のプラン: {{ planName }}</p>
+        </div>
+
+        <div style="border:1px solid var(--border);background:var(--surface);padding:28px;margin-bottom:20px">
+          <div style="display:flex;align-items:baseline;justify-content:space-between;margin-bottom:16px">
+            <h2 style="font-family:var(--serif);font-size:16px;font-weight:700;margin:0">受講進捗</h2>
+            <span style="font-family:var(--mono);font-size:12px;color:var(--gold)">{{ progressPct }}%</span>
+          </div>
+          <div style="width:100%;background:var(--bg);height:10px;border-radius:6px;overflow:hidden"><div style="height:100%;width:{{ progressPct }}%;background:linear-gradient(90deg,var(--gold-dim),var(--gold));border-radius:6px"></div></div>
+          <p style="color:var(--muted);font-size:13px;margin:12px 0 0">Week {{ completedWeeks }} / 8 完了</p>
+        </div>
+
+        <div style="border:1px solid rgba(201,168,76,.3);background:linear-gradient(180deg,rgba(201,168,76,.06),var(--surface));padding:28px;margin-bottom:20px">
+          <div style="display:flex;align-items:center;gap:10px;margin-bottom:8px">
+            <span style="font-family:var(--mono);font-size:10px;color:var(--gold);letter-spacing:.2em">ZOOM / NEXT LIVE</span>
+          </div>
+          <h2 style="font-family:var(--serif);font-size:17px;font-weight:700;margin:0 0 6px">次回Zoomセミナー</h2>
+          <p style="color:var(--muted);font-size:13px;margin:0">Week 4「機能を言葉で追加する」— 2026年4月18日(土) 20:00〜22:00 ／ 録画あり</p>
+        </div>
+
+        <div style="border:1px solid var(--border);background:var(--surface);padding:28px;margin-bottom:28px">
+          <h2 style="font-family:var(--serif);font-size:16px;font-weight:700;margin:0 0 18px">お知らせ</h2>
+          <div>
+            <sc-for list="{{ announcements }}" as="a" hint-placeholder-count="3">
+              <div style="border-bottom:1px solid var(--hair);padding:13px 0">
+                <p style="font-family:var(--mono);color:var(--dim);font-size:11px;margin:0 0 4px">{{ a.date }}</p>
+                <p style="font-weight:700;font-size:14px;margin:0 0 3px">{{ a.title }}</p>
+                <p style="color:var(--muted);font-size:13px;margin:0">{{ a.body }}</p>
+              </div>
+            </sc-for>
+          </div>
+        </div>
+
+        <div style="display:grid;grid-template-columns:repeat(3,1fr);gap:14px">
+          <sc-for list="{{ quickLinks }}" as="q" hint-placeholder-count="3">
+            <div onClick="{{ q.go }}" style="border:1px solid var(--border);background:var(--surface);padding:30px;text-align:center;cursor:pointer" style-hover="border-color:var(--gold-dim)">
+              <div style="font-family:var(--serif);font-size:34px;font-weight:700;color:var(--gold);line-height:1;margin-bottom:10px">{{ q.no }}</div>
+              <p style="font-weight:700;font-size:14px;margin:0">{{ q.label }}</p>
+            </div>
+          </sc-for>
+        </div>
+      </sc-if>
+
+      <!-- ── VIDEOS ── -->
+      <sc-if value="{{ isVideos }}" hint-placeholder-val="">
+        <div style="margin-bottom:48px">
+          <div style="display:flex;align-items:baseline;gap:22px;margin-bottom:22px">
+            <span style="font-family:var(--serif);font-size:14px;color:var(--gold)">№ 02</span>
+            <span style="font-family:var(--mono);font-size:11px;letter-spacing:.18em;text-transform:uppercase;color:var(--gold)">VIDEOS</span>
+            <div style="flex:1;height:1px;background:var(--hair)"></div>
+          </div>
+          <h1 style="font-family:var(--serif);font-size:clamp(30px,4vw,44px);font-weight:700;margin:0 0 14px">動画ライブラリ</h1>
+          <p style="color:var(--muted);font-size:15px;max-width:560px;margin:0">Week別の本編動画とイントロ。各Weekのページで、本編+教材を閲覧できます。</p>
+        </div>
+
+        <div style="display:grid;grid-template-columns:repeat(2,1fr);gap:1px;background:var(--hair);border:1px solid var(--hair)">
+          <sc-for list="{{ weekCards }}" as="w" hint-placeholder-count="8">
+            <div onClick="{{ w.open }}" style="display:flex;flex-direction:column;gap:16px;background:var(--bg);padding:30px;cursor:pointer" style-hover="background:var(--surface)">
+              <div style="display:flex;justify-content:space-between;align-items:baseline">
+                <span style="font-family:var(--serif);font-size:30px;font-weight:700;color:var(--gold);font-feature-settings:'tnum';line-height:1">{{ w.num }}</span>
+                <div style="display:flex;gap:8px;align-items:center">
+                  <sc-if value="{{ w.watched }}" hint-placeholder-val="">
+                    <span style="font-family:var(--mono);font-size:9px;color:var(--gold);letter-spacing:.2em;padding:3px 8px;background:rgba(201,168,76,.1);border:1px solid rgba(201,168,76,.4)">✓ WATCHED</span>
+                  </sc-if>
+                  <sc-if value="{{ w.locked }}" hint-placeholder-val="">
+                    <span style="font-family:var(--mono);font-size:9px;color:var(--dim);letter-spacing:.2em;padding:3px 8px;border:1px solid var(--hair)">LOCKED</span>
+                  </sc-if>
+                </div>
+              </div>
+              <div>
+                <h3 style="font-family:var(--serif);font-size:21px;font-weight:700;margin:0 0 8px;line-height:1.3">{{ w.title }}</h3>
+                <p style="font-size:13px;color:var(--muted);line-height:1.7;margin:0">{{ w.subtitle }}</p>
+              </div>
+              <div style="display:flex;gap:16px;margin-top:auto;padding-top:16px;border-top:1px solid var(--hair)">
+                <span style="font-family:var(--mono);font-size:10px;color:var(--gold);letter-spacing:.18em">● MAIN</span>
+                <span style="font-family:var(--mono);font-size:10px;color:{{ w.introColor }};letter-spacing:.18em">{{ w.introDot }} INTRO</span>
+                <span style="font-family:var(--mono);font-size:10px;color:var(--dim);letter-spacing:.18em;margin-left:auto">OPEN →</span>
+              </div>
+            </div>
+          </sc-for>
+        </div>
+      </sc-if>
+
+      <!-- ── MATERIALS ── -->
+      <sc-if value="{{ isMaterials }}" hint-placeholder-val="">
+        <div style="margin-bottom:48px">
+          <div style="display:flex;align-items:baseline;gap:22px;margin-bottom:22px">
+            <span style="font-family:var(--serif);font-size:14px;color:var(--gold)">№ 03</span>
+            <span style="font-family:var(--mono);font-size:11px;letter-spacing:.18em;text-transform:uppercase;color:var(--gold)">MATERIALS</span>
+            <div style="flex:1;height:1px;background:var(--hair)"></div>
+          </div>
+          <h1 style="font-family:var(--serif);font-size:clamp(30px,4vw,44px);font-weight:700;margin:0 0 14px">資料ダウンロード</h1>
+          <p style="color:var(--muted);font-size:15px;max-width:560px;margin:0">Week別教材・フレーズ集・トラブルシューティング等をPDFでダウンロードできます。</p>
+        </div>
+        <sc-for list="{{ materialCats }}" as="c" hint-placeholder-count="3">
+          <section style="margin-bottom:36px">
+            <div style="display:flex;align-items:center;gap:12px;margin-bottom:16px">
+              <div style="width:34px;height:34px;border-radius:8px;background:rgba(201,168,76,.1);border:1px solid rgba(201,168,76,.2);display:flex;align-items:center;justify-content:center"><span style="font-family:var(--mono);font-size:11px;color:var(--gold);font-weight:700">{{ c.abbr }}</span></div>
+              <h2 style="font-family:var(--serif);font-size:18px;font-weight:700;margin:0">{{ c.label }}</h2>
+              <span style="color:var(--muted);font-size:12px;margin-left:auto">{{ c.count }} 件</span>
+            </div>
+            <div style="display:grid;grid-template-columns:repeat(2,1fr);gap:12px">
+              <sc-for list="{{ c.items }}" as="m" hint-placeholder-count="2">
+                <div style="border:1px solid var(--border);background:var(--surface);padding:18px;display:flex;flex-direction:column;gap:14px" style-hover="border-color:var(--gold-dim)">
+                  <div style="display:flex;align-items:flex-start;gap:12px">
+                    <div style="flex-shrink:0;width:40px;height:40px;border-radius:6px;background:var(--bg);border:1px solid var(--border);display:flex;align-items:center;justify-content:center"><span style="font-size:11px;font-weight:700;color:var(--gold)">PDF</span></div>
+                    <div style="min-width:0;flex:1">
+                      <h3 style="font-weight:700;font-size:14px;line-height:1.4;margin:0">{{ m.title }}</h3>
+                      <p style="color:var(--muted);font-size:11px;margin:4px 0 0">{{ m.meta }}</p>
+                    </div>
+                  </div>
+                  <button onClick="{{ m.download }}" style="text-align:center;background:rgba(201,168,76,.15);color:var(--gold);font-family:var(--sans);font-weight:700;font-size:13px;padding:9px;border:none;border-radius:8px;cursor:pointer">ダウンロード</button>
+                </div>
+              </sc-for>
+            </div>
+          </section>
+        </sc-for>
+      </sc-if>
+
+      <!-- ── MY PAGE ── -->
+      <sc-if value="{{ isMypage }}" hint-placeholder-val="">
+        <div style="margin-bottom:40px">
+          <div style="display:flex;align-items:baseline;gap:22px;margin-bottom:22px">
+            <span style="font-family:var(--serif);font-size:14px;color:var(--gold)">№ 07</span>
+            <span style="font-family:var(--mono);font-size:11px;letter-spacing:.18em;text-transform:uppercase;color:var(--gold)">MY PAGE</span>
+            <div style="flex:1;height:1px;background:var(--hair)"></div>
+          </div>
+          <h1 style="font-family:var(--serif);font-size:clamp(30px,4vw,44px);font-weight:700;margin:0 0 14px">マイページ</h1>
+          <p style="color:var(--muted);font-size:15px;max-width:560px;margin:0">プロフィール編集・プラン確認・退会申請ができます。</p>
+        </div>
+
+        <div style="border:1px solid var(--border);background:var(--surface);padding:28px;margin-bottom:20px">
+          <h2 style="font-family:var(--serif);font-size:16px;font-weight:700;margin:0 0 18px">プロフィール編集</h2>
+          <div style="display:flex;flex-direction:column;gap:16px">
+            <div>
+              <label style="display:block;font-size:13px;font-weight:700;margin-bottom:8px">お名前</label>
+              <input value="{{ formName }}" onInput="{{ onName }}" style="width:100%;background:var(--bg);border:1px solid var(--border);color:var(--text);padding:11px 14px;font-family:var(--sans);font-size:14px;outline:none" style-focus="border-color:var(--gold)">
+            </div>
+            <div>
+              <label style="display:block;font-size:13px;font-weight:700;margin-bottom:8px">自己紹介</label>
+              <textarea onInput="{{ onBio }}" rows="3" placeholder="自己紹介を入力してください" style="width:100%;background:var(--bg);border:1px solid var(--border);color:var(--text);padding:11px 14px;font-family:var(--sans);font-size:14px;outline:none;resize:none">{{ formBio }}</textarea>
+            </div>
+            <div>
+              <label style="display:block;font-size:13px;font-weight:700;margin-bottom:8px">メールアドレス</label>
+              <p style="color:var(--muted);font-size:14px;padding:11px 14px;background:var(--bg);border:1px solid var(--border);margin:0">{{ userEmail }}</p>
+            </div>
+            <div style="display:grid;grid-template-columns:1fr 1fr;gap:14px">
+              <div><label style="display:block;font-size:13px;font-weight:700;margin-bottom:8px">X (Twitter)</label><input value="{{ formTw }}" onInput="{{ onTw }}" placeholder="@username" style="width:100%;background:var(--bg);border:1px solid var(--border);color:var(--text);padding:11px 14px;font-family:var(--sans);font-size:14px;outline:none" style-focus="border-color:var(--gold)"></div>
+              <div><label style="display:block;font-size:13px;font-weight:700;margin-bottom:8px">GitHub</label><input value="{{ formGh }}" onInput="{{ onGh }}" placeholder="username" style="width:100%;background:var(--bg);border:1px solid var(--border);color:var(--text);padding:11px 14px;font-family:var(--sans);font-size:14px;outline:none" style-focus="border-color:var(--gold)"></div>
+            </div>
+            <button onClick="{{ save }}" style="align-self:flex-start;background:var(--gold);color:var(--bg-deep);font-family:var(--sans);font-weight:700;font-size:13px;padding:11px 24px;border:none;cursor:pointer">保存する</button>
+          </div>
+        </div>
+
+        <div style="border:1px solid var(--border);background:var(--surface);padding:28px;margin-bottom:20px">
+          <h2 style="font-family:var(--serif);font-size:16px;font-weight:700;margin:0 0 14px">現在のプラン</h2>
+          <p style="color:var(--gold);font-weight:700;font-size:18px;margin:0 0 14px">{{ planName }}</p>
+          <button onClick="{{ soon }}" style="font-family:var(--sans);font-size:13px;color:var(--text);background:none;border:1px solid var(--border);padding:9px 22px;cursor:pointer" style-hover="border-color:var(--gold)">請求履歴・請求書を確認</button>
+        </div>
+
+        <div style="border:1px solid rgba(180,60,60,.3);background:var(--surface);padding:28px">
+          <h2 style="font-family:var(--serif);font-size:16px;font-weight:700;margin:0 0 14px;color:#e0706a">退会</h2>
+          <button onClick="{{ soon }}" style="color:#e0706a;font-family:var(--sans);font-size:13px;background:none;border:1px solid rgba(180,60,60,.5);padding:9px 22px;cursor:pointer">退会を検討する</button>
+        </div>
+      </sc-if>
+
+      <!-- ── PLACEHOLDER (community/jobs/support) ── -->
+      <sc-if value="{{ isPlaceholder }}" hint-placeholder-val="">
+        <div style="margin-bottom:40px">
+          <div style="display:flex;align-items:baseline;gap:22px;margin-bottom:22px">
+            <span style="font-family:var(--serif);font-size:14px;color:var(--gold)">№ {{ phNum }}</span>
+            <span style="font-family:var(--mono);font-size:11px;letter-spacing:.18em;text-transform:uppercase;color:var(--gold)">{{ phEn }}</span>
+            <div style="flex:1;height:1px;background:var(--hair)"></div>
+          </div>
+          <h1 style="font-family:var(--serif);font-size:clamp(30px,4vw,44px);font-weight:700;margin:0 0 14px">{{ phJp }}</h1>
+        </div>
+        <div style="border:1px dashed var(--border);background:var(--surface);padding:60px;text-align:center">
+          <p style="font-family:var(--serif);font-size:20px;font-style:italic;color:var(--muted);margin:0 0 8px">準備中です。</p>
+          <p style="color:var(--dim);font-size:13px;margin:0">{{ phJp }}は開講に合わせて公開されます。</p>
+        </div>
+      </sc-if>
+
+    </main>
+  </div>
+
+  <!-- toast -->
+  <sc-if value="{{ toast }}" hint-placeholder-val="">
+    <div style="position:fixed;left:50%;bottom:30px;transform:translateX(-50%);z-index:200;background:var(--gold);color:var(--bg-deep);padding:13px 26px;font-family:var(--sans);font-size:14px;font-weight:700;letter-spacing:.03em;box-shadow:0 14px 40px rgba(0,0,0,.5);animation:dlToast .25s ease">{{ toast }}</div>
+  </sc-if>
+</div>
+</x-dc>
+<script type="text/x-dc" data-dc-script data-props="{&quot;$preview&quot;:{&quot;width&quot;:1280,&quot;height&quot;:860}}">
+class Component extends DCLogic {
+  constructor(props){
+    super(props);
+    this.state = { screen:'dashboard', toast:null,
+      formName:'タロウ', formBio:'', formTw:'', formGh:'' };
+  }
+  flash(m){ this.setState({toast:m}); clearTimeout(this._t); this._t=setTimeout(()=>this.setState({toast:null}),2400); }
+  go(s){ this.setState({screen:s}); if(typeof window!=='undefined') window.scrollTo(0,0); }
+
+  renderVals(){
+    const st=this.state, screen=st.screen;
+    const userName='タロウ', planName='Zoom型（1期生）', planLabel='ZOOM', userEmail='taro@example.com';
+    const completedWeeks=3, progressPct=Math.round(completedWeeks/8*100);
+
+    const NAV=[
+      ['dashboard','ダッシュボード','DASHBOARD'],
+      ['videos','動画ライブラリ','VIDEOS'],
+      ['materials','資料','MATERIALS'],
+      ['community','コミュニティ','COMMUNITY'],
+      ['jobs','受発注ボード','JOBS'],
+      ['support','サポート','SUPPORT'],
+      ['mypage','マイページ','MY PAGE']
+    ];
+    const navItems=NAV.map(([key,jp,en],i)=>{ const active=screen===key||(key==='community'&&['community','jobs','support'].includes(screen)&&screen===key); const on=screen===key; return {
+      num:'0'+(i+1), jp, en,
+      bg: on?'linear-gradient(90deg,rgba(201,168,76,.08),transparent)':'transparent',
+      bar: on?'2px solid var(--gold)':'2px solid transparent',
+      numColor: on?'var(--gold)':'var(--dim)',
+      jpColor: on?'var(--text)':'var(--muted)',
+      weight: on?'700':'400',
+      go:()=>this.go(key)
+    };});
+
+    const WEEKS=[
+      ['はじめての Claude Code','インストール → 対話 → メモ帳完成'],
+      ['日本語だけで Web ページを作る','自分の Web サイトを 1 週間で公開'],
+      ['デザインを AI に注文する','プロ品質の見た目を 5 分で'],
+      ['機能を言葉で追加する','Web サイトを Web アプリに進化'],
+      ['AI の力をアプリに入れる','差別化の最大の武器'],
+      ['完成させて世界に公開する','あなたの URL が世界に生まれる'],
+      ['お金を受け取れるようにする','趣味からビジネスへ。一線を越える'],
+      ['お客さんを集めて稼ぐ','最初の 1 人と本当に出会う']
+    ];
+    const weekCards=WEEKS.map(([title,subtitle],i)=>{ const wk=i+1; const watched=wk<=completedWeeks; const locked=wk>5; const hasIntro=wk<=6; return {
+      num:String(wk).padStart(2,'0'), title, subtitle, watched:watched&&!locked, locked,
+      introDot:hasIntro?'●':'○', introColor:hasIntro?'var(--gold)':'var(--dim)',
+      open:()=>this.flash('Week '+wk+'：'+title+' を開く')
+    };});
+
+    const materialCats=[
+      {abbr:'WK',label:'週次教材',items:[['Week 1: はじめてのClaude Code 教材','1.2 MB ・ 2026/03/01'],['Week 2: Webページ公開ガイド','980 KB ・ 2026/03/08']]},
+      {abbr:'PH',label:'フレーズ集',items:[['AI指示フレーズ100選','640 KB ・ 2026/03/01'],['デザイン注文プロンプト集','720 KB ・ 2026/03/05']]},
+      {abbr:'TS',label:'トラブルシューティング',items:[['よくあるエラーと対処法','1.5 MB ・ 2026/03/10']]}
+    ].map(c=>({abbr:c.abbr,label:c.label,count:c.items.length,items:c.items.map(([title,meta])=>({title,meta,download:()=>this.flash('ダウンロードを開始しました')}))}));
+
+    const phMap={ community:['04','COMMUNITY','コミュニティ'], jobs:['05','JOBS','受発注ボード'], support:['06','SUPPORT','サポート'] };
+    const ph=phMap[screen]||['','',''];
+
+    return {
+      navItems, userInitial:userName.charAt(0), userName, planLabel, planName, userEmail,
+      logout:()=>this.flash('ログアウトしました'),
+      soon:()=>this.flash('準備中です / Coming soon'),
+      toast:st.toast,
+
+      isDash:screen==='dashboard', isVideos:screen==='videos', isMaterials:screen==='materials',
+      isMypage:screen==='mypage', isPlaceholder:['community','jobs','support'].includes(screen),
+      phNum:ph[0], phEn:ph[1], phJp:ph[2],
+
+      progressPct, completedWeeks,
+      announcements:[
+        {date:'2026/04/12',title:'Week 4 の動画を公開しました',body:'「機能を言葉で追加する」本編＋イントロを公開。Supabase連携を日本語で。'},
+        {date:'2026/04/05',title:'次回Zoomセミナーの日程',body:'4月18日(土)20:00〜。テーマはWeek 4。録画は24時間以内にアップ。'},
+        {date:'2026/03/28',title:'受発注ボードβ公開',body:'仲間と仕事を回し合う受発注ボードを限定公開しました。'}
+      ],
+      quickLinks:[
+        {no:'02',label:'動画ライブラリ',go:()=>this.go('videos')},
+        {no:'03',label:'資料ダウンロード',go:()=>this.go('materials')},
+        {no:'04',label:'コミュニティ',go:()=>this.go('community')}
+      ],
+
+      weekCards, materialCats,
+
+      formName:st.formName, formBio:st.formBio, formTw:st.formTw, formGh:st.formGh,
+      onName:e=>this.setState({formName:e.target.value}),
+      onBio:e=>this.setState({formBio:e.target.value}),
+      onTw:e=>this.setState({formTw:e.target.value}),
+      onGh:e=>this.setState({formGh:e.target.value}),
+      save:()=>this.flash('保存しました')
+    };
+  }
+}
+</script>
+</body>
+</html>
