@@ -4,6 +4,10 @@
 
 > 2026-08-03: 法人形態を株式会社→**合同会社D（D LLC）**に変更。`site/` 内の表記を全置換済み
 > （会社名・代表者肩書「代表社員」・メタデータ・ヘッダー/フッター/Hero/Mission）。法人設立は未了のため代表者名・所在地は引き続きプレースホルダ。
+>
+> 2026-08-03 (2): プロダクト構成を更新。**D-market → ゴリラ予想**（g-yoso.com）に改名、
+> **ガチャパ**（gacha-pa.com・オンラインガチャ・紫 `#8f5cf0`）を6番目として追加、全プロダクトに本番URLを設定
+> （d-swipe.com / dlogicai.in / academy.dlogicai.in / to-gel.com）。Logo に G モノグラム追加（ゴリラ予想・ガチャパ用）。
 
 ---
 
@@ -80,7 +84,7 @@ site/
 1. **`lib/data.ts`**
    - `company`: 代表者名・所在地・設立日・連絡先（現在 `◯◯` のプレースホルダ）
    - `news`: 実ニュースに差し替え
-   - `products[].href`: 各本番URL（現状 D-market のみ `https://dmarket-six.vercel.app` 設定済、他は `#products`）
+   - ~~`products[].href`: 各本番URL~~ → **全6プロダクト設定済み（2026-08-03）**
 2. **`components/Contact.tsx`** の `submit()`
    - 現在はトースト表示のみ（デモ）。本番はメール送信／フォームSaaS／API に結線。
 3. **`app/layout.tsx`** の `metadataBase`

@@ -51,7 +51,7 @@ export function Footer() {
         </div>
         <div style={{ borderTop: '1px solid rgba(255,255,255,.1)', paddingTop: 26, display: 'flex', justifyContent: 'space-between', flexWrap: 'wrap', gap: 10, fontSize: 12, color: 'rgba(234,242,251,.4)' }}>
           <span>© 2026 D LLC 合同会社D</span>
-          <span style={{ fontFamily: 'var(--inter)', letterSpacing: '.04em' }}>D-market · D-swipe · Dlogic · D-lab · Togel</span>
+          <span style={{ fontFamily: 'var(--inter)', letterSpacing: '.04em' }}>ゴリラ予想 · D-swipe · Dlogic · D-lab · Togel · ガチャパ</span>
         </div>
       </div>
     </footer>

@@ -28,7 +28,7 @@ export const metadata: Metadata = {
   title: '合同会社D（D LLC）— AIで、個人の「できる」を増やす。',
   description:
     'AIで個人の「できる」を増やすプロダクトスタジオ。予測市場・競馬予想AI・性格診断・ノーコード開発教育まで、プロダクト群「Dファミリー」を企画・開発・運営しています。',
-  keywords: ['合同会社D', 'D LLC', 'AI', 'Dファミリー', 'D-market', 'Dlogic', 'D-lab', 'Togel', 'D-swipe'],
+  keywords: ['合同会社D', 'D LLC', 'AI', 'Dファミリー', 'ゴリラ予想', 'Dlogic', 'D-lab', 'Togel', 'D-swipe', 'ガチャパ'],
   openGraph: {
     title: '合同会社D（D LLC）— AIで、個人の「できる」を増やす。',
     description: 'AIで個人の「できる」を増やすプロダクトスタジオ。Dファミリーを企画・開発・運営。',

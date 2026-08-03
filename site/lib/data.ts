@@ -13,7 +13,7 @@ export const navLinks: NavLink[] = [
 export type HeroStat = { n: string; l: string };
 
 export const heroStats: HeroStat[] = [
-  { n: '5', l: 'プロダクト' },
+  { n: '6', l: 'プロダクト' },
   { n: '2026', l: '設立' },
   { n: '10K+', l: '累計ユーザー' },
   { n: '∞', l: 'つくれる可能性' },
@@ -22,11 +22,12 @@ export const heroStats: HeroStat[] = [
 export type MarqueeItem = { label: string; dot: string };
 
 export const marquee: MarqueeItem[] = [
-  { label: 'D-market', dot: '#22b8e6' },
+  { label: 'ゴリラ予想', dot: '#22b8e6' },
   { label: 'D-swipe', dot: '#36a7e6' },
   { label: 'Dlogic', dot: '#FCD535' },
   { label: 'D-lab', dot: '#e8c96a' },
   { label: 'Togel', dot: '#ff6fa5' },
+  { label: 'ガチャパ', dot: '#a982ff' },
 ];
 
 export type Value = { no: string; color: string; title: string; body: string };
@@ -55,7 +56,7 @@ export const values: Value[] = [
 export type Product = {
   name: string;
   tag: string;
-  mono: 'D' | 'T';
+  mono: 'D' | 'T' | 'G';
   accent: string;
   mark: string;
   tileBg: string;
@@ -66,15 +67,15 @@ export type Product = {
 
 export const products: Product[] = [
   {
-    name: 'D-market',
+    name: 'ゴリラ予想',
     tag: '予測市場',
-    mono: 'D',
+    mono: 'G',
     accent: '#22b8e6',
     mark: '#22b8e6',
     tileBg: '#0b1f3a',
     status: '運営中',
-    desc: 'ポイント制の予測市場。世界の出来事の確率を、換金なしのポイントで売買。勝つのは称号とランキング。',
-    href: 'https://dmarket-six.vercel.app',
+    desc: '換金なしのポイントで遊ぶ予測市場。予想を当ててゴリラコインを貯め、景品交換とランキングで競い合う。',
+    href: 'https://www.g-yoso.com',
   },
   {
     name: 'D-swipe',
@@ -85,7 +86,7 @@ export const products: Product[] = [
     tileBg: '#0b1f3a',
     status: '運営中',
     desc: 'スワイプ型のノーコードLP生成サービス。指でめくる感覚で、伝わるランディングページを誰でも。',
-    href: '#products',
+    href: 'https://d-swipe.com',
   },
   {
     name: 'Dlogic',
@@ -96,7 +97,7 @@ export const products: Product[] = [
     tileBg: '#0b1f3a',
     status: '運営中',
     desc: '独自の12項目分析で競走馬を評価する競馬予想AI。市場と同等精度の「参考勝率」を正直に提示。',
-    href: '#products',
+    href: 'https://www.dlogicai.in',
   },
   {
     name: 'D-lab',
@@ -107,7 +108,7 @@ export const products: Product[] = [
     tileBg: '#0b1f3a',
     status: '開講準備中',
     desc: 'Claude Codeに日本語で指示するだけでWebサービスを作る、8週間のオンライン講座。',
-    href: '#products',
+    href: 'https://academy.dlogicai.in',
   },
   {
     name: 'Togel',
@@ -118,7 +119,18 @@ export const products: Product[] = [
     tileBg: '#0b1f3a',
     status: '運営中',
     desc: 'Big Five理論ベースの24タイプ性格診断＋相性マッチング。相性の良い5名と、悪い5名を提示。',
-    href: '#products',
+    href: 'https://www.to-gel.com',
+  },
+  {
+    name: 'ガチャパ',
+    tag: 'オンラインガチャ',
+    mono: 'G',
+    accent: '#8f5cf0',
+    mark: '#a982ff',
+    tileBg: '#0b1f3a',
+    status: '運営中',
+    desc: 'ポケカ・ワンピースカードなどが当たるオンラインガチャ。確率と在庫を公開し、フェアで最高のガチャ体験を。',
+    href: 'https://www.gacha-pa.com',
   },
 ];
 
@@ -130,7 +142,7 @@ export const company: CompanyRow[] = [
   { k: 'CEO', kj: '代表者', v: '代表社員 ◯◯ ◯◯' },
   { k: 'BUSINESS', kj: '事業内容', v: 'AIプロダクトの企画・開発・運営（Dファミリー）' },
   { k: 'ADDRESS', kj: '所在地', v: '東京都◯◯区 ◯◯ 0-0-0' },
-  { k: 'PRODUCTS', kj: '運営サービス', v: 'D-market / D-swipe / Dlogic / D-lab / Togel' },
+  { k: 'PRODUCTS', kj: '運営サービス', v: 'ゴリラ予想 / D-swipe / Dlogic / D-lab / Togel / ガチャパ' },
   { k: 'CONTACT', kj: '連絡先', v: 'contact@d-llc.example' },
 ];
 
@@ -179,11 +191,12 @@ export const footerCols: FooterCol[] = [
   {
     title: 'PRODUCTS',
     links: [
-      { label: 'D-market', href: '#products' },
-      { label: 'D-swipe', href: '#products' },
-      { label: 'Dlogic', href: '#products' },
-      { label: 'D-lab', href: '#products' },
-      { label: 'Togel', href: '#products' },
+      { label: 'ゴリラ予想', href: 'https://www.g-yoso.com' },
+      { label: 'D-swipe', href: 'https://d-swipe.com' },
+      { label: 'Dlogic', href: 'https://www.dlogicai.in' },
+      { label: 'D-lab', href: 'https://academy.dlogicai.in' },
+      { label: 'Togel', href: 'https://www.to-gel.com' },
+      { label: 'ガチャパ', href: 'https://www.gacha-pa.com' },
     ],
   },
   {

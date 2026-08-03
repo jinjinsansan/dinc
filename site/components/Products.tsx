@@ -15,7 +15,7 @@ export function Products() {
         <h2 style={{ fontFamily: 'var(--serif)', fontSize: 'clamp(28px,4.4vw,50px)', lineHeight: 1.2, fontWeight: 700, margin: '0 0 16px' }}>
           ひとつのDから、
           <br />
-          5つのプロダクトへ。
+          6つのプロダクトへ。
         </h2>
         <p style={{ fontSize: 16, color: 'var(--sub)', margin: '0 0 54px', maxWidth: '40em' }}>
           共通するのは「AIで個人をエンパワーする」という思想と、ネイビータイルのDロゴ。世界観はそれぞれ独立しています。

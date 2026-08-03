@@ -1,6 +1,6 @@
 import React from 'react';
 
-// 共通DNA: ネイビータイル #0b1f3a + モノグラム(D/T) + スワイプ ">"
+// 共通DNA: ネイビータイル #0b1f3a + モノグラム(D/T/G) + スワイプ ">"
 // gradient id "dcMaster" は GradientDefs を一度だけ描画すれば document 全体で参照可能。
 
 export function GradientDefs() {
@@ -19,8 +19,8 @@ export function GradientDefs() {
 
 type LogoProps = {
   size?: number;
-  /** "D" or "T" monogram */
-  mono?: 'D' | 'T';
+  /** "D", "T" or "G" monogram */
+  mono?: 'D' | 'T' | 'G';
   /** stroke color; use "url(#dcMaster)" for the master cyan gradient */
   stroke?: string;
   /** tile fill */
@@ -64,6 +64,15 @@ export function Logo({
       {mono === 'T' ? (
         <path
           d="M9 13.5h13M15.5 13.5V27"
+          fill="none"
+          stroke={stroke}
+          strokeWidth={strokeWidth}
+          strokeLinecap="round"
+          strokeLinejoin="round"
+        />
+      ) : mono === 'G' ? (
+        <path
+          d="M21.5 15A7 7 0 1 0 23.5 20h-6"
           fill="none"
           stroke={stroke}
           strokeWidth={strokeWidth}
