@@ -14,7 +14,7 @@ export function Footer() {
           <div>
             <div style={{ display: 'flex', alignItems: 'center', gap: 11, marginBottom: 16 }}>
               <Logo size={30} bordered />
-              <span style={{ fontFamily: 'var(--inter)', fontWeight: 800, fontSize: 18, color: '#fff' }}>D Inc.</span>
+              <span style={{ fontFamily: 'var(--inter)', fontWeight: 800, fontSize: 18, color: '#fff' }}>D LLC</span>
             </div>
             <p style={{ fontSize: 13, lineHeight: 1.9, color: 'rgba(234,242,251,.55)', margin: 0, maxWidth: '24em' }}>
               AIで個人の「できる」を増やすプロダクトスタジオ。Dファミリーを企画・開発・運営しています。
@@ -50,7 +50,7 @@ export function Footer() {
           ))}
         </div>
         <div style={{ borderTop: '1px solid rgba(255,255,255,.1)', paddingTop: 26, display: 'flex', justifyContent: 'space-between', flexWrap: 'wrap', gap: 10, fontSize: 12, color: 'rgba(234,242,251,.4)' }}>
-          <span>© 2026 D Inc. 株式会社D</span>
+          <span>© 2026 D LLC 合同会社D</span>
           <span style={{ fontFamily: 'var(--inter)', letterSpacing: '.04em' }}>D-market · D-swipe · Dlogic · D-lab · Togel</span>
         </div>
       </div>

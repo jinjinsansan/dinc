@@ -19,7 +19,7 @@ export function Hero() {
 
       <div style={{ position: 'relative', zIndex: 2, maxWidth: 1280, margin: '0 auto', padding: '120px 30px 130px' }}>
         <div style={{ fontFamily: 'var(--inter)', fontSize: 12, fontWeight: 700, letterSpacing: '.32em', color: 'var(--cyan)', marginBottom: 34 }}>
-          D INC. — AI PRODUCT STUDIO
+          D LLC — AI PRODUCT STUDIO
         </div>
         <h1 style={{ fontFamily: 'var(--serif)', fontSize: 'clamp(40px,6.6vw,92px)', lineHeight: 1.12, fontWeight: 700, letterSpacing: '-.01em', margin: 0, maxWidth: '18em' }}>
           AIで、個人の

@@ -1,4 +1,4 @@
-# 株式会社D（D Inc.）コーポレートサイト
+# 合同会社D（D LLC）コーポレートサイト
 
 `D Inc Corporate.dc.html`（デザインハンドオフ）を Next.js 14 App Router で実装したコーポレートサイト。
 

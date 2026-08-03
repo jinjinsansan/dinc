@@ -24,21 +24,21 @@ const inter = Inter({
 });
 
 export const metadata: Metadata = {
-  metadataBase: new URL('https://d-inc.example'),
-  title: '株式会社D（D Inc.）— AIで、個人の「できる」を増やす。',
+  metadataBase: new URL('https://d-llc.example'),
+  title: '合同会社D（D LLC）— AIで、個人の「できる」を増やす。',
   description:
     'AIで個人の「できる」を増やすプロダクトスタジオ。予測市場・競馬予想AI・性格診断・ノーコード開発教育まで、プロダクト群「Dファミリー」を企画・開発・運営しています。',
-  keywords: ['株式会社D', 'D Inc.', 'AI', 'Dファミリー', 'D-market', 'Dlogic', 'D-lab', 'Togel', 'D-swipe'],
+  keywords: ['合同会社D', 'D LLC', 'AI', 'Dファミリー', 'D-market', 'Dlogic', 'D-lab', 'Togel', 'D-swipe'],
   openGraph: {
-    title: '株式会社D（D Inc.）— AIで、個人の「できる」を増やす。',
+    title: '合同会社D（D LLC）— AIで、個人の「できる」を増やす。',
     description: 'AIで個人の「できる」を増やすプロダクトスタジオ。Dファミリーを企画・開発・運営。',
     type: 'website',
     locale: 'ja_JP',
-    siteName: 'D Inc.',
+    siteName: 'D LLC',
   },
   twitter: {
     card: 'summary_large_image',
-    title: '株式会社D（D Inc.）',
+    title: '合同会社D（D LLC）',
     description: 'AIで個人の「できる」を増やすプロダクトスタジオ。',
   },
   icons: {

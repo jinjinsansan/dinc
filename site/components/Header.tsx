@@ -71,9 +71,9 @@ export function Header() {
                 color: navInk,
               }}
             >
-              D<span style={{ color: navSub, fontWeight: 600 }}> Inc.</span>
+              D<span style={{ color: navSub, fontWeight: 600 }}> LLC</span>
             </span>
-            <span style={{ fontSize: 12, fontWeight: 700, color: navSub }}>株式会社D</span>
+            <span style={{ fontSize: 12, fontWeight: 700, color: navSub }}>合同会社D</span>
           </div>
         </a>
 
