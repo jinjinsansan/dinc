@@ -1,5 +1,4 @@
 // 合同会社D（D LLC）コーポレートサイト — コンテンツデータ
-// ※ ニュースはサンプル値。実データに差し替えてください。
 
 export type NavLink = { label: string; en: string; href: string };
 
@@ -134,7 +133,7 @@ export const products: Product[] = [
   },
 ];
 
-export type CompanyRow = { k: string; kj: string; v: string };
+export type CompanyRow = { k: string; kj: string; v: string; href?: string };
 
 export const company: CompanyRow[] = [
   { k: 'COMPANY', kj: '会社名', v: '合同会社D（D LLC）' },
@@ -143,7 +142,7 @@ export const company: CompanyRow[] = [
   { k: 'BUSINESS', kj: '事業内容', v: 'AIプロダクトの企画・開発・運営（Dファミリー）' },
   { k: 'ADDRESS', kj: '所在地', v: '東京都港区赤坂4丁目8番19号 赤坂フロントタウン3階' },
   { k: 'PRODUCTS', kj: '運営サービス', v: 'ゴリラ予想 / D-swipe / Dlogic / D-lab / Togel / ガチャパ' },
-  { k: 'CONTACT', kj: '連絡先', v: 'contact@d-llc.net' },
+  { k: 'CONTACT', kj: '連絡先', v: 'お問い合わせフォームよりご連絡ください', href: '#contact' },
 ];
 
 export type NewsItem = {
@@ -152,36 +151,41 @@ export type NewsItem = {
   title: string;
   catColor: string;
   catBg: string;
+  href?: string;
 };
 
 export const news: NewsItem[] = [
   {
-    date: '2026.06.20',
-    cat: 'PRODUCT',
-    title: 'Dlogic「参考勝率」ページをリニューアルしました',
-    catColor: 'var(--gold)',
-    catBg: 'rgba(201,168,76,.12)',
-  },
-  {
-    date: '2026.05.15',
-    cat: 'PRODUCT',
-    title: 'D-lab 1期生の募集に向けたティザーを公開',
-    catColor: 'var(--gold)',
-    catBg: 'rgba(201,168,76,.12)',
-  },
-  {
-    date: '2026.04.10',
+    date: '2026.10.09',
     cat: 'COMPANY',
-    title: 'ブランドロゴをDファミリーで統一しました',
+    title: 'お問い合わせ窓口をWebフォームに一本化しました',
     catColor: 'var(--cyan)',
     catBg: 'rgba(34,184,230,.12)',
+    href: '#contact',
   },
   {
-    date: '2026.03.01',
+    date: '2026.10.01',
+    cat: 'COMPANY',
+    title: '合同会社D（D LLC）を設立しました',
+    catColor: 'var(--cyan)',
+    catBg: 'rgba(34,184,230,.12)',
+    href: '#company',
+  },
+  {
+    date: '2026.08.03',
     cat: 'PRODUCT',
-    title: 'Togel 同性マッチング機能を追加',
-    catColor: 'var(--pink)',
-    catBg: 'rgba(224,81,138,.12)',
+    title: 'オンラインガチャ「ガチャパ」がDファミリーに加わりました',
+    catColor: '#8f5cf0',
+    catBg: 'rgba(143,92,240,.12)',
+    href: 'https://www.gacha-pa.com',
+  },
+  {
+    date: '2026.08.03',
+    cat: 'PRODUCT',
+    title: '予測市場「D-market」を「ゴリラ予想」としてリニューアルしました',
+    catColor: '#1a9cc4',
+    catBg: 'rgba(34,184,230,.12)',
+    href: 'https://www.g-yoso.com',
   },
 ];
 

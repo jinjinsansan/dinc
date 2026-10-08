@@ -18,11 +18,18 @@ export function Company() {
                 {c.k}
                 <span style={{ display: 'block', fontFamily: 'var(--sans)', fontSize: 13, color: 'var(--sub)', marginTop: 2 }}>{c.kj}</span>
               </div>
-              <div style={{ fontSize: 15, color: 'var(--text)', fontWeight: 500 }}>{c.v}</div>
+              <div style={{ fontSize: 15, color: 'var(--text)', fontWeight: 500 }}>
+                {c.href ? (
+                  <a href={c.href} style={{ color: 'var(--navy)', textDecoration: 'underline', textUnderlineOffset: 4 }}>
+                    {c.v} →
+                  </a>
+                ) : (
+                  c.v
+                )}
+              </div>
             </div>
           ))}
         </div>
-        <p style={{ fontSize: 12, color: 'var(--faint)', margin: '14px 0 0' }}>※ 一部の項目はサンプル値です。実データに差し替えてください。</p>
       </div>
     </section>
   );
