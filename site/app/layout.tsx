@@ -24,7 +24,7 @@ const inter = Inter({
 });
 
 export const metadata: Metadata = {
-  metadataBase: new URL('https://d-llc.example'),
+  metadataBase: new URL('https://www.d-llc.net'),
   title: '合同会社D（D LLC）— AIで、個人の「できる」を増やす。',
   description:
     'AIで個人の「できる」を増やすプロダクトスタジオ。予測市場・競馬予想AI・性格診断・ノーコード開発教育まで、プロダクト群「Dファミリー」を企画・開発・運営しています。',

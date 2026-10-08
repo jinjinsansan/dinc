@@ -1,5 +1,5 @@
 // 合同会社D（D LLC）コーポレートサイト — コンテンツデータ
-// ※ 会社概要・ニュース・連絡先は一部サンプル値。実データに差し替えてください。
+// ※ ニュースはサンプル値。実データに差し替えてください。
 
 export type NavLink = { label: string; en: string; href: string };
 
@@ -138,12 +138,12 @@ export type CompanyRow = { k: string; kj: string; v: string };
 
 export const company: CompanyRow[] = [
   { k: 'COMPANY', kj: '会社名', v: '合同会社D（D LLC）' },
-  { k: 'FOUNDED', kj: '設立', v: '2026年' },
-  { k: 'CEO', kj: '代表者', v: '代表社員 ◯◯ ◯◯' },
+  { k: 'FOUNDED', kj: '設立', v: '2026年10月' },
+  { k: 'CEO', kj: '代表者', v: '代表社員 斉藤 実' },
   { k: 'BUSINESS', kj: '事業内容', v: 'AIプロダクトの企画・開発・運営（Dファミリー）' },
-  { k: 'ADDRESS', kj: '所在地', v: '東京都◯◯区 ◯◯ 0-0-0' },
+  { k: 'ADDRESS', kj: '所在地', v: '東京都港区赤坂4丁目8番19号 赤坂フロントタウン3階' },
   { k: 'PRODUCTS', kj: '運営サービス', v: 'ゴリラ予想 / D-swipe / Dlogic / D-lab / Togel / ガチャパ' },
-  { k: 'CONTACT', kj: '連絡先', v: 'contact@d-llc.example' },
+  { k: 'CONTACT', kj: '連絡先', v: 'contact@d-llc.net' },
 ];
 
 export type NewsItem = {
